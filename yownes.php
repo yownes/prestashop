@@ -90,7 +90,8 @@ class Yownes extends Module
         ]);
 
         foreach ($entrypoints as $key) {
-            if ($files[$key]) {
+            $type = explode("/", $key)[1];
+            if ($type == 'js' && $files[$key]) {
                 array_push($scripts, $base_path . $files[$key]);
             }
         }
