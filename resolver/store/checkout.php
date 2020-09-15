@@ -2,11 +2,13 @@
 
 /**
  * 2019 (c) VueFront
+ * 2020 (c) Yownes
  *
- * MODULE VueFront
+ * MODULE Yownes
  *
- * @author    VueFront
+ * @author    VueFront, Yownes
  * @copyright Copyright (c) permanent, VueFront
+ * @copyright Copyright (c) permanent, Yownes
  * @license   MIT
  * @version   0.1.0
  */
@@ -487,7 +489,7 @@ class ResolverStoreCheckout extends Resolver
         $order->id_shop = (int) $this->context->shop->id;
         $order->id_shop_group = (int) $this->context->shop->id_shop_group;
         $order->payment = $paymentMethod['name'];
-        $order->module = "vuefront";
+        $order->module = "yownes";
 
         $order->product_list = $this->context->cart->getProducts();
         $order->recyclable = $this->context->cart->recyclable;
@@ -548,7 +550,7 @@ class ResolverStoreCheckout extends Resolver
                 'paymentMethod' => $paymentMethod['codename'],
                 'total' => floatval($order->getOrdersTotalPaid()),
                 'callback' => Tools::getHttpHost(true) .
-                    __PS_BASE_URI__ . 'index.php?controller=callback&module=vuefront&fc=module'
+                    __PS_BASE_URI__ . 'index.php?controller=callback&module=yownes&fc=module'
             )
         );
 

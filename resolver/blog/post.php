@@ -1,11 +1,13 @@
 <?php
 /**
- * 2019 (c) VueFront
+  * 2019 (c) VueFront
+ * 2020 (c) Yownes
  *
- * MODULE VueFront
+ * MODULE Yownes
  *
- * @author    VueFront
+ * @author    VueFront, Yownes
  * @copyright Copyright (c) permanent, VueFront
+ * @copyright Copyright (c) permanent, Yownes
  * @license   MIT
  *
  * @version   0.1.0

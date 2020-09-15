@@ -1,18 +1,20 @@
 <?php
 /**
  * 2019 (c) VueFront
+ * 2020 (c) Yownes
  *
- * MODULE VueFront
+ * MODULE Yownes
  *
- * @author    VueFront
+ * @author    VueFront, Yownes
  * @copyright Copyright (c) permanent, VueFront
+ * @copyright Copyright (c) permanent, Yownes
  * @license   MIT
  * @version   0.1.0
  */
 
 class ResolverCommonContact extends Resolver
 {
-    private $codename = "vuefront";
+    private $codename = "yownes";
 
     public function get()
     {
@@ -140,7 +142,7 @@ class ResolverCommonContact extends Resolver
         try {
             Mail::send(
                 (int)(Configuration::get('PS_LANG_DEFAULT')),
-                'vuefront_contact',
+                'yownes_contact',
                 'Enquiry '.$args['name'],
                 array(
                     '{email}' => $args['email'],
@@ -152,7 +154,7 @@ class ResolverCommonContact extends Resolver
                 null,
                 null,
                 null,
-                _PS_MODULE_DIR_.'vuefront/mails/'
+                _PS_MODULE_DIR_.'yownes/mails/'
             );
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());

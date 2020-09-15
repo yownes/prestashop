@@ -1,25 +1,17 @@
 {*
  * 2019 (c) VueFront
+ * 2020 (c) Yownes
  *
- * MODULE VueFront
+ * MODULE Yownes
  *
- * @author    VueFront
+ * @author    VueFront, Yownes
  * @copyright Copyright (c) permanent, VueFront
+ * @copyright Copyright (c) permanent, Yownes
  * @license   MIT
  * @version   0.1.0
  *}
-
-<vf-app class="vuefront-app"></vf-app>
-<script lang="text/javascript">
-jQuery(document).ready(function() {
-    
-    d_vuefront({
-        selector: '.vuefront-app',
-        baseURL: '{$baseUrl}',
-        siteUrl: '{$siteUrl}',
-        tokenUrl: "token={$tokenVuefront|escape:'html':'UTF-8'}",
-        apiURL: '',
-        type: 'prestashop'
-      })
-})
-</script>
+ 
+<div id="root"></div>
+{foreach from=$scripts item=script}
+  <script type="text/javascript" src="{$script}"></script>
+{/foreach}

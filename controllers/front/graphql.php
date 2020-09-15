@@ -1,11 +1,13 @@
 <?php
 /**
  * 2019 (c) VueFront
+ * 2020 (c) Yownes
  *
- * MODULE VueFront
+ * MODULE Yownes
  *
- * @author    VueFront
+ * @author    VueFront, Yownes
  * @copyright Copyright (c) permanent, VueFront
+ * @copyright Copyright (c) permanent, Yownes
  * @license   MIT
  * @version   0.1.0
  */
@@ -13,26 +15,26 @@
 require_once dirname(__FILE__) . '/../../system/startup.php';
 
 /**
- * vuefront
- * vuefront.php
+ * yownes
+ * yownes.php
  */
-class VuefrontGraphqlModuleFrontController extends ModuleFrontController
+class YownesGraphqlModuleFrontController extends ModuleFrontController
 {
-    private $codename = "vuefront";
-    private $route = "vuefront";
+    private $codename = "yownes";
+    private $route = "yownes";
 
     public function setMedia()
     {
         parent::setMedia();
         $this->context->controller->registerStylesheet(
-            'modules-vuefront-front-css',
-            'modules/vuefront/views/css/index.css',
+            'modules-yownes-front-css',
+            'modules/yownes/views/css/index.css',
             array('media' => 'all', 'priority' => 200)
         );
 
         $this->context->controller->registerJavascript(
-            'modules-vuefront-front-js',
-            'modules/vuefront/views/js/middleware.js',
+            'modules-yownes-front-js',
+            'modules/yownes/views/js/middleware.js',
             array('position' => 'head', 'priority' => 0)
         );
     }
@@ -45,10 +47,10 @@ class VuefrontGraphqlModuleFrontController extends ModuleFrontController
             if (in_array('text/html', $accepts)) {
                 $this->context->smarty->assign(array(
                     'hello' => 'Hello World!!!',
-                    'target' => __PS_BASE_URI__.'index.php?controller=graphql&module=vuefront&fc=module'
+                    'target' => __PS_BASE_URI__.'index.php?controller=graphql&module=yownes&fc=module'
                 ));
 
-                $this->setTemplate('module:vuefront/views/templates/front/d_vuefront.tpl');
+                $this->setTemplate('module:yownes/views/templates/front/d_yownes.tpl');
                 return;
             }
         }

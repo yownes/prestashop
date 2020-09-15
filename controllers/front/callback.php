@@ -1,11 +1,13 @@
 <?php
 /**
  * 2019 (c) VueFront
+ * 2020 (c) Yownes
  *
- * MODULE VueFront
+ * MODULE Yownes
  *
- * @author    VueFront
+ * @author    VueFront, Yownes
  * @copyright Copyright (c) permanent, VueFront
+ * @copyright Copyright (c) permanent, Yownes
  * @license   MIT
  * @version   0.1.0
  */
@@ -13,13 +15,13 @@
 require_once dirname(__FILE__) . '/../../system/startup.php';
 
 /**
- * vuefront
- * vuefront.php
+ * yownes
+ * yownes.php
  */
-class VuefrontCallbackModuleFrontController extends ModuleFrontController
+class YownesCallbackModuleFrontController extends ModuleFrontController
 {
-    private $codename = "vuefront";
-    private $route = "vuefront";
+    private $codename = "yownes";
+    private $route = "yownes";
 
     public function initContent()
     {

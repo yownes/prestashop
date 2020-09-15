@@ -11,15 +11,14 @@
  * If you have another blog, you can use this model to modify it to
  * add support for your current blog
  *
- * You can always contact our support via https://vuefront.com/support
- * for assitance in integrating your blog module with our CMS Connect App.
- *
  * 2019 (c) VueFront
+ * 2020 (c) Yownes
  *
- * MODULE VueFront
+ * MODULE Yownes
  *
- * @author    VueFront
+ * @author    VueFront, Yownes
  * @copyright Copyright (c) permanent, VueFront
+ * @copyright Copyright (c) permanent, Yownes
  * @license   MIT
  *
  * @version   0.1.0
