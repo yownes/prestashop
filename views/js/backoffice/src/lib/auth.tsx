@@ -1,16 +1,26 @@
 class Auth {
   _isAuthenticated: boolean;
+  _isAdmin: boolean;
 
   constructor() {
     this._isAuthenticated = false;
+    this._isAdmin = false;
   }
 
   isAuthenticated() {
     return this._isAuthenticated;
   }
+  isAdmin() {
+    return this._isAdmin;
+  }
 
   login(cb: () => void) {
     this._isAuthenticated = true;
+    cb();
+  }
+
+  makeAdmin(cb: () => void) {
+    this._isAdmin = true;
     cb();
   }
 

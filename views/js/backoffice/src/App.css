@@ -1,5 +1,9 @@
 @import "~antd/dist/antd.css";
 
+:root {
+  --header-height: 60px;
+}
+
 .App {
   text-align: center;
 }

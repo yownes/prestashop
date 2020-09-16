@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  height: var(--header-height);
+  align-items: center;
+}
+
+.links {
+
+}
+

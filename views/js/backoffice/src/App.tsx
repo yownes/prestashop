@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import { Header } from "./components/organisms";
 import Auth from "./pages/auth";
 import PrivateRoute from "./components/molecules/PrivateRoute";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
           <Auth />
         </Route>
         <PrivateRoute path="/">
-          <Link to="/auth/login">Inicia sesión</Link>
+          <Dashboard />
         </PrivateRoute>
       </Switch>
     </Router>
