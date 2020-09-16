@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import { Header } from "./components/organisms";
 import Auth from "./pages/auth";
+import PrivateRoute from "./components/molecules/PrivateRoute";
 
 function App() {
   return (
@@ -11,9 +12,9 @@ function App() {
         <Route path="/auth">
           <Auth />
         </Route>
-        <Route path="/">
+        <PrivateRoute path="/">
           <Link to="/auth/login">Inicia sesión</Link>
-        </Route>
+        </PrivateRoute>
       </Switch>
     </Router>
   );
