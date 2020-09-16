@@ -1,24 +1,7 @@
 import { Tag } from "antd";
 import Table, { ColumnsType } from "antd/lib/table";
 import React from "react";
-
-enum AccountState {
-  STALLED = "STALLED",
-  CONFIRMING = "CONFIRMING",
-  PAID = "PAID",
-  BANNED = "BANNED",
-}
-
-interface AppType {
-  id: string;
-}
-
-interface ClientType {
-  id: string;
-  state: AccountState;
-  name: string;
-  apps: AppType[];
-}
+import { AccountState, App, Client } from "../../models/App";
 
 const COLORS = {
   STALLED: "default",
@@ -27,7 +10,7 @@ const COLORS = {
   BANNED: "red",
 };
 
-const columns: ColumnsType<ClientType> = [
+const columns: ColumnsType<Client> = [
   {
     title: "Name",
     dataIndex: "name",
@@ -38,7 +21,7 @@ const columns: ColumnsType<ClientType> = [
     title: "Apps",
     dataIndex: "apps",
     key: "apps",
-    render: (apps: AppType[]) => apps.length,
+    render: (apps: App[]) => apps.length,
   },
   {
     title: "Estado",
@@ -52,7 +35,7 @@ const columns: ColumnsType<ClientType> = [
 ];
 
 const Clients = () => {
-  const data: ClientType[] = [
+  const data: Client[] = [
     {
       id: "bvxdtyq56w7w89",
       name: "Jesús",

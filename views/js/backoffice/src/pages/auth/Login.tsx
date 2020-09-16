@@ -29,6 +29,11 @@ const Login = ({}: LoginProps) => {
           onFinish={(values) => {
             console.log("values", values);
             AuthLib.getSingleton().login(() => {
+              AuthLib.getSingleton().setProfile({
+                name: values.password,
+                email: values.email,
+                logo: "https://randomuser.me/api/portraits/men/13.jpg",
+              });
               if (values.isAdmin) {
                 AuthLib.getSingleton().makeAdmin(() => {
                   history.replace(from);
@@ -39,7 +44,7 @@ const Login = ({}: LoginProps) => {
           }}
         >
           <Form.Item
-            name="mail"
+            name="email"
             rules={[
               { required: true, message: "Introduce tu mail" },
               { type: "email" },

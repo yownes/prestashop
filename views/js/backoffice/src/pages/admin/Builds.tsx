@@ -1,43 +1,10 @@
 import React from "react";
 import { Table, Tag } from "antd";
 import { ColumnsType } from "antd/lib/table";
+import { Build, BuildState } from "../../models/App";
+import BuildStateVisualizer from "../../components/molecules/BuildState";
 
-interface ClientType {
-  id: string;
-  name: string;
-}
-
-interface AppType {
-  name: string;
-  client: ClientType;
-}
-
-enum BuildState {
-  STALLED = "STALLED",
-  QUEUED = "QUEUED",
-  GENERATING = "GENERATING",
-  UPLOADING = "UPLOADING",
-  PUBLISHED = "PUBLISHED",
-  WAITING = "WAITING",
-}
-
-interface BuildType {
-  id: string;
-  date: Date;
-  app: AppType;
-  state: BuildState;
-}
-
-const COLORS = {
-  STALLED: "default",
-  QUEUED: "gold",
-  GENERATING: "cyan",
-  UPLOADING: "magenta",
-  PUBLISHED: "green",
-  WAITING: "orange",
-};
-
-const columns: ColumnsType<BuildType> = [
+const columns: ColumnsType<Build> = [
   {
     title: "Fecha",
     dataIndex: "date",
@@ -53,18 +20,18 @@ const columns: ColumnsType<BuildType> = [
     dataIndex: "state",
     key: "state",
     render: (state: BuildState) => {
-      const color = COLORS[state];
-      return <Tag color={color}>{state}</Tag>;
+      return <BuildStateVisualizer state={state}></BuildStateVisualizer>;;
     },
   },
 ];
 
 const Builds = () => {
-  const data: BuildType[] = [
+  const data: Build[] = [
     {
       id: "1",
       date: new Date(),
       app: {
+        id: "1",
         name: "App1",
         client: {
           id: "sdrt789hd1qegq823r23f",
@@ -77,6 +44,7 @@ const Builds = () => {
       id: "2",
       date: new Date(),
       app: {
+        id: "3",
         name: "App3",
         client: {
           id: "fgvewargbftrn4532",
@@ -89,6 +57,7 @@ const Builds = () => {
       id: "3",
       date: new Date(),
       app: {
+        id: "3",
         name: "App3",
         client: {
           id: "fgvewargbftrn4532",
@@ -101,6 +70,7 @@ const Builds = () => {
       id: "4",
       date: new Date(),
       app: {
+        id: "3",
         name: "App3",
         client: {
           id: "fgvewargbftrn4532",
@@ -113,6 +83,7 @@ const Builds = () => {
       id: "5",
       date: new Date(),
       app: {
+        id: "3",
         name: "App3",
         client: {
           id: "fgvewargbftrn4532",
@@ -125,6 +96,7 @@ const Builds = () => {
       id: "6",
       date: new Date(),
       app: {
+        id: "3",
         name: "App3",
         client: {
           id: "fgvewargbftrn4532",

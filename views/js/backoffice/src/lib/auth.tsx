@@ -1,6 +1,13 @@
+interface Profile {
+  email: string;
+  name: string;
+  logo?: string;
+}
+
 class Auth {
   _isAuthenticated: boolean;
   _isAdmin: boolean;
+  profile?: Profile;
 
   constructor() {
     this._isAuthenticated = false;
@@ -28,6 +35,10 @@ class Auth {
     this._isAuthenticated = false;
     cb();
   }
+
+  setProfile(profile: Profile) {
+    this.profile = profile;
+  } 
 }
 
 const namespace = {
