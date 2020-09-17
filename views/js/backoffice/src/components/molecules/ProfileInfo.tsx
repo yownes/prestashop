@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import styles from "./ProfileInfo.module.css";
 
@@ -10,6 +11,8 @@ interface ProfileInfoProps {
 
 const ProfileInfo = ({ logo, name, email }: ProfileInfoProps) => {
   return (
+    <Link to="/profile">
+
     <div className={styles.container}>
       <div className={styles.info}>
         <span className={styles.title}>{name}</span>
@@ -17,6 +20,7 @@ const ProfileInfo = ({ logo, name, email }: ProfileInfoProps) => {
       </div>
       {logo && <img src={logo} alt="Company logo" className={styles.image} />}
     </div>
+    </Link>
   );
 };
 

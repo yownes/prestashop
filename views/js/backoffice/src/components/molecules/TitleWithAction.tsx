@@ -1,10 +1,13 @@
 import React from "react";
+import { Typography } from "antd";
 
 import styles from "./TitleWithAction.module.css";
 
+const { Title } = Typography;
+
 interface TitleWithActionProps {
   title: string;
-  action: {
+  action?: {
     action: () => void;
     label: string;
   };
@@ -13,10 +16,14 @@ interface TitleWithActionProps {
 const TitleWithAction = ({ title, action }: TitleWithActionProps) => {
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>{title}</h2>
-      <button className={styles.action} onClick={action.action}>
-        {action.label}
-      </button>
+      <Title level={2}>{title}</Title>
+      {action && (
+        (
+        <button className={styles.action} onClick={action.action}>
+            {action.label}
+          </button>
+      )
+      )}
     </div>
   );
 };

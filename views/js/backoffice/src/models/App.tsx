@@ -5,6 +5,7 @@ export interface App {
   client?: Client;
   builds?: Build[];
   logo?: string;
+  template?: Template;
 }
 
 export enum AccountState {
@@ -45,4 +46,11 @@ export interface Payment {
   concept: string;
   quantity: number;
   confirmed: boolean;
+}
+
+export interface Template {
+  id: string;
+  gitUrl?: string;
+  previewImg: string;
+  name: string;
 }

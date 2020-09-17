@@ -1,10 +1,18 @@
 import { Card, Col, Row, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import React from "react";
-import { AccountState, App, Build, BuildState, Client, Payment } from "../../models/App";
+import {
+  AccountState,
+  App,
+  BuildState,
+  Client,
+  Payment,
+} from "../../models/App";
 import BuildStateVisualizer from "../../components/molecules/BuildState";
 import TitleWithAction from "../../components/molecules/TitleWithAction";
 import SubscribePlaceholder from "../../components/organisms/SubscribePlaceholder";
+import { Link } from "react-router-dom";
+import { getAppBuildState } from "../../lib/appBuildState";
 
 const paymentsColumns: ColumnsType<Payment> = [
   {
@@ -37,7 +45,12 @@ const appsColumns: ColumnsType<App> = [
     key: "icon",
     render: (logo) => <img src={logo} alt="" width={40} height={40} />,
   },
-  { title: "Nombre", dataIndex: "name", key: "name" },
+  {
+    title: "Nombre",
+    dataIndex: "name",
+    key: "name",
+    render: (name, record) => <Link to={`/app/${record.id}`}>{name}</Link>,
+  },
   { title: "ID", dataIndex: "id", key: "id" },
   {
     title: "URLs",
@@ -54,9 +67,16 @@ const appsColumns: ColumnsType<App> = [
     title: "Estado",
     dataIndex: "builds",
     key: "state",
-    render: (builds: Build[]) => {
-      const state = builds[builds.length - 1].state; // get last build state
-      return <BuildStateVisualizer state={state}></BuildStateVisualizer>;
+    render: (_, record) => {
+      return (
+        (
+        <BuildStateVisualizer
+        
+           state={getAppBuildState(record)}
+        
+        ></BuildStateVisualizer>
+      )
+      );
     },
   },
 ];
