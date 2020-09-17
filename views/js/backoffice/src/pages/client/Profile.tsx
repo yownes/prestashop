@@ -1,8 +1,10 @@
 import { Card, Col, Row, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import React from "react";
-import { App, Build, BuildState, Client, Payment } from "../../models/App";
+import { AccountState, App, Build, BuildState, Client, Payment } from "../../models/App";
 import BuildStateVisualizer from "../../components/molecules/BuildState";
+import TitleWithAction from "../../components/molecules/TitleWithAction";
+import SubscribePlaceholder from "../../components/organisms/SubscribePlaceholder";
 
 const paymentsColumns: ColumnsType<Payment> = [
   {
@@ -63,6 +65,7 @@ const Profile = () => {
   const profile: Client = {
     id: "1",
     name: "Jesus",
+    state: AccountState.STALLED,
     payments: [
       {
         id: "1",
@@ -120,13 +123,32 @@ const Profile = () => {
       <Row gutter={20}>
         <Col span={12}>
           <Card>
-            <h2>Pagos</h2>
+            {
+              profile.state === AccountState.STALLED ?
+                <SubscribePlaceholder></SubscribePlaceholder>
+              :
+              <>
+              <TitleWithAction 
+              title="Pagos" 
+              action={{
+                action: () => console.log('cancelar suscripción'), 
+                label: "Cancelar suscripción"
+              }}
+            />
             <Table columns={paymentsColumns} dataSource={profile.payments} />
+              </>
+            }
           </Card>
         </Col>
         <Col span={12}>
           <Card>
-            <h2>Apps</h2>
+            <TitleWithAction 
+              title="Apps" 
+              action={{
+                action: () => console.log('Añadir nueva'),
+                label: "Añadir nueva"
+              }} 
+            />
             <Table columns={appsColumns} dataSource={profile.apps} />
           </Card>
         </Col>
