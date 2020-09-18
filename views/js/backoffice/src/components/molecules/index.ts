@@ -4,3 +4,4 @@ export { default as PrivateRoute } from "./PrivateRoute";
 export { default as ProfileInfo } from "./ProfileInfo";
 export { default as TemplatePreview } from "./TemplatePreview";
 export { default as TitleWithAction } from "./TitleWithAction";
+export { default as Placeholder } from "./Placeholder";

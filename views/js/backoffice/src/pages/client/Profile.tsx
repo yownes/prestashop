@@ -8,11 +8,13 @@ import {
   Client,
   Payment,
 } from "../../models/App";
-import BuildStateVisualizer from "../../components/molecules/BuildState";
-import TitleWithAction from "../../components/molecules/TitleWithAction";
-import SubscribePlaceholder from "../../components/organisms/SubscribePlaceholder";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { getAppBuildState } from "../../lib/appBuildState";
+import {
+  Placeholder,
+  BuildState as BuildStateVisualizer,
+  TitleWithAction,
+} from "../../components/molecules";
 
 const paymentsColumns: ColumnsType<Payment> = [
   {
@@ -82,6 +84,7 @@ const appsColumns: ColumnsType<App> = [
 ];
 
 const Profile = () => {
+  const history = useHistory();
   const profile: Client = {
     id: "1",
     name: "Jesus",
@@ -143,33 +146,47 @@ const Profile = () => {
       <Row gutter={20}>
         <Col span={12}>
           <Card>
-            {
-              profile.state === AccountState.STALLED ?
-                <SubscribePlaceholder></SubscribePlaceholder>
-              :
+            {profile.state === AccountState.STALLED ? (
+              <Placeholder
+                claim="Suscríbete para poder tener tu propia App"
+                cta={{ title: "Suscribirse", link: "/pay" }}
+              ></Placeholder>
+            ) : (
               <>
-              <TitleWithAction 
-              title="Pagos" 
-              action={{
-                action: () => console.log('cancelar suscripción'), 
-                label: "Cancelar suscripción"
-              }}
-            />
-            <Table columns={paymentsColumns} dataSource={profile.payments} />
+                <TitleWithAction
+                  title="Pagos"
+                  action={{
+                    action: () => console.log("cancelar suscripción"), //TODO: Cancel suscription
+                    label: "Cancelar suscripción",
+                  }}
+                />
+                <Table
+                  columns={paymentsColumns}
+                  dataSource={profile.payments}
+                />
               </>
-            }
+            )}
           </Card>
         </Col>
         <Col span={12}>
           <Card>
-            <TitleWithAction 
-              title="Apps" 
-              action={{
-                action: () => console.log('Añadir nueva'),
-                label: "Añadir nueva"
-              }} 
-            />
-            <Table columns={appsColumns} dataSource={profile.apps} />
+            {(profile.apps?.length ?? 0) > 0 ? (
+              <>
+                <TitleWithAction
+                  title="Apps"
+                  action={{
+                    action: () => history.push("/apps/new"),
+                    label: "Añadir nueva",
+                  }}
+                />
+                <Table columns={appsColumns} dataSource={profile.apps} />
+              </>
+            ) : (
+              <Placeholder
+                claim="Crea tu primera App y empieza a vender"
+                cta={{ title: "Añadir nueva app", link: "/apps/new" }}
+              ></Placeholder>
+            )}
           </Card>
         </Col>
       </Row>
