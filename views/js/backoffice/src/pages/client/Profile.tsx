@@ -14,6 +14,7 @@ import {
   Placeholder,
   BuildState as BuildStateVisualizer,
   TitleWithAction,
+  ProfileInfo,
 } from "../../components/molecules";
 
 const paymentsColumns: ColumnsType<Payment> = [
@@ -84,6 +85,8 @@ const Profile = () => {
   const profile: Client = {
     id: "1",
     name: "Jesus",
+    email: "jesus@estudioyobo.com",
+    avatar: "https://randomuser.me/api/portraits/men/13.jpg",
     state: AccountState.STALLED,
     payments: [
       {
@@ -141,6 +144,44 @@ const Profile = () => {
     <>
       <Row gutter={20}>
         <Col span={12}>
+          <Row style={{ marginBottom: 20 }}>
+            <Col span="24">
+              <Card>
+                <ProfileInfo
+                  reverse
+                  editable
+                  name={profile.name}
+                  email={profile.email ?? ""}
+                  logo={profile.avatar}
+                />
+              </Card>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="24">
+              <Card>
+                {(profile.apps?.length ?? 0) > 0 ? (
+                  <>
+                    <TitleWithAction
+                      title="Apps"
+                      action={{
+                        action: () => history.push("/app/new"),
+                        label: "Añadir nueva",
+                      }}
+                    />
+                    <Table columns={appsColumns} dataSource={profile.apps} />
+                  </>
+                ) : (
+                  <Placeholder
+                    claim="Crea tu primera App y empieza a vender"
+                    cta={{ title: "Añadir nueva app", link: "/app/new" }}
+                  ></Placeholder>
+                )}
+              </Card>
+            </Col>
+          </Row>
+        </Col>
+        <Col span={12}>
           <Card>
             {profile.state === AccountState.STALLED ? (
               <Placeholder
@@ -161,27 +202,6 @@ const Profile = () => {
                   dataSource={profile.payments}
                 />
               </>
-            )}
-          </Card>
-        </Col>
-        <Col span={12}>
-          <Card>
-            {(profile.apps?.length ?? 0) > 0 ? (
-              <>
-                <TitleWithAction
-                  title="Apps"
-                  action={{
-                    action: () => history.push("/app/new"),
-                    label: "Añadir nueva",
-                  }}
-                />
-                <Table columns={appsColumns} dataSource={profile.apps} />
-              </>
-            ) : (
-              <Placeholder
-                claim="Crea tu primera App y empieza a vender"
-                cta={{ title: "Añadir nueva app", link: "/app/new" }}
-              ></Placeholder>
             )}
           </Card>
         </Col>

@@ -23,6 +23,8 @@ export enum AccountState {
 export interface Client {
   id: string;
   name: string;
+  email?: string;
+  avatar?: string;
   state?: AccountState;
   apps?: App[];
   payments?: Payment[];

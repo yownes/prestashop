@@ -1,8 +1,6 @@
 import React from "react";
 
-interface PayProps {}
-
-const Pay = ({}: PayProps) => {
+const Pay = () => {
   return <div>Pay</div>;
 };
 
