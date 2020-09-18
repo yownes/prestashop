@@ -33,7 +33,7 @@ const Builds = () => {
       app: {
         id: "1",
         name: "App1",
-        client: {
+        customer: {
           id: "sdrt789hd1qegq823r23f",
           name: "Alejandro",
         },
@@ -46,7 +46,7 @@ const Builds = () => {
       app: {
         id: "3",
         name: "App3",
-        client: {
+        customer: {
           id: "fgvewargbftrn4532",
           name: "Jesús",
         },
@@ -59,7 +59,7 @@ const Builds = () => {
       app: {
         id: "3",
         name: "App3",
-        client: {
+        customer: {
           id: "fgvewargbftrn4532",
           name: "Jesús",
         },
@@ -72,7 +72,7 @@ const Builds = () => {
       app: {
         id: "3",
         name: "App3",
-        client: {
+        customer: {
           id: "fgvewargbftrn4532",
           name: "Jesús",
         },
@@ -85,7 +85,7 @@ const Builds = () => {
       app: {
         id: "3",
         name: "App3",
-        client: {
+        customer: {
           id: "fgvewargbftrn4532",
           name: "Jesús",
         },
@@ -98,7 +98,7 @@ const Builds = () => {
       app: {
         id: "3",
         name: "App3",
-        client: {
+        customer: {
           id: "fgvewargbftrn4532",
           name: "Jesús",
         },

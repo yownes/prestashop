@@ -1,5 +1,5 @@
-import { App, BuildState } from "../models/App";
+import { App, AppGen, BuildState } from "../models/App";
 
-export function getAppBuildState(app: App): BuildState {
+export function getAppBuildState(app: App | AppGen): BuildState {
   return app.builds?.[app.builds.length - 1].state ?? BuildState.STALLED;
 }

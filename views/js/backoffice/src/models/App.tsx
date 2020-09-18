@@ -1,11 +1,16 @@
 export interface App {
   id: string;
   name?: string;
-  urls?: { ios: string; android: string };
-  client?: Client;
+  storeLinks?: { ios: string; android: string };
+  customer?: Client;
   builds?: Build[];
   logo?: string;
   template?: Template;
+  color?: string;
+}
+
+export interface AppGen extends Omit<App, "id"> {
+  id?: string;
 }
 
 export enum AccountState {
@@ -51,6 +56,6 @@ export interface Payment {
 export interface Template {
   id: string;
   gitUrl?: string;
-  previewImg: string;
-  name: string;
+  previewImg?: string;
+  name?: string;
 }

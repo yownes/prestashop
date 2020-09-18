@@ -20,6 +20,9 @@ const ClientDashboard = () => {
       <Route exact path={`/pay`}>
         <Pay />
       </Route>
+      <Route exact path={`/app/new`}>
+        <App />
+      </Route>
       <Route path={`/app/:appId`}>
         <App />
       </Route>

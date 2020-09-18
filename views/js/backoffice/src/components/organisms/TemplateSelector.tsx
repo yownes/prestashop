@@ -7,7 +7,10 @@ import TemplatePreview from "../molecules/TemplatePreview";
 import styles from "./TemplateSelector.module.css";
 import Title from "antd/lib/typography/Title";
 
-interface TemplateSelectorProps {}
+interface TemplateSelectorProps {
+  value?: string;
+  onChange: (selected: string) => void;
+}
 
 const templates: Template[] = [
   {
@@ -42,14 +45,13 @@ const templates: Template[] = [
   },
 ];
 
-const TemplateSelector = ({}: TemplateSelectorProps) => {
-  const [selected, setSelected] = useState();
+const TemplateSelector = ({ value, onChange }: TemplateSelectorProps) => {
   return (
     <div className={styles.container}>
       <Title level={3}>Plantilla</Title>
       <Radio.Group
-        value={selected}
-        onChange={(e) => setSelected(e.target.value)}
+        value={value ?? templates[templates.length -   1].id}
+        onChange={(e) => onChange(e.target.value)}
         style={{ overflowX: "scroll", display: "flex" }}
       >
         {templates.map((template) => (
@@ -58,7 +60,10 @@ const TemplateSelector = ({}: TemplateSelectorProps) => {
             key={template.id}
             style={{ height: "auto" }}
           >
-            <TemplatePreview name={template.name} image={template.previewImg} />
+            <TemplatePreview
+              name={template.name ?? ""}
+              image={template.previewImg ?? ""}
+            />
           </Radio.Button>
         ))}
       </Radio.Group>

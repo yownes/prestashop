@@ -56,7 +56,7 @@ const appsColumns: ColumnsType<App> = [
   { title: "ID", dataIndex: "id", key: "id" },
   {
     title: "URLs",
-    dataIndex: "urls",
+    dataIndex: "storeLinks",
     key: "urls",
     render: (urls) => (
       <>
@@ -71,13 +71,9 @@ const appsColumns: ColumnsType<App> = [
     key: "state",
     render: (_, record) => {
       return (
-        (
         <BuildStateVisualizer
-        
-           state={getAppBuildState(record)}
-        
+          state={getAppBuildState(record)}
         ></BuildStateVisualizer>
-      )
       );
     },
   },
@@ -129,14 +125,14 @@ const Profile = () => {
         id: "212edf23fc4g",
         logo:
           "https://playbaikoh.com/wp-content/uploads/2015/05/Game_icon_skull_BAIKOH_perfil.png",
-        urls: { ios: "", android: "" },
+        storeLinks: { ios: "", android: "" },
         builds: [{ id: "123", state: BuildState.PUBLISHED }],
       },
       {
         name: "Testing",
         id: "wedfghjui7654",
         logo: "https://appiconmaker.co/home/appicon/testid?size=1024",
-        urls: { ios: "", android: "" },
+        storeLinks: { ios: "", android: "" },
         builds: [{ id: "123", state: BuildState.WAITING }],
       },
     ],
@@ -175,7 +171,7 @@ const Profile = () => {
                 <TitleWithAction
                   title="Apps"
                   action={{
-                    action: () => history.push("/apps/new"),
+                    action: () => history.push("/app/new"),
                     label: "Añadir nueva",
                   }}
                 />
@@ -184,7 +180,7 @@ const Profile = () => {
             ) : (
               <Placeholder
                 claim="Crea tu primera App y empieza a vender"
-                cta={{ title: "Añadir nueva app", link: "/apps/new" }}
+                cta={{ title: "Añadir nueva app", link: "/app/new" }}
               ></Placeholder>
             )}
           </Card>
