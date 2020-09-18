@@ -18,9 +18,10 @@ const AppInfo = ({ app, onChange }: AppInfoProps) => {
     <div className={styles.info}>
       <div className={styles.info__logo}>
         <img
-          src="https://playbaikoh.com/wp-content/uploads/2015/05/Game_icon_skull_BAIKOH_perfil.png"
+          src={app.logo}
           width={120}
           height={120}
+          alt="App logo"
         />
       </div>
       <h1 className={styles.info__appName}>

@@ -4,9 +4,7 @@ import { Input } from "antd";
 
 import styles from "./AdminHeader.module.css";
 
-interface AdminHeaderProps {}
-
-const AdminHeader = ({}: AdminHeaderProps) => {
+const AdminHeader = () => {
   return (
     <div className={styles.container}>
       <div>

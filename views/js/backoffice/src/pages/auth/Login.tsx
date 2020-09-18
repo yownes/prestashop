@@ -6,15 +6,13 @@ import { Form, Input, Button, Checkbox } from "antd";
 
 import styles from "./auth.module.css";
 
-interface LoginProps {}
-
 interface LocationState {
   from: {
     pathname: string;
   };
 }
 
-const Login = ({}: LoginProps) => {
+const Login = () => {
   const history = useHistory();
   const location = useLocation<LocationState>();
   let { from } = location.state || { from: { pathname: "/" } };

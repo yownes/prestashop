@@ -1,5 +1,5 @@
 import { Radio } from "antd";
-import React, { useState } from "react";
+import React from "react";
 import { RightCircleOutlined } from "@ant-design/icons";
 import { Template } from "../../models/App";
 import TemplatePreview from "../molecules/TemplatePreview";

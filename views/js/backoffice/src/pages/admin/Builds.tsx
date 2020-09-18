@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Tag } from "antd";
+import { Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { Build, BuildState } from "../../models/App";
 import BuildStateVisualizer from "../../components/molecules/BuildState";

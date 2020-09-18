@@ -1,4 +1,4 @@
-import { Card, Col, Row, Space } from "antd";
+import { Card, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TitleWithAction, AppInfo } from "../../components/molecules";

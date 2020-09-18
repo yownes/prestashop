@@ -1,7 +1,6 @@
 import React from "react";
 import './App.css';
-import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
-import { Header } from "./components/organisms";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Auth from "./pages/auth";
 import PrivateRoute from "./components/molecules/PrivateRoute";
 import Dashboard from "./pages/Dashboard";

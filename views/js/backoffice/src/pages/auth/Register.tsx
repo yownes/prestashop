@@ -5,9 +5,7 @@ import { Form, Input, Button, Checkbox } from "antd";
 
 import styles from "./auth.module.css";
 
-interface RegisterProps {}
-
-const Register = ({}: RegisterProps) => {
+const Register = () => {
   return (
     <Auth background="https://images.unsplash.com/photo-1586244439413-bc2288941dda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80">
       <div>

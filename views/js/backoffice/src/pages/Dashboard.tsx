@@ -5,9 +5,8 @@ import Auth from "../lib/auth";
 import AdminDashboard from "./admin";
 import ClientDashboard from "./client";
 
-interface DashboardProps {}
 
-const Dashboard = ({}: DashboardProps) => {
+const Dashboard = () => {
   const isAdmin = Auth.getSingleton().isAdmin();
   return (
     <DashboardTemplate header={isAdmin ? <AdminHeader /> : null}>
