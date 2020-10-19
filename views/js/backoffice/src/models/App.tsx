@@ -6,7 +6,7 @@ export interface App {
   builds?: Build[];
   logo?: string;
   template?: Template;
-  color?: string;
+  color?: { color: string; text: "black" | "white" };
 }
 
 export interface AppGen extends Omit<App, "id"> {

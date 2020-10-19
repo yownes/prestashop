@@ -22,12 +22,12 @@ async function getAppById(id: string): Promise<AppGen> {
   return app;
 }
 
-const baseApp = {
+const baseApp: AppGen = {
   template: {
-    id: "1"
+    id: "1",
   },
-  color: "#0099cc"
-}
+  color: { color: "#0099cc", text: "white" },
+};
 
 const App = () => {
   const { appId } = useParams<AppParamTypes>();
