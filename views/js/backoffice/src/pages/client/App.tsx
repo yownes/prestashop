@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TitleWithAction, AppInfo } from "../../components/molecules";
 import { TemplateSelector, ColorPicker } from "../../components/organisms";
+import AppPreview from "../../components/organisms/AppPreview";
 import { AppGen, BuildState } from "../../models/App";
 
 interface AppParamTypes {
@@ -44,7 +45,6 @@ const App = () => {
   }, [appId])
   if (!app) return <div>Loading...</div>
   return (
-
     <div>
       <Row gutter={20}>
         <Col span={12}>
@@ -55,26 +55,34 @@ const App = () => {
             <Col span={24}>
               <Card>
                 <TitleWithAction title="Estilo" />
-                <TemplateSelector value={app.template?.id} onChange={(selected) => {
-                  setApp(val => ({
-                    ...val,
-                    template: {
-                      id: selected
-                    }
-                  }))
-                }} />
-                <ColorPicker value={app.color} onChange={(selected) => {
-                  setApp(val => ({
-                    ...val,
-                    color: selected
-                  }))
-                }} />
+                <TemplateSelector
+                  value={app.template?.id}
+                  onChange={(selected) => {
+                    setApp((val) => ({
+                      ...val,
+                      template: {
+                        id: selected,
+                      },
+                    }));
+                  }}
+                />
+                <ColorPicker
+                  value={app.color}
+                  onChange={(selected) => {
+                    setApp((val) => ({
+                      ...val,
+                      color: selected,
+                    }));
+                  }}
+                />
               </Card>
             </Col>
           </Row>
         </Col>
         <Col span={12}>
-          <Card>Aqui la preview</Card>
+          <Card>
+              <AppPreview app={app} />
+          </Card>
         </Col>
       </Row>
     </div>

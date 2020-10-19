@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.preview {
+  width: 375px;
+  height: 667px;
+  background-color: #333;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
