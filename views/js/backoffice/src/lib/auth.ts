@@ -33,6 +33,7 @@ class Auth {
 
   logout(cb: () => void) {
     this._isAuthenticated = false;
+    this._isAdmin = false;
     cb();
   }
 

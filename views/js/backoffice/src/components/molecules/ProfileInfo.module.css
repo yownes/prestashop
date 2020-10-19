@@ -1,5 +1,6 @@
 .container {
   display: flex;
+  align-items: center;
   gap: .7rem;
 }
 
@@ -16,7 +17,7 @@
 .info {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   text-align: right;
 }
 
