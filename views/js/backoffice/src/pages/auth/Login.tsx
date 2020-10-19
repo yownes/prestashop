@@ -22,7 +22,6 @@ const Login = () => {
         <h1 className={styles.centerText}>Bienvenido</h1>
         <Form
           onFinish={(values) => {
-            console.log("values", values);
             AuthLib.getSingleton().login(() => {
               AuthLib.getSingleton().setProfile({
                 name: values.password,
@@ -53,9 +52,9 @@ const Login = () => {
           >
             <Input.Password placeholder="Contraseña" />
           </Form.Item>
-            <Link to={`/auth/password`} className={styles.rightAlign}>
-              ¿Ha olvidado la contraseña?
-            </Link>
+          <Link to={`/auth/password`} className={styles.rightAlign}>
+            ¿Ha olvidado la contraseña?
+          </Link>
           <Form.Item name="isAdmin" valuePropName="checked">
             <Checkbox>eres admin?</Checkbox>
           </Form.Item>
