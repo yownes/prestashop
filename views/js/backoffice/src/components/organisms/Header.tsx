@@ -4,9 +4,12 @@ import { Typography } from "antd";
 import { Logo } from "../atoms";
 import ProfileInfo from "../molecules/ProfileInfo";
 import Auth from "../../lib/auth";
-import routes from "../../lib/routes";
+import clientRoutes from "../../lib/routes";
+import adminoutes from "../../lib/adminRoutes";
 
 import styles from "./Header.module.css";
+
+const routes = [...clientRoutes, ...adminoutes];
 
 const Header = () => {
   const profile = Auth.getSingleton().profile;

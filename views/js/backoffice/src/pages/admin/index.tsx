@@ -1,22 +1,9 @@
 import React from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
-import Builds from "./Builds";
-import Clients from "./Clients";
+import Router from "../../components/organisms/Router";
+import routes from "../../lib/adminRoutes";
 
 const AdminDashboard = () => {
-  return (
-    <Switch>
-      <Route exact path="/">
-        <Redirect to={{ pathname: "/clients" }} />
-      </Route>
-      <Route exact path={`/builds`}>
-        <Builds />
-      </Route>
-      <Route exact path={`/clients`}>
-        <Clients />
-      </Route>
-    </Switch>
-  );
+  return <Router routes={routes} />;
 };
 
 export default AdminDashboard;

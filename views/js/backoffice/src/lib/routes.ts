@@ -1,14 +1,7 @@
+import { RoutePath } from "../components/organisms/Router";
 import App from "../pages/client/App";
 import Pay from "../pages/client/Pay";
 import Profile from "../pages/client/Profile";
-
-interface RoutePath {
-  exact: boolean;
-  path: string;
-  redirect?: string;
-  component?: () => JSX.Element;
-  name?: string;
-}
 
 const routes: RoutePath[] = [
   {
