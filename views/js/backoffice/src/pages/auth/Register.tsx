@@ -7,12 +7,9 @@ import styles from "./auth.module.css";
 
 const Register = () => {
   return (
-    <Auth background="https://images.unsplash.com/photo-1586244439413-bc2288941dda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80">
+    <Auth image="https://images.unsplash.com/photo-1586244439413-bc2288941dda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80">
       <div>
         <h1 className={styles.centerText}>Crear una cuenta</h1>
-        <p className={styles.centerText}>
-          ¿Ya tienes cuenta? <Link to={`/auth/login`}>Conectarse</Link>
-        </p>
         <Form>
           <Form.Item
             name="name"
@@ -70,11 +67,14 @@ const Register = () => {
           >
             <Checkbox>Acepto los Términos y Condiciones</Checkbox>
           </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
+          <div className={styles.buttons}>
+            <Button block type="ghost">
+              <Link to={`/auth/login`}>Conectarse</Link>
+            </Button>
+            <Button block type="primary" htmlType="submit">
               Crear cuenta
             </Button>
-          </Form.Item>
+          </div>
         </Form>
       </div>
     </Auth>

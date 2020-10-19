@@ -17,12 +17,9 @@ const Login = () => {
   const location = useLocation<LocationState>();
   let { from } = location.state || { from: { pathname: "/" } };
   return (
-    <Auth background="https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80">
+    <Auth image="https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80">
       <div>
         <h1 className={styles.centerText}>Bienvenido</h1>
-        <p className={styles.centerText}>
-          ¿Eres nuevo? <Link to={`/auth/register`}>Crear cuenta</Link>
-        </p>
         <Form
           onFinish={(values) => {
             console.log("values", values);
@@ -56,14 +53,22 @@ const Login = () => {
           >
             <Input.Password placeholder="Contraseña" />
           </Form.Item>
+            <Link to={`/auth/password`} className={styles.rightAlign}>
+              ¿Ha olvidado la contraseña?
+            </Link>
           <Form.Item name="isAdmin" valuePropName="checked">
             <Checkbox>eres admin?</Checkbox>
           </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
+          <div className={styles.buttons}>
+            <Button block type="ghost">
+              <Link to={`/auth/register`} style={{ display: "block" }}>
+                Crear Cuenta
+              </Link>
+            </Button>
+            <Button block type="primary" htmlType="submit">
               Conectarse
             </Button>
-          </Form.Item>
+          </div>
         </Form>
       </div>
     </Auth>
