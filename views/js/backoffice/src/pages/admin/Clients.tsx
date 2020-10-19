@@ -1,6 +1,7 @@
 import { Tag } from "antd";
 import Table, { ColumnsType } from "antd/lib/table";
 import React from "react";
+import { Link } from "react-router-dom";
 import { AccountState, App, Client } from "../../models/App";
 
 const COLORS = {
@@ -15,8 +16,14 @@ const columns: ColumnsType<Client> = [
     title: "Name",
     dataIndex: "name",
     key: "name",
+    render: (name, record) => <Link to={`/clients/${record.id}`}>{name}</Link>,
   },
-  { title: "ID Cliente", dataIndex: "id", key: "id" },
+  {
+    title: "ID Cliente",
+    dataIndex: "id",
+    key: "id",
+    render: (id) => <Link to={`/clients/${id}`}>{id}</Link>,
+  },
   {
     title: "Apps",
     dataIndex: "apps",

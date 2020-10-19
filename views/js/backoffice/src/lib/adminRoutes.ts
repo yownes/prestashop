@@ -1,6 +1,7 @@
 import { RoutePath } from "../components/organisms/Router";
 import Builds from "../pages/admin/Builds";
 import Clients from "../pages/admin/Clients";
+import Profile from "../pages/client/Profile";
 
 const routes: RoutePath[] = [
   {
@@ -19,6 +20,12 @@ const routes: RoutePath[] = [
     path: "/clients",
     name: "Clientes",
     component: Clients,
+  },
+  {
+    exact: true,
+    path: "/clients/:id",
+    name: "Cliente",
+    component: Profile,
   },
 ];
 
