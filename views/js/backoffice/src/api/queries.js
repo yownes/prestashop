@@ -5,6 +5,7 @@ export const ME = gql`
     me {
       email
       username
+      isStaff
     }
   }
 `;

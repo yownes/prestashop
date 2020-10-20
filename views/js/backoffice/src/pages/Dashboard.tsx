@@ -1,13 +1,13 @@
 import React from "react";
 import AdminHeader from "../components/organisms/AdminHeader";
 import DashboardTemplate from "../components/templates/Dashboard";
-import Auth from "../lib/auth";
+import Auth, { useAuth } from "../lib/auth";
 import AdminDashboard from "./admin";
 import ClientDashboard from "./client";
 
 
 const Dashboard = () => {
-  const isAdmin = Auth.getSingleton().isAdmin();
+  const { isAdmin } = useAuth();
   return (
     <DashboardTemplate header={isAdmin ? <AdminHeader /> : null}>
       {isAdmin ? <AdminDashboard /> : <ClientDashboard />}

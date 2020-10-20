@@ -1,9 +1,11 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useLazyQuery } from "@apollo/client";
 import { REGISTER, TOKEN_AUTH, VERIFY_TOKEN } from "../api/mutations";
 import { Register, RegisterVariables } from "../api/types/Register";
 import { TokenAuth, TokenAuthVariables } from "../api/types/TokenAuth";
 import { VerifyToken, VerifyTokenVariables } from "../api/types/VerifyToken";
+import { ME } from "../api/queries";
+import { Me } from "../api/types/Me";
 
 interface Profile {
   email: string;
@@ -69,9 +71,8 @@ function useAuthLogic() {
 
     if (t) {
       verifyToken({ variables: { token: t } }).then((result) => {
-        console.log({ result });
-
         if (result.data?.verifyToken?.success) {
+          me();
           setToken(t);
         }
       });
@@ -83,6 +84,13 @@ function useAuthLogic() {
   const [verifyToken] = useMutation<VerifyToken, VerifyTokenVariables>(
     VERIFY_TOKEN
   );
+  const [me] = useLazyQuery<Me>(ME, {
+    onCompleted({ me }) {
+      if (me?.isStaff) {
+        setIsAdmin(true);
+      }
+    },
+  });
 
   return {
     login,

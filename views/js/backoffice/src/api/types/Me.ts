@@ -14,6 +14,10 @@ export interface Me_me {
    * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
    */
   username: string;
+  /**
+   * Designates whether the user can log into this admin site.
+   */
+  isStaff: boolean;
 }
 
 export interface Me {
