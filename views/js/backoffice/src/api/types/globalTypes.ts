@@ -17,6 +17,18 @@ export enum AccountAccountStatus {
   WAITING_PAYMENT = "WAITING_PAYMENT",
 }
 
+/**
+ * An enumeration.
+ */
+export enum BuildBuildStatus {
+  GENERATING = "GENERATING",
+  PUBLISHED = "PUBLISHED",
+  QUEUED = "QUEUED",
+  STALLED = "STALLED",
+  UPLOADING = "UPLOADING",
+  WAITING = "WAITING",
+}
+
 export interface StoreAppInput {
   name?: string | null;
   color?: string | null;

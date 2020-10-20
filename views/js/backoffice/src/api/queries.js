@@ -30,3 +30,26 @@ export const CLIENTS = gql`
     }
   }
 `;
+
+export const BUILDS = gql`
+  query Builds($first: Int, $last: Int) {
+    builds(first: $first, last: $last) {
+      edges {
+        node {
+          id
+          buildId
+          date
+          buildStatus
+          app {
+            id
+            name
+            customer {
+              id
+              username
+            }
+          }
+        }
+      }
+    }
+  }
+`;

@@ -1,10 +1,13 @@
 import React from "react";
 import { Table } from "antd";
+import { useQuery } from "@apollo/client";
 import { ColumnsType } from "antd/lib/table";
-import { Build, BuildState } from "../../models/App";
+import { BuildState } from "../../models/App";
 import BuildStateVisualizer from "../../components/molecules/BuildState";
+import { Builds as IBuilds, BuildsVariables, Builds_builds_edges_node } from "../../api/types/Builds";
+import { BUILDS } from "../../api/queries";
 
-const columns: ColumnsType<Build> = [
+const columns: ColumnsType<Builds_builds_edges_node> = [
   {
     title: "Fecha",
     dataIndex: "date",
@@ -13,11 +16,11 @@ const columns: ColumnsType<Build> = [
   },
   { title: "ID build", dataIndex: "id", key: "buildId" },
   { title: "Cliente", dataIndex: ["app", "client", "name"], key: "client" },
-  { title: "ID Cliente", dataIndex: ["app", "client", "id"], key: "clientId" },
+  { title: "ID Cliente", dataIndex: ["app", "customer", "id"], key: "clientId" },
   { title: "App", dataIndex: ["app", "name"], key: "app" },
   {
     title: "Estado",
-    dataIndex: "state",
+    dataIndex: "buildStatus",
     key: "state",
     render: (state: BuildState) => {
       return <BuildStateVisualizer state={state}></BuildStateVisualizer>;;
@@ -26,89 +29,14 @@ const columns: ColumnsType<Build> = [
 ];
 
 const Builds = () => {
-  const data: Build[] = [
-    {
-      id: "1",
-      date: new Date(),
-      app: {
-        id: "1",
-        name: "App1",
-        customer: {
-          id: "sdrt789hd1qegq823r23f",
-          name: "Alejandro",
-        },
-      },
-      state: BuildState.STALLED,
-    },
-    {
-      id: "2",
-      date: new Date(),
-      app: {
-        id: "3",
-        name: "App3",
-        customer: {
-          id: "fgvewargbftrn4532",
-          name: "Jesús",
-        },
-      },
-      state: BuildState.QUEUED,
-    },
-    {
-      id: "3",
-      date: new Date(),
-      app: {
-        id: "3",
-        name: "App3",
-        customer: {
-          id: "fgvewargbftrn4532",
-          name: "Jesús",
-        },
-      },
-      state: BuildState.GENERATING,
-    },
-    {
-      id: "4",
-      date: new Date(),
-      app: {
-        id: "3",
-        name: "App3",
-        customer: {
-          id: "fgvewargbftrn4532",
-          name: "Jesús",
-        },
-      },
-      state: BuildState.UPLOADING,
-    },
-    {
-      id: "5",
-      date: new Date(),
-      app: {
-        id: "3",
-        name: "App3",
-        customer: {
-          id: "fgvewargbftrn4532",
-          name: "Jesús",
-        },
-      },
-      state: BuildState.WAITING,
-    },
-    {
-      id: "6",
-      date: new Date(),
-      app: {
-        id: "3",
-        name: "App3",
-        customer: {
-          id: "fgvewargbftrn4532",
-          name: "Jesús",
-        },
-      },
-      state: BuildState.PUBLISHED,
-    },
-  ];
+  const {loading, data} = useQuery<IBuilds, BuildsVariables>(BUILDS)
+  if (loading) {
+    return <span>Loading...</span>;
+  }
+  const dataSource = data?.builds?.edges.map((edge) => edge!!.node!!) ?? [];
   return (
     <div>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={dataSource} />
     </div>
   );
 };
