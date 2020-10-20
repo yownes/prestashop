@@ -1,6 +1,5 @@
 import React from "react";
 import Title from "antd/lib/typography/Title";
-import Text from "antd/lib/typography/Text";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { Input, Radio } from "antd";
 import { Color } from "../atoms";

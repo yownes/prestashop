@@ -1,22 +1,29 @@
 import React from "react";
-import './App.css';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { ApolloProvider } from "@apollo/client";
+import "./App.css";
 import Auth from "./pages/auth";
 import PrivateRoute from "./components/molecules/PrivateRoute";
 import Dashboard from "./pages/Dashboard";
+import client from "./lib/apolloClient";
+import { AuthProvider } from "./lib/auth";
 
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route path="/auth">
-          <Auth />
-        </Route>
-        <PrivateRoute path="/">
-          <Dashboard />
-        </PrivateRoute>
-      </Switch>
-    </Router>
+    <ApolloProvider client={client}>
+      <AuthProvider>
+        <Router>
+          <Switch>
+            <Route path="/auth">
+              <Auth />
+            </Route>
+            <PrivateRoute path="/">
+              <Dashboard />
+            </PrivateRoute>
+          </Switch>
+        </Router>
+      </AuthProvider>
+    </ApolloProvider>
   );
 }
 

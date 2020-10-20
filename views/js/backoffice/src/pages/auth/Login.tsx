@@ -1,7 +1,7 @@
 import React from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, Redirect, useLocation } from "react-router-dom";
 import Auth from "../../components/templates/Auth";
-import AuthLib from "../../lib/auth";
+import { useAuth } from "../../lib/auth";
 import { Form, Input, Button, Checkbox } from "antd";
 
 import styles from "./auth.module.css";
@@ -13,28 +13,19 @@ interface LocationState {
 }
 
 const Login = () => {
-  const history = useHistory();
   const location = useLocation<LocationState>();
   let { from } = location.state || { from: { pathname: "/" } };
+  const { login, isAuthenticated } = useAuth();
+  if (isAuthenticated) {
+    return <Redirect to={from} />;
+  }
   return (
     <Auth image="https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80">
       <div>
         <h1 className={styles.centerText}>Bienvenido</h1>
         <Form
           onFinish={(values) => {
-            AuthLib.getSingleton().login(() => {
-              AuthLib.getSingleton().setProfile({
-                name: values.password,
-                email: values.email,
-                logo: "https://randomuser.me/api/portraits/men/13.jpg",
-              });
-              if (values.isAdmin) {
-                AuthLib.getSingleton().makeAdmin(() => {
-                  history.replace(from);
-                });
-              }
-              history.replace(from);
-            });
+            login?.({ password: values.password, email: values.email });
           }}
         >
           <Form.Item

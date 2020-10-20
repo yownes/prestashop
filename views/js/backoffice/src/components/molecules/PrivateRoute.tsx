@@ -1,15 +1,16 @@
 import React from "react";
 import { Redirect, Route, RouteProps } from "react-router-dom";
-import Auth from "../../lib/auth";
+import Auth, { useAuth } from "../../lib/auth";
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
 function PrivateRoute({ children, ...rest }: RouteProps) {
+  const { isAuthenticated } = useAuth();
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        Auth.getSingleton().isAuthenticated() ? (
+        isAuthenticated ? (
           children
         ) : (
           <Redirect

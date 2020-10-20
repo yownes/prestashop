@@ -1,8 +1,8 @@
 import React from "react";
 import { Dropdown, Menu } from "antd";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { EllipsisOutlined } from "@ant-design/icons";
-import Auth from "../../lib/auth";
+import { useAuth } from "../../lib/auth";
 
 import styles from "./ProfileInfo.module.css";
 
@@ -21,16 +21,14 @@ const ProfileInfo = ({
   reverse,
   editable,
 }: ProfileInfoProps) => {
-  const history = useHistory()
+  const { logout } = useAuth();
 
   const menu = (
     <Menu>
       <Menu.Item key="0"><Link to="/profile">Perfil</Link></Menu.Item>
       <Menu.Divider />
       <Menu.Item onClick={() => {
-        Auth.getSingleton().logout(() => {
-          history.replace("/");
-        })
+        logout?.();
       }} key="1">Cerrar sesión</Menu.Item>
     </Menu>
   )

@@ -1,18 +1,21 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Typography } from "antd";
+import { useQuery } from "@apollo/client";
 import { Logo } from "../atoms";
 import ProfileInfo from "../molecules/ProfileInfo";
-import Auth from "../../lib/auth";
 import clientRoutes from "../../lib/routes";
 import adminoutes from "../../lib/adminRoutes";
+
+import { ME } from "../../api/queries";
+import { Me } from "../../api/types/Me";
 
 import styles from "./Header.module.css";
 
 const routes = [...clientRoutes, ...adminoutes];
 
 const Header = () => {
-  const profile = Auth.getSingleton().profile;
+  const { data } = useQuery<Me>(ME);
   const location = useLocation();
   let route = routes.find((r) => r.path === location.pathname);
   if (!route) {
@@ -34,7 +37,9 @@ const Header = () => {
         <Logo />
       </Link>
       <Typography.Title level={2}>{route?.name}</Typography.Title>
-      {profile && <ProfileInfo {...profile} />}
+      {data?.me?.email && (
+        <ProfileInfo email={data.me.email} name={data.me.username} />
+      )}
     </header>
   );
 };
