@@ -1,16 +1,38 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect, useLocation } from "react-router-dom";
 import Auth from "../../components/templates/Auth";
 import { Form, Input, Button, Checkbox } from "antd";
 
 import styles from "./auth.module.css";
+import { useAuth } from "../../lib/auth";
+
+interface LocationState {
+  from: {
+    pathname: string;
+  };
+}
 
 const Register = () => {
+  const location = useLocation<LocationState>();
+  let { from } = location.state || { from: { pathname: "/" } };
+  const { register, isAuthenticated } = useAuth();
+  if (isAuthenticated) {
+    return <Redirect to={from} />;
+  }
   return (
     <Auth image="https://images.unsplash.com/photo-1586244439413-bc2288941dda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80">
       <div>
         <h1 className={styles.centerText}>Crear una cuenta</h1>
-        <Form>
+        <Form
+          onFinish={(values) => {
+            register?.({
+              email: values.email,
+              username: values.name,
+              password1: values.password,
+              password2: values.confirmPassword,
+            });
+          }}
+        >
           <Form.Item
             name="name"
             rules={[
@@ -21,7 +43,7 @@ const Register = () => {
             <Input placeholder="Nombre" />
           </Form.Item>
           <Form.Item
-            name="mail"
+            name="email"
             rules={[
               { required: true, message: "Introduce tu mail" },
               { type: "email" },
@@ -31,7 +53,13 @@ const Register = () => {
           </Form.Item>
           <Form.Item
             name="password"
-            rules={[{ required: true, message: "Introduce una contraseña" }]}
+            rules={[
+              { required: true, message: "Introduce una contraseña" },
+              {
+                min: 8,
+                message: "La contraseña debe contener al menos 8 caracteres",
+              },
+            ]}
           >
             <Input.Password placeholder="Contraseña" />
           </Form.Item>
@@ -54,6 +82,7 @@ const Register = () => {
           </Form.Item>
           <Form.Item
             name="agreement"
+            valuePropName="checked"
             rules={[
               {
                 validator: (_, value) =>
