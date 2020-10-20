@@ -7,6 +7,16 @@
 // START Enums and Input Objects
 //==============================================================
 
+/**
+ * An enumeration.
+ */
+export enum AccountAccountStatus {
+  BANNED = "BANNED",
+  PAID_ACCOUNT = "PAID_ACCOUNT",
+  REGISTERED = "REGISTERED",
+  WAITING_PAYMENT = "WAITING_PAYMENT",
+}
+
 export interface StoreAppInput {
   name?: string | null;
   color?: string | null;

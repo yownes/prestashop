@@ -1,9 +1,17 @@
-import { Tag } from "antd";
-import Table, { ColumnsType } from "antd/lib/table";
 import React from "react";
+import { Tag } from "antd";
+import { useQuery } from "@apollo/client";
+import Table, { ColumnsType } from "antd/lib/table";
 import { Link } from "react-router-dom";
-import { AccountState, App, Client } from "../../models/App";
+import { CLIENTS } from "../../api/queries";
+import { AccountState, App } from "../../models/App";
+import {
+  Clients as IClients,
+  ClientsVariables,
+  Clients_users_edges_node,
+} from "../../api/types/Clients";
 
+// TODO: state -> COLORS
 const COLORS = {
   STALLED: "default",
   CONFIRMING: "orange",
@@ -11,10 +19,10 @@ const COLORS = {
   BANNED: "red",
 };
 
-const columns: ColumnsType<Client> = [
+const columns: ColumnsType<Clients_users_edges_node> = [
   {
     title: "Name",
-    dataIndex: "name",
+    dataIndex: "username",
     key: "name",
     render: (name, record) => <Link to={`/clients/${record.id}`}>{name}</Link>,
   },
@@ -42,35 +50,14 @@ const columns: ColumnsType<Client> = [
 ];
 
 const Clients = () => {
-  const data: Client[] = [
-    {
-      id: "bvxdtyq56w7w89",
-      name: "Jesús",
-      apps: [{ id: "1" }],
-      state: AccountState.STALLED,
-    },
-    {
-      id: "bvxdtyq56w7w89",
-      name: "Alejandro",
-      apps: [{ id: "1" }, { id: "2" }, { id: "3" }],
-      state: AccountState.CONFIRMING,
-    },
-    {
-      id: "bvxdtyq56w7w89",
-      name: "Antoni",
-      apps: [{ id: "1" }, { id: "1" }],
-      state: AccountState.PAID,
-    },
-    {
-      id: "bvxdtyq56w7w89",
-      name: "Jorge",
-      apps: [{ id: "1" }],
-      state: AccountState.BANNED,
-    },
-  ];
+  const { loading, data } = useQuery<IClients, ClientsVariables>(CLIENTS);
+  if (loading) {
+    return <span>Loading...</span>;
+  }
+  const dataSource = data?.users?.edges.map((edge) => edge!!.node!!) ?? [];
   return (
     <div>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={dataSource} />
     </div>
   );
 };
