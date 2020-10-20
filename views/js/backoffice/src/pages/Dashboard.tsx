@@ -1,7 +1,7 @@
 import React from "react";
 import AdminHeader from "../components/organisms/AdminHeader";
 import DashboardTemplate from "../components/templates/Dashboard";
-import Auth, { useAuth } from "../lib/auth";
+import { useAuth } from "../lib/auth";
 import AdminDashboard from "./admin";
 import ClientDashboard from "./client";
 

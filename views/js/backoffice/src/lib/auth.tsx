@@ -65,20 +65,6 @@ function useAuthLogic() {
     localStorage.removeItem(TOKEN_KEY);
     setToken(undefined);
   }
-
-  useEffect(() => {
-    const t = localStorage.getItem(TOKEN_KEY);
-
-    if (t) {
-      verifyToken({ variables: { token: t } }).then((result) => {
-        if (result.data?.verifyToken?.success) {
-          me();
-          setToken(t);
-        }
-      });
-    }
-  }, []);
-
   const [tokenAuth] = useMutation<TokenAuth, TokenAuthVariables>(TOKEN_AUTH);
   const [registerMutation] = useMutation<Register, RegisterVariables>(REGISTER);
   const [verifyToken] = useMutation<VerifyToken, VerifyTokenVariables>(
@@ -91,6 +77,19 @@ function useAuthLogic() {
       }
     },
   });
+
+  useEffect(() => {
+    const t = localStorage.getItem(TOKEN_KEY);
+
+    if (t) {
+      verifyToken({ variables: { token: t } }).then((result) => {
+        if (result.data?.verifyToken?.success) {
+          me();
+          setToken(t);
+        }
+      });
+    }
+  }, [me, verifyToken]);
 
   return {
     login,

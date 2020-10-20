@@ -2,7 +2,7 @@ import React from "react";
 import { Link, Redirect, useLocation } from "react-router-dom";
 import Auth from "../../components/templates/Auth";
 import { useAuth } from "../../lib/auth";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button } from "antd";
 
 import styles from "./auth.module.css";
 
