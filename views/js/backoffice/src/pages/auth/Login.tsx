@@ -46,9 +46,6 @@ const Login = () => {
           <Link to={`/auth/password`} className={styles.rightAlign}>
             ¿Ha olvidado la contraseña?
           </Link>
-          <Form.Item name="isAdmin" valuePropName="checked">
-            <Checkbox>eres admin?</Checkbox>
-          </Form.Item>
           <div className={styles.buttons}>
             <Button block type="ghost">
               <Link to={`/auth/register`} style={{ display: "block" }}>
