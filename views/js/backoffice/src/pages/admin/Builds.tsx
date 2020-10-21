@@ -2,11 +2,11 @@ import React from "react";
 import { Table } from "antd";
 import { useQuery } from "@apollo/client";
 import { ColumnsType } from "antd/lib/table";
-import { BuildState } from "../../models/App";
 import BuildStateVisualizer from "../../components/molecules/BuildState";
 import { Builds as IBuilds, BuildsVariables, Builds_builds_edges_node } from "../../api/types/Builds";
 import { BUILDS } from "../../api/queries";
 import Loading from "../../components/atoms/Loading";
+import { BuildBuildStatus } from "../../api/types/globalTypes";
 
 const columns: ColumnsType<Builds_builds_edges_node> = [
   {
@@ -17,14 +17,18 @@ const columns: ColumnsType<Builds_builds_edges_node> = [
   },
   { title: "ID build", dataIndex: "id", key: "buildId" },
   { title: "Cliente", dataIndex: ["app", "client", "name"], key: "client" },
-  { title: "ID Cliente", dataIndex: ["app", "customer", "id"], key: "clientId" },
+  {
+    title: "ID Cliente",
+    dataIndex: ["app", "customer", "id"],
+    key: "clientId",
+  },
   { title: "App", dataIndex: ["app", "name"], key: "app" },
   {
     title: "Estado",
     dataIndex: "buildStatus",
     key: "state",
-    render: (state: BuildState) => {
-      return <BuildStateVisualizer state={state}></BuildStateVisualizer>;;
+    render: (state: BuildBuildStatus) => {
+      return <BuildStateVisualizer state={state}></BuildStateVisualizer>;
     },
   },
 ];

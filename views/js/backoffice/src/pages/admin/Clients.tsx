@@ -4,19 +4,20 @@ import { useQuery } from "@apollo/client";
 import Table, { ColumnsType } from "antd/lib/table";
 import { Link } from "react-router-dom";
 import { CLIENTS } from "../../api/queries";
-import { AccountState, App } from "../../models/App";
 import {
   Clients as IClients,
   ClientsVariables,
   Clients_users_edges_node,
+  Clients_users_edges_node_apps_edges,
 } from "../../api/types/Clients";
 import Loading from "../../components/atoms/Loading";
+import { AccountAccountStatus } from "../../api/types/globalTypes";
 
 // TODO: state -> COLORS
 const COLORS = {
-  STALLED: "default",
-  CONFIRMING: "orange",
-  PAID: "green",
+  REGISTERED: "default",
+  WAITING_PAYMENT: "orange",
+  PAID_ACCOUNT: "green",
   BANNED: "red",
 };
 
@@ -35,15 +36,15 @@ const columns: ColumnsType<Clients_users_edges_node> = [
   },
   {
     title: "Apps",
-    dataIndex: "apps",
+    dataIndex: ["apps", "edges"],
     key: "apps",
-    render: (apps: App[]) => apps.length,
+    render: (apps: Clients_users_edges_node_apps_edges[]) => apps.length,
   },
   {
     title: "Estado",
-    dataIndex: "state",
+    dataIndex: "accountStatus",
     key: "state",
-    render: (state: AccountState) => {
+    render: (state: AccountAccountStatus) => {
       const color = COLORS[state];
       return <Tag color={color}>{state}</Tag>;
     },
