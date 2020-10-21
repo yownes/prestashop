@@ -64,6 +64,15 @@ export const UPDATE_APP = gql`
   }
 `;
 
+export const DELETE_APP = gql`
+  mutation DeleteApp($id: ID!) {
+    deleteApp(id: $id) {
+      ok
+      error
+    }
+  }
+`;
+
 /**
  * ACCOUNT
  */
