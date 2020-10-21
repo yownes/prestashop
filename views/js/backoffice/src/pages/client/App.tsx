@@ -1,50 +1,49 @@
 import { Card, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useLazyQuery } from "@apollo/client";
+import { APP } from "../../api/queries";
+import { App as IApp, AppVariables, App_app } from "../../api/types/App";
 import Loading from "../../components/atoms/Loading";
 import { TitleWithAction, AppInfo } from "../../components/molecules";
 import { TemplateSelector, ColorPicker } from "../../components/organisms";
 import AppPreview from "../../components/organisms/AppPreview";
-import { AppGen, BuildState } from "../../models/App";
+import { BuildBuildStatus } from "../../api/types/globalTypes";
 
 interface AppParamTypes {
   appId?: string;
 }
 
-async function getAppById(id: string): Promise<AppGen> {
-  const app = {
-    name: "PacoPinta",
-    id,
-    template: { id: "VGVtcGxhdGVUeXBlOjE=" },
-    logo:
-      "https://playbaikoh.com/wp-content/uploads/2015/05/Game_icon_skull_BAIKOH_perfil.png",
-    urls: { ios: "", android: "" },
-    builds: [{ id: "123", state: BuildState.PUBLISHED }],
-  };  
-  return app;
-}
-
-const baseApp: AppGen = {
+const baseApp: App_app = {
+  __typename: "StoreAppType",
   template: {
+    __typename: "TemplateType",
     id: "VGVtcGxhdGVUeXBlOjE=",
   },
-  color: { color: "#0099cc", text: "white" },
+  id: "",
+  name: "",
+  builds: { __typename: "BuildTypeConnection", edges: [] },
+  color: { __typename: "StoreColors", color: "#0099cc", text: "white" },
+  storeLinks: null,
+  logo: null,
+  apiLink: null,
 };
 
 const App = () => {
   const { appId } = useParams<AppParamTypes>();
-  const [app, setApp] = useState<AppGen>();
-
+  const [app, setApp] = useState<App_app>(baseApp);
+  const [getAppById, { loading, data }] = useLazyQuery<IApp, AppVariables>(APP);
+  useEffect(() => {
+    if (data?.app) {
+      setApp(data?.app);
+    }
+  }, [data]);
   useEffect(() => {
     if (appId) {
-      getAppById(appId).then(app => {
-        setApp(app)
-      });
-    } else {
-      setApp(baseApp)
+      getAppById({ variables: { id: appId } });
     }
-  }, [appId])
-  if (!app) return <Loading />;
+  }, [appId]);
+  if (!app || loading) return <Loading />;
   return (
     <div>
       <Row gutter={20}>
@@ -62,17 +61,18 @@ const App = () => {
                     setApp((val) => ({
                       ...val,
                       template: {
+                        __typename: "TemplateType",
                         id: selected,
                       },
                     }));
                   }}
                 />
                 <ColorPicker
-                  value={app.color}
+                  value={app.color!!}
                   onChange={(selected) => {
                     setApp((val) => ({
                       ...val,
-                      color: selected,
+                      color: { __typename: "StoreColors", ...selected },
                     }));
                   }}
                 />
@@ -82,7 +82,7 @@ const App = () => {
         </Col>
         <Col span={12}>
           <Card>
-              <AppPreview app={app} />
+            <AppPreview app={app} />
           </Card>
         </Col>
       </Row>

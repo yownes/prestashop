@@ -1,11 +1,11 @@
 import { Button } from "antd";
 import React from "react";
-import { AppGen } from "../../models/App";
+import { App_app } from "../../api/types/App";
 
 import styles from "./AppPreview.module.css";
 
 interface AppPreviewProps {
-  app: AppGen;
+  app: App_app;
 }
 
 const AppPreview = ({ app }: AppPreviewProps) => {

@@ -56,6 +56,36 @@ export const TEMPLATES = gql`
   }
 `;
 
+export const APP = gql`
+  query App($id: ID!) {
+    app(id: $id) {
+      id
+      name
+      color {
+        color
+        text
+      }
+      apiLink
+      template {
+        id
+      }
+      logo
+      builds {
+        edges {
+          node {
+            id
+            buildStatus
+          }
+        }
+      }
+      storeLinks {
+        ios
+        android
+      }
+    }
+  }
+`;
+
 /**
  * ADMIN
  */

@@ -1,23 +1,23 @@
 import React from "react";
 import { Typography } from "antd";
 import { getAppBuildState } from "../../lib/appBuildState";
-import { AppGen } from "../../models/App";
 
 import styles from "./AppInfo.module.css";
 import BuildState from "./BuildState";
+import { App_app } from "../../api/types/App";
 
 const { Paragraph } = Typography;
 
 interface AppInfoProps {
-  app: AppGen;
-  onChange: (app: AppGen) => void;
+  app: App_app;
+  onChange: (app: App_app) => void;
 }
 
 const AppInfo = ({ app, onChange }: AppInfoProps) => {
   return (
     <div className={styles.info}>
       <div className={styles.info__logo}>
-        <img src={app.logo} width={120} height={120} alt="App logo" />
+        <img src={app.logo ?? ''} width={120} height={120} alt="App logo" style={{objectFit: "contain"}} />
       </div>
       <h1 className={styles.info__appName}>
         <Paragraph
@@ -47,7 +47,7 @@ const AppInfo = ({ app, onChange }: AppInfoProps) => {
         )}
       </div>
       <div className={styles.info__state}>
-        {/* <BuildState state={getAppBuildState(app)} /> */}
+        <BuildState state={getAppBuildState(app)} />
       </div>
     </div>
   );

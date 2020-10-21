@@ -3,11 +3,14 @@ import Title from "antd/lib/typography/Title";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { Input, Radio } from "antd";
 import { Color } from "../atoms";
+import { App_app_color } from "../../api/types/App";
 
-type ColorInput = { color: string; text: "white" | "black" };
+type TextColor = "white" | "black";
+
+type ColorInput = { color: string; text: TextColor };
 
 interface ColorPickerProps {
-  value?: ColorInput;
+  value?: App_app_color;
   onChange: (change: ColorInput) => void;
 }
 
@@ -23,7 +26,9 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
         {defaultColors.map((color) => (
           <Color
             color={color}
-            onClick={() => onChange({ color, text: value?.text ?? "white" })}
+            onClick={() =>
+              onChange({ color, text: (value?.text as TextColor) ?? "white" })
+            }
           />
         ))}
       </div>
@@ -35,7 +40,10 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
         style={{ width: 150 }}
         value={value?.color ?? defaultColors[0]}
         onChange={(e) =>
-          onChange({ color: e.target.value, text: value?.text ?? "white" })
+          onChange({
+            color: e.target.value,
+            text: (value?.text as TextColor) ?? "white",
+          })
         }
       />
       <div>
@@ -55,7 +63,7 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
         <Radio value="white">
           <span
             style={{
-              backgroundColor: value?.color,
+              backgroundColor: value?.color ?? undefined,
               color: "white",
               padding: "1rem",
             }}
@@ -66,7 +74,7 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
         <Radio value="black">
           <span
             style={{
-              backgroundColor: value?.color,
+              backgroundColor: value?.color ?? undefined,
               color: "black",
               padding: "1rem",
             }}

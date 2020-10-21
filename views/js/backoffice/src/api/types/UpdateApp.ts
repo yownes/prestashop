@@ -21,5 +21,5 @@ export interface UpdateApp {
 
 export interface UpdateAppVariables {
   data: StoreAppInput;
-  id?: string | null;
+  id: string;
 }

@@ -56,7 +56,7 @@ export const VERIFY_TOKEN = gql`
  */
 
 export const UPDATE_APP = gql`
-  mutation UpdateApp($data: StoreAppInput!, $id: ID) {
+  mutation UpdateApp($data: StoreAppInput!, $id: ID!) {
     updateApp(data: $data, id: $id) {
       ok
       error
