@@ -10,6 +10,7 @@ import {
   ClientsVariables,
   Clients_users_edges_node,
 } from "../../api/types/Clients";
+import Loading from "../../components/atoms/Loading";
 
 // TODO: state -> COLORS
 const COLORS = {
@@ -52,7 +53,7 @@ const columns: ColumnsType<Clients_users_edges_node> = [
 const Clients = () => {
   const { loading, data } = useQuery<IClients, ClientsVariables>(CLIENTS);
   if (loading) {
-    return <span>Loading...</span>;
+    return <Loading />;
   }
   const dataSource = data?.users?.edges.map((edge) => edge!!.node!!) ?? [];
   return (

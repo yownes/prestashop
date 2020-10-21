@@ -6,6 +6,7 @@ import { TokenAuth, TokenAuthVariables } from "../api/types/TokenAuth";
 import { VerifyToken, VerifyTokenVariables } from "../api/types/VerifyToken";
 import { ME } from "../api/queries";
 import { Me } from "../api/types/Me";
+import Loading from "../components/atoms/Loading";
 
 export const TOKEN_KEY = "yownesToken";
 
@@ -181,7 +182,7 @@ function useAuthLogic(): IAuth {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const auth = useAuthLogic();
   if (auth.loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };

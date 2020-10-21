@@ -1,6 +1,7 @@
 import { Card, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Loading from "../../components/atoms/Loading";
 import { TitleWithAction, AppInfo } from "../../components/molecules";
 import { TemplateSelector, ColorPicker } from "../../components/organisms";
 import AppPreview from "../../components/organisms/AppPreview";
@@ -43,7 +44,7 @@ const App = () => {
       setApp(baseApp)
     }
   }, [appId])
-  if (!app) return <div>Loading...</div>
+  if (!app) return <Loading />;
   return (
     <div>
       <Row gutter={20}>

@@ -17,7 +17,7 @@ const Router = ({ routes }: RouterProps) => {
   return (
     <Switch>
       {routes.map((MyRoute) => (
-        <Route exact={MyRoute.exact} path={MyRoute.path}>
+        <Route key={MyRoute.path} exact={MyRoute.exact} path={MyRoute.path}>
           {MyRoute.redirect ? (
             <Redirect to={{ pathname: MyRoute.redirect }} />
           ) : (

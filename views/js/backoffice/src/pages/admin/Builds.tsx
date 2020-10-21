@@ -6,6 +6,7 @@ import { BuildState } from "../../models/App";
 import BuildStateVisualizer from "../../components/molecules/BuildState";
 import { Builds as IBuilds, BuildsVariables, Builds_builds_edges_node } from "../../api/types/Builds";
 import { BUILDS } from "../../api/queries";
+import Loading from "../../components/atoms/Loading";
 
 const columns: ColumnsType<Builds_builds_edges_node> = [
   {
@@ -31,7 +32,7 @@ const columns: ColumnsType<Builds_builds_edges_node> = [
 const Builds = () => {
   const {loading, data} = useQuery<IBuilds, BuildsVariables>(BUILDS)
   if (loading) {
-    return <span>Loading...</span>;
+    return <Loading />;
   }
   const dataSource = data?.builds?.edges.map((edge) => edge!!.node!!) ?? [];
   return (
