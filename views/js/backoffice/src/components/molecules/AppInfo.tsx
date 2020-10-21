@@ -17,12 +17,7 @@ const AppInfo = ({ app, onChange }: AppInfoProps) => {
   return (
     <div className={styles.info}>
       <div className={styles.info__logo}>
-        <img
-          src={app.logo}
-          width={120}
-          height={120}
-          alt="App logo"
-        />
+        <img src={app.logo} width={120} height={120} alt="App logo" />
       </div>
       <h1 className={styles.info__appName}>
         <Paragraph
@@ -52,7 +47,7 @@ const AppInfo = ({ app, onChange }: AppInfoProps) => {
         )}
       </div>
       <div className={styles.info__state}>
-        <BuildState state={getAppBuildState(app)} />
+        {/* <BuildState state={getAppBuildState(app)} /> */}
       </div>
     </div>
   );

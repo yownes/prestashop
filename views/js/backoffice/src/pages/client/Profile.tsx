@@ -1,13 +1,8 @@
 import { Card, Col, Row, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import React from "react";
-import {
-  AccountState,
-  App,
-  BuildState,
-  Client,
-  Payment,
-} from "../../models/App";
+import { useQuery } from "@apollo/client";
+import { Payment } from "../../models/App";
 import { Link, useHistory } from "react-router-dom";
 import { getAppBuildState } from "../../lib/appBuildState";
 import {
@@ -16,6 +11,13 @@ import {
   TitleWithAction,
   ProfileInfo,
 } from "../../components/molecules";
+import { MY_ACCOUNT } from "../../api/queries";
+import {
+  MyAccount,
+  MyAccount_me_apps_edges_node,
+} from "../../api/types/MyAccount";
+import Loading from "../../components/atoms/Loading";
+import { AccountAccountStatus } from "../../api/types/globalTypes";
 
 const paymentsColumns: ColumnsType<Payment> = [
   {
@@ -41,12 +43,20 @@ const paymentsColumns: ColumnsType<Payment> = [
   },
 ];
 
-const appsColumns: ColumnsType<App> = [
+const appsColumns: ColumnsType<MyAccount_me_apps_edges_node> = [
   {
     title: "Icono",
     dataIndex: "logo",
     key: "icon",
-    render: (logo) => <img src={logo} alt="" width={40} height={40} />,
+    render: (logo) => (
+      <img
+        src={logo}
+        alt=""
+        width={40}
+        height={40}
+        style={{ objectFit: "contain" }}
+      />
+    ),
   },
   {
     title: "Nombre",
@@ -82,64 +92,8 @@ const appsColumns: ColumnsType<App> = [
 
 const Profile = () => {
   const history = useHistory();
-  const profile: Client = {
-    id: "1",
-    name: "Jesus",
-    email: "jesus@estudioyobo.com",
-    avatar: "https://randomuser.me/api/portraits/men/13.jpg",
-    state: AccountState.STALLED,
-    payments: [
-      {
-        id: "1",
-        confirmed: true,
-        until: new Date(),
-        initial: new Date(),
-        quantity: 60,
-        concept: "Simply App",
-      },
-      {
-        id: "2",
-        confirmed: true,
-        until: new Date(),
-        initial: new Date(),
-        quantity: 60,
-        concept: "Simply App",
-      },
-      {
-        id: "3",
-        confirmed: true,
-        until: new Date(),
-        initial: new Date(),
-        quantity: 60,
-        concept: "Simply App",
-      },
-      {
-        id: "4",
-        confirmed: true,
-        until: new Date(),
-        initial: new Date(),
-        quantity: 60,
-        concept: "Simply App",
-      },
-    ],
-    apps: [
-      {
-        name: "PacoPinta",
-        id: "212edf23fc4g",
-        logo:
-          "https://playbaikoh.com/wp-content/uploads/2015/05/Game_icon_skull_BAIKOH_perfil.png",
-        storeLinks: { ios: "", android: "" },
-        builds: [{ id: "123", state: BuildState.PUBLISHED }],
-      },
-      {
-        name: "Testing",
-        id: "wedfghjui7654",
-        logo: "https://appiconmaker.co/home/appicon/testid?size=1024",
-        storeLinks: { ios: "", android: "" },
-        builds: [{ id: "123", state: BuildState.WAITING }],
-      },
-    ],
-  };
+  const { loading, data } = useQuery<MyAccount>(MY_ACCOUNT);
+  if (loading) return <Loading />;
   return (
     <>
       <Row gutter={20}>
@@ -150,9 +104,8 @@ const Profile = () => {
                 <ProfileInfo
                   reverse
                   editable
-                  name={profile.name}
-                  email={profile.email ?? ""}
-                  logo={profile.avatar}
+                  name={data?.me?.username ?? ""}
+                  email={data?.me?.email ?? ""}
                 />
               </Card>
             </Col>
@@ -160,7 +113,7 @@ const Profile = () => {
           <Row>
             <Col span="24">
               <Card>
-                {(profile.apps?.length ?? 0) > 0 ? (
+                {(data?.me?.apps?.edges.length ?? 0) > 0 ? (
                   <>
                     <TitleWithAction
                       title="Apps"
@@ -169,7 +122,12 @@ const Profile = () => {
                         label: "Añadir nueva",
                       }}
                     />
-                    <Table columns={appsColumns} dataSource={profile.apps} />
+                    <Table
+                      columns={appsColumns}
+                      dataSource={data?.me?.apps.edges.map(
+                        (edge) => edge!!.node!!
+                      )}
+                    />
                   </>
                 ) : (
                   <Placeholder
@@ -183,7 +141,7 @@ const Profile = () => {
         </Col>
         <Col span={12}>
           <Card>
-            {profile.state === AccountState.STALLED ? (
+            {data?.me?.accountStatus === AccountAccountStatus.REGISTERED ? (
               <Placeholder
                 claim="Suscríbete para poder tener tu propia App"
                 cta={{ title: "Suscribirse", link: "/pay" }}
@@ -199,7 +157,7 @@ const Profile = () => {
                 />
                 <Table
                   columns={paymentsColumns}
-                  dataSource={profile.payments}
+                  dataSource={[]} // TODO: Payments
                 />
               </>
             )}

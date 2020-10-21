@@ -1,5 +1,9 @@
-import { App, AppGen, BuildState } from "../models/App";
+import { BuildBuildStatus } from "../api/types/globalTypes";
+import { MyAccount_me_apps_edges_node } from "../api/types/MyAccount";
 
-export function getAppBuildState(app: App | AppGen): BuildState {
-  return app.builds?.[app.builds.length - 1].state ?? BuildState.STALLED;
+export function getAppBuildState(
+  app: MyAccount_me_apps_edges_node
+): BuildBuildStatus {
+  const nodes = app.builds?.edges.map((edge) => edge!!.node!!);
+  return nodes[nodes.length - 1]?.buildStatus ?? BuildBuildStatus.STALLED;
 }

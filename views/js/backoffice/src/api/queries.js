@@ -10,6 +10,42 @@ export const ME = gql`
   }
 `;
 
+export const MY_ACCOUNT = gql`
+  query MyAccount {
+    me {
+      id
+      username
+      email
+      accountStatus
+      apps {
+        edges {
+          node {
+            id
+            logo
+            name
+            storeLinks {
+              ios
+              android
+            }
+            builds {
+              edges {
+                node {
+                  id
+                  buildStatus
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * ADMIN
+ */
+
 export const CLIENTS = gql`
   query Clients($first: Int, $last: Int) {
     users(first: $first, last: $last) {

@@ -1,9 +1,9 @@
 import { Tag } from "antd";
 import React from "react";
-import { BuildState as IBuildState } from "../../models/App";
+import { BuildBuildStatus } from "../../api/types/globalTypes";
 
 interface BuildStateProps {
-  state: IBuildState;
+  state: BuildBuildStatus;
 }
 
 const COLORS = {
