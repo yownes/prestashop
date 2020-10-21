@@ -15,18 +15,18 @@ async function getAppById(id: string): Promise<AppGen> {
   const app = {
     name: "PacoPinta",
     id,
-    template: { id: "2" },
+    template: { id: "VGVtcGxhdGVUeXBlOjE=" },
     logo:
       "https://playbaikoh.com/wp-content/uploads/2015/05/Game_icon_skull_BAIKOH_perfil.png",
     urls: { ios: "", android: "" },
     builds: [{ id: "123", state: BuildState.PUBLISHED }],
-  }  
+  };  
   return app;
 }
 
 const baseApp: AppGen = {
   template: {
-    id: "1",
+    id: "VGVtcGxhdGVUeXBlOjE=",
   },
   color: { color: "#0099cc", text: "white" },
 };

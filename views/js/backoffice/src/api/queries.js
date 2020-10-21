@@ -42,6 +42,20 @@ export const MY_ACCOUNT = gql`
   }
 `;
 
+export const TEMPLATES = gql`
+  query Templates {
+    templates {
+      edges {
+        node {
+          id
+          name
+          previewImg
+        }
+      }
+    }
+  }
+`;
+
 /**
  * ADMIN
  */
