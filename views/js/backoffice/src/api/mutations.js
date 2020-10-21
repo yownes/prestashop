@@ -63,3 +63,16 @@ export const UPDATE_APP = gql`
     }
   }
 `;
+
+/**
+ * ACCOUNT
+ */
+
+ export const DELETE_ACCOUNT = gql`
+  mutation DeleteAccount($password: String!) {
+    deleteAccount(password: $password) {
+      success
+      errors
+    }
+  }
+ `

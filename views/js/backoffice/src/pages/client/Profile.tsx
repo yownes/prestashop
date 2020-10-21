@@ -18,6 +18,7 @@ import {
 } from "../../api/types/MyAccount";
 import Loading from "../../components/atoms/Loading";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
+import ProfileDangerZone from "../../components/organisms/ProfileDangerZone";
 
 const paymentsColumns: ColumnsType<Payment> = [
   {
@@ -107,6 +108,7 @@ const Profile = () => {
                   name={data?.me?.username ?? ""}
                   email={data?.me?.email ?? ""}
                 />
+                <ProfileDangerZone id={data?.me?.id ?? ""} />
               </Card>
             </Col>
           </Row>
