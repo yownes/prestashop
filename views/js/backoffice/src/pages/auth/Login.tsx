@@ -5,6 +5,7 @@ import { useAuth } from "../../lib/auth";
 import { Form, Input, Button } from "antd";
 
 import styles from "./auth.module.css";
+import Errors from "../../components/molecules/Errors";
 
 interface LocationState {
   from: {
@@ -15,7 +16,7 @@ interface LocationState {
 const Login = () => {
   const location = useLocation<LocationState>();
   let { from } = location.state || { from: { pathname: "/" } };
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, errors } = useAuth();
   if (isAuthenticated) {
     return <Redirect to={from} />;
   }
@@ -23,6 +24,7 @@ const Login = () => {
     <Auth image="https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80">
       <div>
         <h1 className={styles.centerText}>Bienvenido</h1>
+        <Errors errors={errors} fields={["email", "password"]} />
         <Form
           onFinish={(values) => {
             login?.({ password: values.password, email: values.email });

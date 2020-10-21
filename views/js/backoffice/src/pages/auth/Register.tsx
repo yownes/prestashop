@@ -5,6 +5,7 @@ import { Form, Input, Button, Checkbox } from "antd";
 
 import styles from "./auth.module.css";
 import { useAuth } from "../../lib/auth";
+import Errors from "../../components/molecules/Errors";
 
 interface LocationState {
   from: {
@@ -15,7 +16,7 @@ interface LocationState {
 const Register = () => {
   const location = useLocation<LocationState>();
   let { from } = location.state || { from: { pathname: "/" } };
-  const { register, isAuthenticated } = useAuth();
+  const { register, isAuthenticated, errors } = useAuth();
   if (isAuthenticated) {
     return <Redirect to={from} />;
   }
@@ -23,6 +24,7 @@ const Register = () => {
     <Auth image="https://images.unsplash.com/photo-1586244439413-bc2288941dda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80">
       <div>
         <h1 className={styles.centerText}>Crear una cuenta</h1>
+        <Errors errors={errors} fields={["email", "password1", "password2"]} />
         <Form
           onFinish={(values) => {
             register?.({
