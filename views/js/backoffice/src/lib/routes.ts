@@ -1,4 +1,5 @@
 import { RoutePath } from "../components/organisms/Router";
+import Validate from "../pages/auth/Validate";
 import App from "../pages/client/App";
 import Pay from "../pages/client/Pay";
 import Profile from "../pages/client/Profile";
@@ -32,6 +33,12 @@ const routes: RoutePath[] = [
     path: "/app/:appId",
     name: "Editar App",
     component: App,
+  },
+  {
+    exact: true,
+    path: "/activate/:token",
+    name: "Activar Cuenta",
+    component: Validate,
   },
 ];
 

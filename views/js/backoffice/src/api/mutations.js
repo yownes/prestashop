@@ -51,6 +51,15 @@ export const VERIFY_TOKEN = gql`
   }
 `;
 
+export const VERIFY_ACCOUNT = gql`
+  mutation VerifyAccount($token: String!) {
+    verifyAccount(token: $token) {
+      success
+      errors
+    }
+  }
+`;
+
 /**
  * APP
  */

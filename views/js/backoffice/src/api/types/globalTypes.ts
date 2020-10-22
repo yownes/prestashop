@@ -37,9 +37,15 @@ export interface StoreAppColorInput {
 export interface StoreAppInput {
   name?: string | null;
   color?: StoreAppColorInput | null;
+  links?: StoreAppLinksInput | null;
   apiLink?: string | null;
   template?: string | null;
   logo?: any | null;
+}
+
+export interface StoreAppLinksInput {
+  androidLink?: string | null;
+  iosLink?: string | null;
 }
 
 //==============================================================
