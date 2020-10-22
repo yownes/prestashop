@@ -1,12 +1,13 @@
-import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { createUploadLink } from "apollo-upload-client";
 import { TOKEN_KEY } from "./auth";
 
 const cache = new InMemoryCache({
   typePolicies: {},
 });
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: "http://localhost:8000/graphql",
 });
 

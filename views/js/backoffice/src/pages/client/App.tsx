@@ -8,71 +8,83 @@ import Loading from "../../components/atoms/Loading";
 import { TitleWithAction, AppInfo } from "../../components/molecules";
 import { TemplateSelector, ColorPicker } from "../../components/organisms";
 import AppPreview from "../../components/organisms/AppPreview";
-import { BuildBuildStatus } from "../../api/types/globalTypes";
+import { StoreAppInput } from "../../api/types/globalTypes";
 
 interface AppParamTypes {
   appId?: string;
 }
 
-const baseApp: App_app = {
-  __typename: "StoreAppType",
-  template: {
-    __typename: "TemplateType",
-    id: "VGVtcGxhdGVUeXBlOjE=",
-  },
-  id: "",
+function appsAreEqual(state: StoreAppInput, app?: App_app | null): boolean {
+  if (!app) {
+    return false;
+  }
+  return (
+    app.color?.color === state.color?.color &&
+    app.color?.text === state.color?.text &&
+    app.name === state.name &&
+    app.template?.id === state.template &&
+    app.logo === state.logo
+  );
+}
+
+const baseApp: StoreAppInput = {
+  template: "VGVtcGxhdGVUeXBlOjE=",
   name: "",
-  builds: { __typename: "BuildTypeConnection", edges: [] },
-  color: { __typename: "StoreColors", color: "#0099cc", text: "white" },
-  storeLinks: null,
+  color: { color: "#0099cc", text: "white" },
   logo: null,
-  apiLink: null,
 };
 
 const App = () => {
   const { appId } = useParams<AppParamTypes>();
-  const [app, setApp] = useState<App_app>(baseApp);
+  const [state, setState] = useState<StoreAppInput>(baseApp);
   const [getAppById, { loading, data }] = useLazyQuery<IApp, AppVariables>(APP);
   useEffect(() => {
     if (data?.app) {
-      setApp(data?.app);
+      setState({
+        template: data.app.template?.id,
+        name: data.app.name,
+        color: { color: data.app.color?.color, text: data.app.color?.text },
+        logo: data.app.logo,
+      });
     }
   }, [data]);
   useEffect(() => {
     if (appId) {
       getAppById({ variables: { id: appId } });
     }
-  }, [appId]);
-  if (!app || loading) return <Loading />;
+  }, [appId, getAppById]);
+  if (!state || loading) return <Loading />;
   return (
     <div>
       <Row gutter={20}>
         <Col span={12}>
           <Row>
-            <AppInfo app={app} onChange={(app) => setApp(app)} />
+            <AppInfo
+              data={state}
+              id={data?.app?.id}
+              onChange={(app) => setState(app)}
+              app={data?.app ?? undefined}
+            />
           </Row>
           <Row>
             <Col span={24}>
               <Card>
                 <TitleWithAction title="Estilo" />
                 <TemplateSelector
-                  value={app.template?.id}
+                  value={state.template!!}
                   onChange={(selected) => {
-                    setApp((val) => ({
+                    setState((val) => ({
                       ...val,
-                      template: {
-                        __typename: "TemplateType",
-                        id: selected,
-                      },
+                      template: selected,
                     }));
                   }}
                 />
                 <ColorPicker
-                  value={app.color!!}
+                  value={state.color!!}
                   onChange={(selected) => {
-                    setApp((val) => ({
+                    setState((val) => ({
                       ...val,
-                      color: { __typename: "StoreColors", ...selected },
+                      color: selected,
                     }));
                   }}
                 />
@@ -82,7 +94,11 @@ const App = () => {
         </Col>
         <Col span={12}>
           <Card>
-            <AppPreview app={app} />
+            <AppPreview
+              id={data?.app?.id!!}
+              app={state}
+              hasChanged={!appsAreEqual(state, data?.app)}
+            />
           </Card>
         </Col>
       </Row>

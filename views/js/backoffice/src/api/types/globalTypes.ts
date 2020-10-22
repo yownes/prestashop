@@ -29,9 +29,14 @@ export enum BuildBuildStatus {
   WAITING = "WAITING",
 }
 
+export interface StoreAppColorInput {
+  color?: string | null;
+  text?: string | null;
+}
+
 export interface StoreAppInput {
   name?: string | null;
-  color?: string | null;
+  color?: StoreAppColorInput | null;
   apiLink?: string | null;
   template?: string | null;
   logo?: any | null;

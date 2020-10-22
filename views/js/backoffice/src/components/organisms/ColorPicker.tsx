@@ -3,14 +3,14 @@ import Title from "antd/lib/typography/Title";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { Input, Radio } from "antd";
 import { Color } from "../atoms";
-import { App_app_color } from "../../api/types/App";
+import { StoreAppColorInput } from "../../api/types/globalTypes";
 
 type TextColor = "white" | "black";
 
 type ColorInput = { color: string; text: TextColor };
 
 interface ColorPickerProps {
-  value?: App_app_color;
+  value?: StoreAppColorInput;
   onChange: (change: ColorInput) => void;
 }
 
