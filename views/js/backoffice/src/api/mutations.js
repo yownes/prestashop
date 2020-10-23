@@ -94,3 +94,12 @@ export const DELETE_APP = gql`
     }
   }
  `
+
+ export const BAN_USER = gql`
+   mutation BanUser($ban: Boolean!, $userId: ID!) {
+     banUser(ban: $ban, userId: $userId) {
+       ok
+       error
+     }
+   }
+ `;

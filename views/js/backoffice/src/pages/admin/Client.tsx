@@ -14,8 +14,10 @@ import UserState from "../../components/molecules/UserState";
 import AppsTable from "../../components/molecules/AppsTable";
 import BuildsTable from "../../components/molecules/BuildsTable";
 import { DeleteOutlined } from "@ant-design/icons";
-import { DELETE_APP } from "../../api/mutations";
+import { BAN_USER, DELETE_APP } from "../../api/mutations";
 import { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
+import { BanUser, BanUserVariables } from "../../api/types/BanUser";
+import { AccountAccountStatus } from "../../api/types/globalTypes";
 
 const { Text } = Typography;
 
@@ -42,6 +44,7 @@ const Client = () => {
     variables: { id },
   });
   const [deleteApp] = useMutation<DeleteApp, DeleteAppVariables>(DELETE_APP);
+  const [banUser] = useMutation<BanUser, BanUserVariables>(BAN_USER);
   if (loading) {
     return <Loading />;
   }
@@ -71,7 +74,35 @@ const Client = () => {
               </Col>
               <Col sm={12} xs={24}>
                 <Button danger>Dar de baja la suscripción</Button>
-                <Button danger>Banear Cuenta</Button>
+                <Popconfirm title={data?.user?.accountStatus === AccountAccountStatus.BANNED ? "¿Desbanear?": "¿Banear?"} onConfirm={() => {
+                  if (data?.user?.id) {
+                    banUser({
+                      variables: {
+                        userId: data.user.id,
+                        ban:
+                          data?.user?.accountStatus !==
+                          AccountAccountStatus.BANNED,
+                      },
+                      update(cache, {data: banData}) {
+                        if (banData?.banUser?.ok) {
+                          cache.modify({
+                            id: cache.identify({...data.user}),
+                            fields: {
+                              accountStatus(prev: AccountAccountStatus) {
+                                return (
+                                  prev ===
+                                  AccountAccountStatus.BANNED ? AccountAccountStatus.REGISTERED : AccountAccountStatus.BANNED
+                                );
+                              }
+                            }
+                          })
+                        }
+                      }
+                    });
+                  }
+                }}>
+                  <Button danger>Banear Cuenta</Button>
+                </Popconfirm>
               </Col>
             </Row>
           </Card>
