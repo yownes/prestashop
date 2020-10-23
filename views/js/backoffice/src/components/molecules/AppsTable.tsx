@@ -10,6 +10,7 @@ import BuildState from "./BuildState";
 
 interface AppsTableProps {
   dataSource?: MyAccount_me_apps;
+  columns?: ColumnsType<MyAccount_me_apps_edges_node>;
 }
 
 const appsColumns: ColumnsType<MyAccount_me_apps_edges_node> = [
@@ -55,10 +56,11 @@ const appsColumns: ColumnsType<MyAccount_me_apps_edges_node> = [
   },
 ];
 
-const AppsTable = ({ dataSource }: AppsTableProps) => {
+const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
+  const allCols = columns ? [...appsColumns, ...columns] : appsColumns;
   return (
     <Table
-      columns={appsColumns}
+      columns={allCols}
       dataSource={dataSource?.edges.map((edge) => edge!!.node!!)}
     />
   );

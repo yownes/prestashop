@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { CLIENT } from "../../api/queries";
 import {
   Client as IClient,
@@ -9,10 +9,15 @@ import {
   Client_user_apps_edges_node_builds_edges_node,
 } from "../../api/types/Client";
 import Loading from "../../components/atoms/Loading";
-import { Card, Col, Row } from "antd";
+import { Button, Card, Col, message, Popconfirm, Row, Typography } from "antd";
 import UserState from "../../components/molecules/UserState";
 import AppsTable from "../../components/molecules/AppsTable";
 import BuildsTable from "../../components/molecules/BuildsTable";
+import { DeleteOutlined } from "@ant-design/icons";
+import { DELETE_APP } from "../../api/mutations";
+import { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
+
+const { Text } = Typography;
 
 interface ClientProps {
   id: string;
@@ -36,39 +41,84 @@ const Client = () => {
   const { loading, data } = useQuery<IClient, ClientVariables>(CLIENT, {
     variables: { id },
   });
+  const [deleteApp] = useMutation<DeleteApp, DeleteAppVariables>(DELETE_APP);
   if (loading) {
     return <Loading />;
   }
   return (
     <>
       <Row style={{ marginBottom: 20 }}>
-        <Col md={6} sm={12} xs={24}>
+        <Col sm={12} xs={24}>
           <Card>
-            <div>
-              <span>ID: </span>
-              <span>{data?.user?.id}</span>
-            </div>
-            <div>
-              <span>Username: </span>
-              <span>{data?.user?.username}</span>
-            </div>
-            <div>
-              <span>Activo: </span>
-              <span>{data?.user?.isActive ? "Si" : "No"}</span>
-            </div>
-            <div>
-              <span>Estado: </span>
-              <span>
-                <UserState state={data?.user?.accountStatus} />
-              </span>
-            </div>
+            <Row gutter={10}>
+              <Col xl={12} md={24}>
+                <div>
+                  <Text>ID: </Text>
+                  <Text strong>{data?.user?.id}</Text>
+                </div>
+                <div>
+                  <Text>Username: </Text>
+                  <Text strong>{data?.user?.username}</Text>
+                </div>
+                <div>
+                  <Text>Activo: </Text>
+                  <Text strong>{data?.user?.isActive ? "Si" : "No"}</Text>
+                </div>
+                <div>
+                  <Text>Estado: </Text>
+                  <UserState state={data?.user?.accountStatus} />
+                </div>
+              </Col>
+              <Col sm={12} xs={24}>
+                <Button danger>Dar de baja la suscripción</Button>
+                <Button danger>Banear Cuenta</Button>
+              </Col>
+            </Row>
           </Card>
         </Col>
       </Row>
       <Row gutter={20}>
         <Col md={12} sm={24}>
           <Card>
-            <AppsTable dataSource={data?.user?.apps} />
+            <AppsTable
+              dataSource={data?.user?.apps}
+              columns={[
+                {
+                  title: "Acciones",
+                  key: "actions",
+                  render: (_, record) => {
+                    return (
+                      <Popconfirm
+                        title="¿Quieres eliminar esta app?"
+                        onConfirm={() => {
+                          console.log("eliminar", record);
+                          deleteApp({
+                            variables: {
+                              id: record.id,
+                            },
+                            update(cache, { data }) {
+                              if (data?.deleteApp?.ok) {
+                                const id = cache.identify({ ...record });
+                                cache.evict({
+                                  id,
+                                });
+                                cache.gc();
+                              } else {
+                                message.error(data?.deleteApp?.error);
+                              }
+                            },
+                          });
+                        }}
+                      >
+                        <Button danger>
+                          <DeleteOutlined />
+                        </Button>
+                      </Popconfirm>
+                    );
+                  },
+                },
+              ]}
+            />
           </Card>
         </Col>
         <Col md={12} sm={24}>

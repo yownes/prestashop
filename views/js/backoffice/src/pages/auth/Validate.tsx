@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { VERIFY_ACCOUNT } from "../../api/mutations";
 import {
