@@ -4,7 +4,17 @@ import { createUploadLink } from "apollo-upload-client";
 import { TOKEN_KEY } from "./auth";
 
 const cache = new InMemoryCache({
-  typePolicies: {},
+  typePolicies: {
+    BuildType: {
+      fields: {
+        date: {
+          read(existing) {
+            return new Date(existing);
+          },
+        },
+      },
+    },
+  },
 });
 
 const httpLink = createUploadLink({

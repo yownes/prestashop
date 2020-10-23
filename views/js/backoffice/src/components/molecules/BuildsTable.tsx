@@ -12,6 +12,7 @@ const columns: ColumnsType<Client_user_apps_edges_node_builds_edges_node> = [
     render: (date: Date) => date.toLocaleDateString(),
   },
   { title: "ID build", dataIndex: "id", key: "buildId" },
+  { title: "App", dataIndex: ["app", "name"], key: "app.name" },
   {
     title: "Estado",
     dataIndex: "buildStatus",
