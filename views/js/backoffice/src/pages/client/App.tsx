@@ -29,7 +29,7 @@ function appsAreEqual(state: StoreAppInput, app?: App_app | null): boolean {
 
 const baseApp: StoreAppInput = {
   template: "VGVtcGxhdGVUeXBlOjE=",
-  name: "",
+  name: "(no name)",
   color: { color: "#0099cc", text: "white" },
   logo: null,
 };

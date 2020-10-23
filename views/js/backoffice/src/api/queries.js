@@ -111,6 +111,41 @@ export const CLIENTS = gql`
   }
 `;
 
+export const CLIENT = gql`
+  query Client($id: ID!) {
+    user(id: $id) {
+      id
+      username
+      isActive
+      accountStatus
+      apps {
+        edges {
+          node {
+            id
+            name
+            logo
+            apiLink
+            storeLinks {
+              ios
+              android
+            }
+            builds {
+              edges {
+                node {
+                  id
+                  buildId
+                  date
+                  buildStatus
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const BUILDS = gql`
   query Builds($first: Int, $last: Int) {
     builds(first: $first, last: $last) {

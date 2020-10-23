@@ -3,22 +3,18 @@ import { ColumnsType } from "antd/lib/table";
 import React from "react";
 import { useQuery } from "@apollo/client";
 import { Payment } from "../../models/App";
-import { Link, useHistory } from "react-router-dom";
-import { getAppBuildState } from "../../lib/appBuildState";
+import { useHistory } from "react-router-dom";
 import {
   Placeholder,
-  BuildState as BuildStateVisualizer,
   TitleWithAction,
   ProfileInfo,
 } from "../../components/molecules";
 import { MY_ACCOUNT } from "../../api/queries";
-import {
-  MyAccount,
-  MyAccount_me_apps_edges_node,
-} from "../../api/types/MyAccount";
+import { MyAccount } from "../../api/types/MyAccount";
 import Loading from "../../components/atoms/Loading";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
 import ProfileDangerZone from "../../components/organisms/ProfileDangerZone";
+import AppsTable from "../../components/molecules/AppsTable";
 
 const paymentsColumns: ColumnsType<Payment> = [
   {
@@ -41,53 +37,6 @@ const paymentsColumns: ColumnsType<Payment> = [
         style: "currency",
         currency: "EUR",
       }).format(total),
-  },
-];
-
-const appsColumns: ColumnsType<MyAccount_me_apps_edges_node> = [
-  {
-    title: "Icono",
-    dataIndex: "logo",
-    key: "icon",
-    render: (logo) => (
-      <img
-        src={logo}
-        alt=""
-        width={40}
-        height={40}
-        style={{ objectFit: "contain" }}
-      />
-    ),
-  },
-  {
-    title: "Nombre",
-    dataIndex: "name",
-    key: "name",
-    render: (name, record) => <Link to={`/app/${record.id}`}>{name}</Link>,
-  },
-  { title: "ID", dataIndex: "id", key: "id" },
-  {
-    title: "URLs",
-    dataIndex: "storeLinks",
-    key: "urls",
-    render: (urls) => (
-      <>
-        <a href={urls.ios}>iOS</a>
-        <a href={urls.android}>Android</a>
-      </>
-    ),
-  },
-  {
-    title: "Estado",
-    dataIndex: "builds",
-    key: "state",
-    render: (_, record) => {
-      return (
-        <BuildStateVisualizer
-          state={getAppBuildState(record)}
-        ></BuildStateVisualizer>
-      );
-    },
   },
 ];
 
@@ -124,12 +73,7 @@ const Profile = () => {
                         label: "Añadir nueva",
                       }}
                     />
-                    <Table
-                      columns={appsColumns}
-                      dataSource={data?.me?.apps.edges.map(
-                        (edge) => edge!!.node!!
-                      )}
-                    />
+                    <AppsTable dataSource={data?.me?.apps} />
                   </>
                 ) : (
                   <Placeholder

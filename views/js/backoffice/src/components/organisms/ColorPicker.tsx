@@ -29,6 +29,7 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
             onClick={() =>
               onChange({ color, text: (value?.text as TextColor) ?? "white" })
             }
+            size={20}
           />
         ))}
       </div>
