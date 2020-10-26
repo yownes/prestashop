@@ -1,6 +1,7 @@
 import { RoutePath } from "../components/organisms/Router";
 import Validate from "../pages/auth/Validate";
 import App from "../pages/client/App";
+import Checkout from "../pages/client/Checkout";
 import Pay from "../pages/client/Pay";
 import Profile from "../pages/client/Profile";
 
@@ -21,6 +22,12 @@ const routes: RoutePath[] = [
     path: "/pay",
     name: "Pago",
     component: Pay,
+  },
+  {
+    exact: true,
+    path: "/checkout/:id",
+    name: "Check Out",
+    component: Checkout,
   },
   {
     exact: true,

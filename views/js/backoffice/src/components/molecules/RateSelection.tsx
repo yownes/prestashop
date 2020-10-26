@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Typography } from "antd";
+import { Link } from "react-router-dom";
 
 const { Text, Title } = Typography;
 
@@ -25,9 +26,11 @@ const RateSelection = ({
       <Title>
         <Text strong>{price}</Text>€ al mes
       </Title>
-      <Button type="primary" onClick={() => onSelected(id)}>
-        Seleccionar
-      </Button>
+      <Link to={`/checkout/${id}`}>
+        <Button type="primary" onClick={() => onSelected(id)}>
+          Seleccionar
+        </Button>
+      </Link>
       <Text>Precio con IVA incluido</Text>
     </div>
   );
