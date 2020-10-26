@@ -1,0 +1,17 @@
+.table td {
+  padding: 1rem;
+}
+
+.table th {
+  padding: 0 1rem 2rem;
+  vertical-align: bottom;
+}
+
+.table td:not(:last-child),
+.table th:not(:last-child) {
+  border-right: solid 1px #333;
+}
+
+.table tr {
+  border-bottom: solid 1px #333;
+}
