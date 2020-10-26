@@ -36,7 +36,9 @@ const Header = () => {
       <Link to="/">
         <Logo />
       </Link>
-      <Typography.Title level={2}>{route?.name}</Typography.Title>
+      <Typography.Title level={2} style={{ color: "#00ec93" }}>
+        <span style={{ color: "#333" }}>{">"}</span> {route?.name}
+      </Typography.Title>
       {data?.me?.email && (
         <ProfileInfo email={data.me.email} name={data.me.username} />
       )}
