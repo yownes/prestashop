@@ -92,13 +92,17 @@ export const PLANS = gql`
       edges {
         node {
           id
-          interval
-          amount
-          product {
-            id
-            name
-            description
-            metadata
+          name
+          description
+          planSet {
+            edges {
+              node {
+                id
+                amount
+                interval
+                active
+              }
+            }
           }
         }
       }

@@ -25,7 +25,7 @@ const routes: RoutePath[] = [
   },
   {
     exact: true,
-    path: "/checkout/:id",
+    path: "/checkout",
     name: "Check Out",
     component: Checkout,
   },
