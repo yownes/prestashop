@@ -12,6 +12,7 @@ import {
 import Loading from "../../components/atoms/Loading";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
 import UserState from "../../components/molecules/UserState";
+import connectionToNodes from "../../lib/connectionToNodes";
 
 const columns: ColumnsType<Clients_users_edges_node> = [
   {
@@ -45,10 +46,9 @@ const Clients = () => {
   if (loading) {
     return <Loading />;
   }
-  const dataSource = data?.users?.edges.map((edge) => edge!!.node!!) ?? [];
   return (
     <div>
-      <Table columns={columns} dataSource={dataSource} />
+      <Table columns={columns} dataSource={connectionToNodes(data?.users)} />
     </div>
   );
 };

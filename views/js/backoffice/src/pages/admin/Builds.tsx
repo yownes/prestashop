@@ -7,6 +7,7 @@ import { Builds as IBuilds, BuildsVariables, Builds_builds_edges_node } from "..
 import { BUILDS } from "../../api/queries";
 import Loading from "../../components/atoms/Loading";
 import { BuildBuildStatus } from "../../api/types/globalTypes";
+import connectionToNodes from "../../lib/connectionToNodes";
 
 const columns: ColumnsType<Builds_builds_edges_node> = [
   {
@@ -38,10 +39,9 @@ const Builds = () => {
   if (loading) {
     return <Loading />;
   }
-  const dataSource = data?.builds?.edges.map((edge) => edge!!.node!!) ?? [];
   return (
     <div>
-      <Table columns={columns} dataSource={dataSource} />
+      <Table columns={columns} dataSource={connectionToNodes(data?.builds)} />
     </div>
   );
 };

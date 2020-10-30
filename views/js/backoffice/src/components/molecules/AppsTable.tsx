@@ -6,6 +6,7 @@ import {
   MyAccount_me_apps_edges_node,
 } from "../../api/types/MyAccount";
 import { getAppBuildState } from "../../lib/appBuildState";
+import connectionToNodes from "../../lib/connectionToNodes";
 import BuildState from "./BuildState";
 
 interface AppsTableProps {
@@ -58,12 +59,7 @@ const appsColumns: ColumnsType<MyAccount_me_apps_edges_node> = [
 
 const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
   const allCols = columns ? [...appsColumns, ...columns] : appsColumns;
-  return (
-    <Table
-      columns={allCols}
-      dataSource={dataSource?.edges.map((edge) => edge!!.node!!)}
-    />
-  );
+  return <Table columns={allCols} dataSource={connectionToNodes(dataSource)} />;
 };
 
 export default AppsTable;

@@ -9,6 +9,7 @@ import Title from "antd/lib/typography/Title";
 import { TEMPLATES } from "../../api/queries";
 import { Templates } from "../../api/types/Templates";
 import Loading from "../atoms/Loading";
+import connectionToNodes from "../../lib/connectionToNodes";
 
 interface TemplateSelectorProps {
   value?: string;
@@ -20,7 +21,7 @@ const TemplateSelector = ({ value, onChange }: TemplateSelectorProps) => {
   if (loading) {
     return <Loading />
   }
-  const templates = data?.templates?.edges.map(edge => edge!!.node!!) ?? [];
+  const templates = connectionToNodes(data?.templates);
   return (
     <div className={styles.container}>
       <Title level={3}>Plantilla</Title>

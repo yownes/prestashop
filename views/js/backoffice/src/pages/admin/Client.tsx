@@ -18,6 +18,7 @@ import { BAN_USER, DELETE_APP } from "../../api/mutations";
 import { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
 import { BanUser, BanUserVariables } from "../../api/types/BanUser";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
+import connectionToNodes from "../../lib/connectionToNodes";
 
 const { Text } = Typography;
 
@@ -26,13 +27,14 @@ interface ClientProps {
 }
 
 function getBuilds(apps?: Client_user_apps) {
-  const nodes = apps?.edges.map((edge) => edge!!.node!!) ?? [];
+  const nodes = connectionToNodes(apps);
   let all: Client_user_apps_edges_node_builds_edges_node[] = [];
   nodes.forEach(({ builds, name, id }) => {
     const buildNodes =
-      builds.edges
-        .map((edge) => edge!!.node!!)
-        .map((build) => ({ ...build, app: { id, name } })) ?? [];
+      connectionToNodes(builds).map((build) => ({
+        ...build,
+        app: { id, name },
+      })) ?? [];
     all.push(...buildNodes);
   });
   return all;
