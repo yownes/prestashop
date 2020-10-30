@@ -1,5 +1,10 @@
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { useQuery } from "@apollo/client";
 import React from "react";
+import { PLANS } from "../../api/queries";
+import { Plans } from "../../api/types/Plans";
+import connectionToNodes from "../../lib/connectionToNodes";
+import Loading from "../atoms/Loading";
 import RateSelection from "../molecules/RateSelection";
 
 import styles from "./RateTable.module.css";
@@ -24,14 +29,22 @@ interface RateTableProps {
 }
 
 const RateTable = ({ rates, features, onSelected }: RateTableProps) => {
+  const { data, loading } = useQuery<Plans>(PLANS);
+  if (loading) return <Loading />;
   return (
     <table className={styles.table}>
       <thead>
         <tr>
           <th>Características</th>
-          {rates.map((rate) => (
+          {connectionToNodes(data?.plans).map((rate) => (
             <th key={rate.id}>
-              <RateSelection {...rate} onSelected={onSelected} />
+              <RateSelection
+                id={rate.id}
+                title={rate.product?.name ?? "-"}
+                subtitle={rate.product?.description ?? "-"}
+                price={rate.amount ?? -1}
+                onSelected={onSelected}
+              />
             </th>
           ))}
         </tr>

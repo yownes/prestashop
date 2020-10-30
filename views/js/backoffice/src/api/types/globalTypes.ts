@@ -29,6 +29,16 @@ export enum BuildBuildStatus {
   WAITING = "WAITING",
 }
 
+/**
+ * An enumeration.
+ */
+export enum PlanInterval {
+  DAY = "DAY",
+  MONTH = "MONTH",
+  WEEK = "WEEK",
+  YEAR = "YEAR",
+}
+
 export interface StoreAppColorInput {
   color?: string | null;
   text?: string | null;

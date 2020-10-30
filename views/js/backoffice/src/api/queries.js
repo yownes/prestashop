@@ -86,6 +86,26 @@ export const APP = gql`
   }
 `;
 
+export const PLANS = gql`
+  query Plans {
+    plans {
+      edges {
+        node {
+          id
+          interval
+          amount
+          product {
+            id
+            name
+            description
+            metadata
+          }
+        }
+      }
+    }
+  }
+`;
+
 /**
  * ADMIN
  */
