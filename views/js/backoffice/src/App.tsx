@@ -7,6 +7,7 @@ import PrivateRoute from "./components/molecules/PrivateRoute";
 import Dashboard from "./pages/Dashboard";
 import client from "./lib/apolloClient";
 import { AuthProvider } from "./lib/auth";
+import Tos from "./pages/Tos";
 
 function App() {
   return (
@@ -16,6 +17,9 @@ function App() {
           <Switch>
             <Route path="/auth">
               <Auth />
+            </Route>
+            <Route exact path={`/tos`}>
+              <Tos />
             </Route>
             <PrivateRoute path="/">
               <Dashboard />

@@ -96,7 +96,9 @@ const Register = () => {
               },
             ]}
           >
-            <Checkbox>Acepto los Términos y Condiciones</Checkbox>
+            <Checkbox>
+              Acepto los <Link to="/tos">Términos y Condiciones</Link>
+            </Checkbox>
           </Form.Item>
           <div className={styles.buttons}>
             <Button block type="ghost">
