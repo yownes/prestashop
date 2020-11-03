@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Typography } from "antd";
 import { useQuery } from "@apollo/client";
 import { Logo } from "../atoms";
-import ProfileInfo from "../molecules/ProfileInfo";
+import HeaderSessionInfo from "../molecules/HeaderSessionInfo";
 import clientRoutes from "../../lib/routes";
 import adminoutes from "../../lib/adminRoutes";
 
@@ -40,7 +40,7 @@ const Header = () => {
         <span style={{ color: "#333" }}>{">"}</span> {route?.name}
       </Typography.Title>
       {data?.me?.email && (
-        <ProfileInfo email={data.me.email} name={data.me.username} />
+        <HeaderSessionInfo email={data.me.email} name={data.me.username} />
       )}
     </header>
   );

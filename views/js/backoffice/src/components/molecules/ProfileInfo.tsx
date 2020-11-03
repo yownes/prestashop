@@ -1,57 +1,47 @@
 import React from "react";
-import { Dropdown, Menu } from "antd";
+import { Button, Descriptions } from "antd";
+import { MyAccount_me } from "../../api/types/MyAccount";
+import UserState from "./UserState";
 import { Link } from "react-router-dom";
-import { EllipsisOutlined } from "@ant-design/icons";
-import { useAuth } from "../../lib/auth";
-
-import styles from "./ProfileInfo.module.css";
 
 interface ProfileInfoProps {
-  logo?: string;
-  name: string;
-  email: string;
-  reverse?: boolean;
-  editable?: boolean;
+  profile?: MyAccount_me | null;
 }
 
-const ProfileInfo = ({
-  logo,
-  name,
-  email,
-  reverse,
-  editable,
-}: ProfileInfoProps) => {
-  const { logout } = useAuth();
-
-  const menu = (
-    <Menu>
-      <Menu.Item key="0"><Link to="/profile">Perfil</Link></Menu.Item>
-      <Menu.Divider />
-      <Menu.Item onClick={() => {
-        logout?.();
-      }} key="1">Cerrar sesión</Menu.Item>
-    </Menu>
-  )
+const ProfileInfo = ({ profile }: ProfileInfoProps) => {
   return (
-    <div className={`${styles.container} ${reverse ? styles.reverse : ""}`}>
-        <div className={`${styles.info} ${reverse ? styles.alignLeft : ""}`}>
-          <span className={styles.title}>
-      <Link to="/profile">
-              {name}
-        </Link>
-          </span>
-          <span className={styles.subtitle}>{email}</span>
-        </div>
-        <Dropdown overlay={menu} trigger={['click']}>
-          <EllipsisOutlined />
-        </Dropdown>
-      </div>
+    <>
+      <Descriptions
+        title="Información de perfil"
+        layout="vertical"
+        size="small"
+        bordered
+        column={{ md: 2, xs: 1, sm: 2, lg: 3 }}
+      >
+        {profile?.username && (
+          <Descriptions.Item label="Nombre de usuario">
+            {profile.username}
+          </Descriptions.Item>
+        )}
+        {profile?.email && (
+          <Descriptions.Item label="Email">{profile.email}</Descriptions.Item>
+        )}
+        {profile?.apps && (
+          <Descriptions.Item label="Apps">
+            {profile.apps.edges.length}
+          </Descriptions.Item>
+        )}
+        {profile?.accountStatus && (
+          <Descriptions.Item label="Estado de la cuenta">
+            <UserState state={profile.accountStatus} />
+          </Descriptions.Item>
+        )}
+      </Descriptions>
+      <Link to="/profile/edit">
+        <Button size="small">Editar</Button>
+      </Link>
+    </>
   );
-};
-
-ProfileInfo.defaultProps = {
-  reverse: false,
-  editable: false,
 };
 
 export default ProfileInfo;

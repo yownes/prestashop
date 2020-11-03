@@ -51,12 +51,7 @@ const Profile = () => {
           <Row style={{ marginBottom: 20 }}>
             <Col span="24">
               <Card>
-                <ProfileInfo
-                  reverse
-                  editable
-                  name={data?.me?.username ?? ""}
-                  email={data?.me?.email ?? ""}
-                />
+                <ProfileInfo profile={data?.me} />
                 <ProfileDangerZone id={data?.me?.id ?? ""} />
               </Card>
             </Col>
