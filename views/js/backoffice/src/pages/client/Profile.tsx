@@ -1,4 +1,4 @@
-import { Card, Col, Row, Table } from "antd";
+import { Alert, Card, Col, Row, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import React from "react";
 import { useQuery } from "@apollo/client";
@@ -46,6 +46,18 @@ const Profile = () => {
   if (loading) return <Loading />;
   return (
     <>
+      {!data?.me?.verified && (
+        <Row gutter={[20, 20]}>
+          <Col span={24}>
+            <Alert
+              showIcon
+              message="Tu cuenta no está validada todavía"
+              description="Comprueba tu correo electrónico en busca del link de validación"
+              type="warning"
+            />
+          </Col>
+        </Row>
+      )}
       <Row gutter={20}>
         <Col span={12}>
           <Row style={{ marginBottom: 20 }}>

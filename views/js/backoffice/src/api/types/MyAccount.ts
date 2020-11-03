@@ -80,6 +80,7 @@ export interface MyAccount_me {
   username: string;
   email: string;
   accountStatus: AccountAccountStatus;
+  verified: boolean | null;
   apps: MyAccount_me_apps;
 }
 

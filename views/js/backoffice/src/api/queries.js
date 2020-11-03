@@ -17,6 +17,7 @@ export const MY_ACCOUNT = gql`
       username
       email
       accountStatus
+      verified
       apps {
         edges {
           node {
