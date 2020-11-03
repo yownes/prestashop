@@ -1,4 +1,9 @@
-export { default as Header } from "./Header";
 export { default as AdminHeader } from "./AdminHeader";
-export { default as TemplateSelector } from "./TemplateSelector";
+export { default as AppPreview } from "./AppPreview";
+export { default as ChangePassword } from "./ChangePassword";
 export { default as ColorPicker } from "./ColorPicker";
+export { default as Header } from "./Header";
+export { default as ProfileDangerZone } from "./ProfileDangerZone";
+export { default as RateTable } from "./RateTable";
+export { default as Router } from "./Router";
+export { default as TemplateSelector } from "./TemplateSelector";
