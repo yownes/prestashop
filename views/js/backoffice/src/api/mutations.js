@@ -157,3 +157,12 @@ export const SUBSCRIBE = gql`
     }
   }
 `;
+
+export const UNSUBSCRIBE = gql`
+  mutation Unsubscribe($userId: ID!) {
+    dropOutUser(userId: $userId) {
+      ok
+      error
+    }
+  }
+`;

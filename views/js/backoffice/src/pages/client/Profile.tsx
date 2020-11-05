@@ -1,7 +1,7 @@
 import { Alert, Card, Col, Row, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import React from "react";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Payment } from "../../models/App";
 import { useHistory } from "react-router-dom";
 import {
@@ -15,6 +15,8 @@ import Loading from "../../components/atoms/Loading";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
 import ProfileDangerZone from "../../components/organisms/ProfileDangerZone";
 import AppsTable from "../../components/molecules/AppsTable";
+import { UNSUBSCRIBE } from "../../api/mutations";
+import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
 
 const paymentsColumns: ColumnsType<Payment> = [
   {
@@ -43,6 +45,9 @@ const paymentsColumns: ColumnsType<Payment> = [
 const Profile = () => {
   const history = useHistory();
   const { loading, data } = useQuery<MyAccount>(MY_ACCOUNT);
+  const [unsubscribe] = useMutation<Unsubscribe, UnsubscribeVariables>(
+    UNSUBSCRIBE
+  );
   if (loading) return <Loading />;
   return (
     <>
@@ -104,8 +109,28 @@ const Profile = () => {
                 <TitleWithAction
                   title="Pagos"
                   action={{
-                    action: () => console.log("cancelar suscripción"), //TODO: Cancel suscription
+                    action: () => {
+                      if (data?.me?.id) {
+                        unsubscribe({
+                          variables: {
+                            userId: data?.me?.id,
+                          },
+                        });
+                      }
+                    },
                     label: "Cancelar suscripción",
+                    needsConfirmation: true,
+                    confirmationTitle: (
+                      <>
+                        <h4>
+                          ¿Realmente deseas cancelar la suscripción al servicio?
+                        </h4>
+                        <p>
+                          Todas las apps que tengas serán eliminadas de las
+                          tiendas de aplicaciones
+                        </p>
+                      </>
+                    ),
                   }}
                 />
                 <Table
