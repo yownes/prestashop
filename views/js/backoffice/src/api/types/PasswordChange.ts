@@ -12,6 +12,7 @@ export interface PasswordChange_passwordChange {
   success: boolean | null;
   errors: any | null;
   token: string | null;
+  refreshToken: string | null;
 }
 
 export interface PasswordChange {

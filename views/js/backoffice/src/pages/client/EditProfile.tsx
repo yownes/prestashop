@@ -3,7 +3,7 @@ import { Button, Card, Col, Input, Row, Typography } from "antd";
 import { Link } from "react-router-dom";
 import ChangePassword from "../../components/organisms/ChangePassword";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const EditProfile = () => {
   return (

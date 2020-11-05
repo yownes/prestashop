@@ -12,6 +12,7 @@ export interface Register_register {
   success: boolean | null;
   errors: any | null;
   token: string | null;
+  refreshToken: string | null;
 }
 
 export interface Register {

@@ -25,6 +25,7 @@ export interface TokenAuth_tokenAuth_user {
 export interface TokenAuth_tokenAuth {
   __typename: "ObtainJSONWebToken";
   token: string | null;
+  refreshToken: string | null;
   success: boolean | null;
   errors: any | null;
   user: TokenAuth_tokenAuth_user | null;

@@ -8,6 +8,7 @@ export const TOKEN_AUTH = gql`
   mutation TokenAuth($password: String!, $email: String, $username: String) {
     tokenAuth(password: $password, email: $email, username: $username) {
       token
+      refreshToken
       success
       errors
       user {
@@ -37,6 +38,7 @@ export const REGISTER = gql`
       success
       errors
       token
+      refreshToken
     }
   }
 `;
@@ -60,6 +62,17 @@ export const VERIFY_ACCOUNT = gql`
   }
 `;
 
+export const REFRESH_TOKEN = gql`
+  mutation RefreshToken($refreshToken: String!) {
+    refreshToken(refreshToken: $refreshToken) {
+      token
+      refreshToken
+      success
+      errors
+    }
+  }
+`;
+
 export const PASSWORD_CHANGE = gql`
   mutation PasswordChange(
     $oldPassword: String!
@@ -74,6 +87,7 @@ export const PASSWORD_CHANGE = gql`
       success
       errors
       token
+      refreshToken
     }
   }
 `;

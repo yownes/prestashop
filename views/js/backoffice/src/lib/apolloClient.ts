@@ -1,7 +1,8 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, InMemoryCache, concat } from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
 import { setContext } from "@apollo/client/link/context";
 import { createUploadLink } from "apollo-upload-client";
-import { TOKEN_KEY } from "./auth";
+import { getToken } from "./auth";
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -17,12 +18,25 @@ const cache = new InMemoryCache({
   },
 });
 
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message, locations, path }) => {
+      console.log(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+      );
+    });
+  }
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
+});
+
 const httpLink = createUploadLink({
   uri: "http://localhost:8000/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem(TOKEN_KEY);
+  const token = getToken();
 
   return {
     headers: {
@@ -33,7 +47,7 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: errorLink.concat(concat(authLink, httpLink)),
   cache,
 });
 

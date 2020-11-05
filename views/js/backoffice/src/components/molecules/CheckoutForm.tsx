@@ -5,7 +5,6 @@ import { useElements, useStripe, CardElement } from "@stripe/react-stripe-js";
 import { PlanInterval } from "../../api/types/globalTypes";
 import { Plans_plans_edges_node_planSet_edges_node } from "../../api/types/Plans";
 import CardSection from "./CardSection";
-import { useAuth } from "../../lib/auth";
 
 const { Title, Text } = Typography;
 

@@ -1,12 +1,12 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react";
 import { useMutation, useLazyQuery } from "@apollo/client";
-import { REGISTER, TOKEN_AUTH, VERIFY_TOKEN } from "../api/mutations";
+import { REFRESH_TOKEN, REGISTER, TOKEN_AUTH } from "../api/mutations";
 import { Register, RegisterVariables } from "../api/types/Register";
 import { TokenAuth, TokenAuthVariables } from "../api/types/TokenAuth";
-import { VerifyToken, VerifyTokenVariables } from "../api/types/VerifyToken";
 import { ME } from "../api/queries";
 import { Me } from "../api/types/Me";
 import Loading from "../components/atoms/Loading";
+import { RefreshToken, RefreshTokenVariables } from "../api/types/RefreshToken";
 
 export const TOKEN_KEY = "yownesToken";
 
@@ -15,16 +15,19 @@ interface Error {
   message: string;
 }
 
+interface Token {
+  token: string;
+  expiry: number;
+}
+
 export interface Errors {
   nonFieldErrors?: Error[];
   [key: string]: Error[] | undefined;
 }
 
-
-
 interface AuthState {
   isAdmin: boolean;
-  token?: string;
+  token?: Token;
   loading: boolean;
   errors?: Errors;
   isAuthenticated: boolean;
@@ -45,7 +48,7 @@ type AuthStateAction =
       type: "LOGIN";
       payload: {
         isAdmin?: boolean;
-        token: string;
+        token?: Token;
       };
     }
   | {
@@ -70,6 +73,13 @@ const initialState: AuthState = {
   isAuthenticated: false,
 };
 
+
+let inMemoryToken: string;
+
+export function getToken() {
+  return inMemoryToken;
+}
+
 function reducer(state: AuthState, action: AuthStateAction): AuthState {
   switch (action.type) {
     case "LOADING":
@@ -85,12 +95,15 @@ function reducer(state: AuthState, action: AuthStateAction): AuthState {
         isAuthenticated: false,
       };
     case "LOGIN":
+      if (action.payload.token) {
+        inMemoryToken = action.payload.token.token;
+      }
       return {
         ...state,
         isAdmin: action.payload.isAdmin || false,
-        token: action.payload.token,
+        token: action.payload.token || state.token,
         loading: false,
-        isAuthenticated: !!action.payload.token,
+        isAuthenticated: action.payload.token ? true : !!state.token,
       };
     case "LOGOUT":
       return { ...initialState, loading: false };
@@ -99,19 +112,47 @@ function reducer(state: AuthState, action: AuthStateAction): AuthState {
   }
 }
 
+function parseToken(token: string): Token {
+  const payload = JSON.parse(atob(token.split(".")[1]));
+  const expiry = payload.exp;
+  return {
+    token,
+    expiry,
+  };
+}
+
 function useAuthLogic(): IAuth {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [tokenAuth] = useMutation<TokenAuth, TokenAuthVariables>(TOKEN_AUTH);
+  const [registerMutation] = useMutation<Register, RegisterVariables>(REGISTER);
+  const [refreshTokenMutation] = useMutation<
+    RefreshToken,
+    RefreshTokenVariables
+  >(REFRESH_TOKEN);
+  const [me] = useLazyQuery<Me>(ME, {
+    onCompleted({ me }) {
+      dispatch({
+        type: "LOGIN",
+        payload: { isAdmin: me?.isStaff },
+      });
+    },
+  });
 
   function login(variables: TokenAuthVariables) {
+    console.log("login", variables);
     return tokenAuth({
       variables,
     }).then(({ data }) => {
       if (data?.tokenAuth?.success && data.tokenAuth.token) {
-        localStorage.setItem(TOKEN_KEY, data.tokenAuth.token);
+        if (data.tokenAuth.refreshToken) {
+          localStorage.setItem(TOKEN_KEY, data.tokenAuth.refreshToken);
+        }
+        const token = parseToken(data.tokenAuth.token);
+        setTimeout(refreshToken, token.expiry * 1000 - new Date().getTime());
         dispatch({
           type: "LOGIN",
           payload: {
-            token: data.tokenAuth.token,
+            token,
             isAdmin: data.tokenAuth.user?.isStaff ?? false,
           },
         });
@@ -127,10 +168,15 @@ function useAuthLogic(): IAuth {
       variables,
     }).then(({ data }) => {
       if (data?.register?.success && data.register.token) {
-        localStorage.setItem(TOKEN_KEY, data.register.token);
-        dispatch({ type: "LOGIN", payload: { token: data.register.token } });
+        if (data.register.refreshToken) {
+          localStorage.setItem(TOKEN_KEY, data.register.refreshToken);
+        }
+        dispatch({
+          type: "LOGIN",
+          payload: { token: parseToken(data.register.token) },
+        });
       } else {
-        dispatch({type: "ERROR", payload: data?.register?.errors})
+        dispatch({ type: "ERROR", payload: data?.register?.errors });
       }
     });
   }
@@ -139,37 +185,47 @@ function useAuthLogic(): IAuth {
     localStorage.removeItem(TOKEN_KEY);
     dispatch({ type: "LOGOUT" });
   }
-  const [tokenAuth] = useMutation<TokenAuth, TokenAuthVariables>(TOKEN_AUTH);
-  const [registerMutation] = useMutation<Register, RegisterVariables>(REGISTER);
-  const [verifyToken] = useMutation<VerifyToken, VerifyTokenVariables>(
-    VERIFY_TOKEN
-  );
-  const [me] = useLazyQuery<Me>(ME, {
-    onCompleted({ me }) {
-      const token = localStorage.getItem(TOKEN_KEY);
-      dispatch({
-        type: "LOGIN",
-        payload: { isAdmin: me?.isStaff, token: token || "" },
+
+  function refreshToken() {
+    const thRefreshToken = localStorage.getItem(TOKEN_KEY);
+    console.log("refreshToken", thRefreshToken);
+    if (thRefreshToken) {
+      refreshTokenMutation({
+        variables: { refreshToken: thRefreshToken },
+        fetchPolicy: "no-cache",
+      }).then(({ data }) => {
+        if (data?.refreshToken?.success && data.refreshToken.token) {
+          const token = parseToken(data.refreshToken.token);
+          const ms = token.expiry * 1000 - new Date().getTime();
+
+          setTimeout(refreshToken, ms);
+
+          dispatch({
+            type: "LOGIN",
+            payload: { token },
+          });
+
+          me();
+
+          if (data.refreshToken.refreshToken) {
+            localStorage.setItem(TOKEN_KEY, data.refreshToken.refreshToken);
+          }
+        } else {
+          dispatch({ type: "ERROR", payload: data?.refreshToken?.errors });
+        }
       });
-    },
-  });
+    }
+  }
 
   useEffect(() => {
     const t = localStorage.getItem(TOKEN_KEY);
-
     if (t) {
-      verifyToken({ variables: { token: t } })
-        .then((result) => {
-          if (result.data?.verifyToken?.success) {
-            me();
-          } else {
-            dispatch({ type: "ERROR", payload: result.data?.verifyToken?.errors });
-          }
-        });
+      refreshToken();
     } else {
       dispatch({ type: "LOADING", payload: false });
     }
-  }, [me, verifyToken]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     login,
