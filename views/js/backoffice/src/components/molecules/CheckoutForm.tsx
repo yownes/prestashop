@@ -1,15 +1,19 @@
-import { Button, Card, Col, Input, Row, Typography } from "antd";
-import Form from "antd/lib/form/Form";
 import React from "react";
+import { Button, Card, Col, Input, Row, Typography, Form, message } from "antd";
 import { useElements, useStripe, CardElement } from "@stripe/react-stripe-js";
+import { useMutation } from "@apollo/client";
+import { useHistory } from "react-router-dom";
 import { PlanInterval } from "../../api/types/globalTypes";
-import { Plans_plans_edges_node_planSet_edges_node } from "../../api/types/Plans";
 import CardSection from "./CardSection";
+import { SUBSCRIBE } from "../../api/mutations";
+import { Subscribe, SubscribeVariables } from "../../api/types/Subscribe";
+import Errors from "./Errors";
+import { CheckoutLocationState } from "../../pages/client/Checkout";
 
 const { Title, Text } = Typography;
 
 interface CheckoutFormProps {
-  plan: Plans_plans_edges_node_planSet_edges_node;
+  plan: CheckoutLocationState;
 }
 
 interface CreateSubscriptionProps {
@@ -19,14 +23,6 @@ interface CreateSubscriptionProps {
 
 interface RetrySubscriptionProps extends CreateSubscriptionProps {
   invoiceId: string;
-}
-
-function createSubscription({
-  paymentMethodId,
-  priceId,
-}: CreateSubscriptionProps) {
-  // TODO: Endpoint
-  console.log("[createSubscription]", { paymentMethodId, priceId });
 }
 
 function retryInvoiceWithNewPaymentMethod({
@@ -41,6 +37,11 @@ function retryInvoiceWithNewPaymentMethod({
 const CheckoutForm = ({ plan }: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
+  const history = useHistory();
+  const [createSubscription, { data }] = useMutation<
+    Subscribe,
+    SubscribeVariables
+  >(SUBSCRIBE);
   return (
     <Form
       onFinish={async () => {
@@ -80,8 +81,16 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
             });
           } else {
             createSubscription({
-              paymentMethodId,
-              priceId: plan.id,
+              variables: {
+                paymentMethodId,
+                planId: plan.stripeId!!,
+              },
+            }).then(({    data    }) => {
+              if (data?.subscribe?.ok) {
+                history.replace("/profile");;;;
+              } else {
+                message.error(data?.subscribe?.error);
+              }
             });
           }
         }
@@ -92,7 +101,7 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
           <Card>
             <Title level={2}>Tu Pedido</Title>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text type="secondary">{plan.id}</Text>
+              <Text type="secondary">{plan.name}</Text>
               <Text type="secondary">
                 Suscripción de {plan.amount}€ al{" "}
                 {plan.interval === PlanInterval.MONTH ? "mes" : "año"}
@@ -143,6 +152,15 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
             <CardSection />
           </Card>
         </Col>
+      </Row>
+      <Row>
+        <Errors
+          errors={{
+            nonFieldErrors: data?.subscribe?.error
+              ? [{ message: data?.subscribe?.error, code: "error" }]
+              : undefined,
+          }}
+        />
       </Row>
       <Row>
         <Button htmlType="submit">Confirmar</Button>

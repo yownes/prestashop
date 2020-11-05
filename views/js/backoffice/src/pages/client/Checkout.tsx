@@ -7,10 +7,13 @@ import CheckoutForm from "../../components/molecules/CheckoutForm";
 
 const stripePromise = loadStripe("pk_test_RG1KlTBaXWs8pCamCoLixIIu00FTwuG937");
 
+export interface CheckoutLocationState
+  extends Plans_plans_edges_node_planSet_edges_node {
+  name: string;
+}
+
 const Checkout = () => {
-  const { state: plan } = useLocation<
-    Plans_plans_edges_node_planSet_edges_node
-  >();
+  const { state: plan } = useLocation<CheckoutLocationState>();
   if (!plan) {
     return <Redirect to={"/pay"} />;
   }

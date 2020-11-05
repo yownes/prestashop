@@ -99,6 +99,7 @@ export const PLANS = gql`
             edges {
               node {
                 id
+                stripeId
                 amount
                 interval
                 active

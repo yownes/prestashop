@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Typography } from "antd";
 import { Link } from "react-router-dom";
-import { Plans_plans_edges_node_planSet_edges_node } from "../../api/types/Plans";
 import { PlanInterval } from "../../api/types/globalTypes";
+import { CheckoutLocationState } from "../../pages/client/Checkout";
 
 const { Text, Title } = Typography;
 
@@ -10,7 +10,7 @@ interface RateSelectionProps {
   id: string;
   subtitle?: string;
   title: string;
-  plan: Plans_plans_edges_node_planSet_edges_node;
+  plan: CheckoutLocationState;
   onSelected: (id: string) => void;
 }
 

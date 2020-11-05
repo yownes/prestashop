@@ -15,6 +15,7 @@ export interface Plans_plans_edges_node_planSet_edges_node {
    * The ID of the object.
    */
   id: string;
+  stripeId: string | null;
   /**
    * Amount (as decimal) to be charged on the interval specified.
    */

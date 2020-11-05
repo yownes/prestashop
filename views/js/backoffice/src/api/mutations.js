@@ -135,3 +135,25 @@ export const DELETE_APP = gql`
      }
    }
  `;
+
+/**
+ * PAYMENTS
+ */
+
+export const ADD_PAYMENT_METHOD = gql`
+  mutation AddPaymentMethod($paymentMethodId: ID!) {
+    addPaymentMethod(paymentMethodId: $paymentMethodId) {
+      ok
+      error
+    }
+  }
+`;
+
+export const SUBSCRIBE = gql`
+  mutation Subscribe($paymentMethodId: ID!, $planId: ID!) {
+    subscribe(paymentMethodId: $paymentMethodId, planId: $planId) {
+      ok
+      error
+    }
+  }
+`;

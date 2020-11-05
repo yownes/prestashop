@@ -9,6 +9,7 @@ import {
   Plans_plans_edges_node_planSet_edges_node,
 } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
+import { CheckoutLocationState } from "../../pages/client/Checkout";
 import Loading from "../atoms/Loading";
 import RateSelection from "../molecules/RateSelection";
 
@@ -35,19 +36,28 @@ interface RateTableProps {
 
 function selectPlan(
   plans: Plans_plans_edges_node_planSet_edges_node[],
-  interval: PlanInterval
-): Plans_plans_edges_node_planSet_edges_node {
-  return (
-    plans
+  interval: PlanInterval,
+  name: string
+): CheckoutLocationState {
+  const plan = plans
       .filter((plan) => plan.active)
-      .find((plan) => plan.interval === interval) ?? {
-      __typename: "StripePlanType",
-      amount: 0,
-      id: "-1",
-      interval: PlanInterval.MONTH,
-      active: true,
-    }
-  );
+      .find((plan) => plan.interval === interval)
+      if (plan) {
+        return {
+          ...plan,
+          name
+        }
+      } else {
+        return  {
+            __typename: "StripePlanType",
+            amount: 0,
+            id: "-1",
+            stripeId: "-1",
+            interval: PlanInterval.MONTH,
+            name,
+            active: true,
+          };
+      }
 }
 
 const RateTable = ({ rates, features, onSelected }: RateTableProps) => {
@@ -75,7 +85,7 @@ const RateTable = ({ rates, features, onSelected }: RateTableProps) => {
                   id={rate.id}
                   title={rate.name}
                   subtitle={rate.description ?? "-"}
-                  plan={selectPlan(connectionToNodes(rate.planSet), interval)}
+                  plan={selectPlan(connectionToNodes(rate.planSet), interval, rate.name)}
                   onSelected={onSelected}
                 />
               </th>
