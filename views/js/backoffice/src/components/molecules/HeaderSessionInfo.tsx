@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, Menu } from "antd";
+import { Button, Dropdown, Menu } from "antd";
 import { Link } from "react-router-dom";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useAuth } from "../../lib/auth";
@@ -39,7 +39,7 @@ const HeaderSessionInfo = ({ name, email }: HeaderSessionInfoProps) => {
         <span className={styles.subtitle}>{email}</span>
       </div>
       <Dropdown overlay={menu} trigger={["click"]}>
-        <EllipsisOutlined />
+        <Button icon={<EllipsisOutlined />} shape="circle" />
       </Dropdown>
     </div>
   );

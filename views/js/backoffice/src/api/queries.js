@@ -143,6 +143,8 @@ export const CLIENT = gql`
       id
       username
       isActive
+      email
+      verified
       accountStatus
       apps {
         edges {

@@ -1,9 +1,20 @@
-import { Alert, Card, Col, Row, Table } from "antd";
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Dropdown,
+  Menu,
+  Popconfirm,
+  Row,
+  Table,
+  Typography,
+} from "antd";
 import { ColumnsType } from "antd/lib/table";
-import React from "react";
+import React, { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { Payment } from "../../models/App";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   Placeholder,
   TitleWithAction,
@@ -17,6 +28,7 @@ import ProfileDangerZone from "../../components/organisms/ProfileDangerZone";
 import AppsTable from "../../components/molecules/AppsTable";
 import { UNSUBSCRIBE } from "../../api/mutations";
 import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
+import { EllipsisOutlined } from "@ant-design/icons";
 
 const paymentsColumns: ColumnsType<Payment> = [
   {
@@ -44,11 +56,44 @@ const paymentsColumns: ColumnsType<Payment> = [
 
 const Profile = () => {
   const history = useHistory();
+  const [confirmPassword, setConfirmPassword] = useState(false);
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const { loading, data } = useQuery<MyAccount>(MY_ACCOUNT);
   const [unsubscribe] = useMutation<Unsubscribe, UnsubscribeVariables>(
     UNSUBSCRIBE
   );
   if (loading) return <Loading />;
+
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <Link to="/profile/edit">Editar</Link>
+      </Menu.Item>
+      <Menu.Divider></Menu.Divider>
+      <Menu.Item>
+        <Popconfirm
+          title="¿Realmente deseas eliminar la cuenta?"
+          placement="left"
+          onConfirm={() => {
+            setConfirmPassword(true);
+            setIsOverlayVisible(false);
+          }}
+        >
+          <Typography.Text type="danger">Eliminar cuenta</Typography.Text>
+        </Popconfirm>
+      </Menu.Item>
+    </Menu>
+  );
+  const profieActions = (
+    <Dropdown
+      overlay={menu}
+      trigger={["click"]}
+      visible={isOverlayVisible}
+      onVisibleChange={setIsOverlayVisible}
+    >
+      <Button shape="circle" icon={<EllipsisOutlined></EllipsisOutlined>} />
+    </Dropdown>
+  );
   return (
     <>
       {!data?.me?.verified && (
@@ -68,8 +113,11 @@ const Profile = () => {
           <Row style={{ marginBottom: 20 }}>
             <Col span="24">
               <Card>
-                <ProfileInfo profile={data?.me} />
-                <ProfileDangerZone id={data?.me?.id ?? ""} />
+                <ProfileInfo profile={data?.me} action={profieActions} />
+                <ProfileDangerZone
+                  id={data?.me?.id ?? ""}
+                  confirmPassword={confirmPassword}
+                />
               </Card>
             </Col>
           </Row>

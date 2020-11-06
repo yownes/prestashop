@@ -88,6 +88,8 @@ export interface Client_user {
    * Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
    */
   isActive: boolean;
+  email: string;
+  verified: boolean | null;
   accountStatus: AccountAccountStatus;
   apps: Client_user_apps;
 }

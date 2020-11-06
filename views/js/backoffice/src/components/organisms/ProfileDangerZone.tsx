@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Popconfirm } from "antd";
+import { Button, Divider, Form, Input, Popconfirm } from "antd";
 import { useMutation } from "@apollo/client";
 import { Errors as IErrors, useAuth } from "../../lib/auth";
 import {
@@ -11,70 +11,45 @@ import Errors from "../molecules/Errors";
 
 interface ProfileDangerZoneProps {
   id: string;
+  confirmPassword: boolean;
 }
 
-const ProfileDangerZone = ({ id }: ProfileDangerZoneProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState(false);
+const ProfileDangerZone = ({ id, confirmPassword }: ProfileDangerZoneProps) => {
   const [errors, setErrors] = useState<IErrors>();
   const [deleteAccount] = useMutation<DeleteAccount, DeleteAccountVariables>(
     DELETE_ACCOUNT
   );
   const { logout } = useAuth();
+  if (!confirmPassword) {
+    return null;
+  }
   return (
     <div>
-      <Errors errors={errors} />
-      {confirmPassword && (
-        <div>
-          <Form
-            onFinish={(values) => {
-              deleteAccount({ variables: { password: values.password } }).then(
-                ({ data }) => {
-                  if (data?.deleteAccount?.success) {
-                    logout?.();
-                  } else {
-                    setErrors(data?.deleteAccount?.errors);
-                  }
-                }
-              );
-            }}
-          >
-            <Form.Item
-              name="password"
-              label="Confirmar contraseña para eliminar la cuenta"
-            >
-              <Input.Password />
-            </Form.Item>
-            <Button htmlType="submit">Confirmar eliminación de cuenta</Button>
-          </Form>
-        </div>
-      )}
-
-      {isExpanded ? (
-        <div>
-          <Popconfirm
-            title="¿Realmente deseas eliminar la cuenta?"
-            placement="right"
-            onConfirm={() => {
-              setConfirmPassword(true);
-            }}
-          >
-            <Button type="primary" danger>
-              Eliminar cuenta
-            </Button>
-          </Popconfirm>
-          <Button onClick={() => setIsExpanded(false)}>Cancelar</Button>
-        </div>
-      ) : (
-        <Button
-          type="ghost"
-          size="small"
-          danger
-          onClick={() => setIsExpanded(true)}
+      <Divider />
+      <Errors errors={errors} fields={["password"]} />
+      <Form
+        onFinish={(values) => {
+          deleteAccount({ variables: { password: values.password } }).then(
+            ({ data }) => {
+              if (data?.deleteAccount?.success) {
+                logout?.();
+              } else {
+                setErrors(data?.deleteAccount?.errors);
+              }
+            }
+          );
+        }}
+      >
+        <Form.Item
+          name="password"
+          label="Confirmar contraseña para eliminar la cuenta"
         >
-          Danger zone
+          <Input.Password />
+        </Form.Item>
+        <Button htmlType="submit" type="primary" danger>
+          Confirmar eliminación de cuenta
         </Button>
-      )}
+      </Form>
     </div>
   );
 };
