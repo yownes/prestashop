@@ -20,16 +20,16 @@ import {
   Row,
   Typography,
 } from "antd";
-import UserState from "../../components/molecules/UserState";
 import AppsTable from "../../components/molecules/AppsTable";
 import BuildsTable from "../../components/molecules/BuildsTable";
 import { DeleteOutlined, EllipsisOutlined } from "@ant-design/icons";
-import { BAN_USER, DELETE_APP } from "../../api/mutations";
+import { BAN_USER, DELETE_APP, UNSUBSCRIBE } from "../../api/mutations";
 import { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
 import { BanUser, BanUserVariables } from "../../api/types/BanUser";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { ProfileInfo } from "../../components/molecules";
+import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
 
 const { Text } = Typography;
 
@@ -59,6 +59,9 @@ const Client = () => {
   });
   const [deleteApp] = useMutation<DeleteApp, DeleteAppVariables>(DELETE_APP);
   const [banUser] = useMutation<BanUser, BanUserVariables>(BAN_USER);
+  const [unsubscribe] = useMutation<Unsubscribe, UnsubscribeVariables>(
+    UNSUBSCRIBE
+  );
   if (loading) {
     return <Loading />;
   }
@@ -100,17 +103,9 @@ const Client = () => {
           }}
         >
           <Typography.Text type="danger">
-            
-            
             {data?.user?.accountStatus === AccountAccountStatus.BANNED
-            
-            
-                ? "Desbanear"
-           
-           
-                  : "Banear Cuenta"}
-          
-          
+              ? "Desbanear"
+              : "Banear Cuenta"}
           </Typography.Text>
         </Popconfirm>
       </Menu.Item>
@@ -120,6 +115,7 @@ const Client = () => {
           placement="left"
           onConfirm={() => {
             setIsOverlayVisible(false);
+            unsubscribe({ variables: { userId: id } });
           }}
         >
           <Typography.Text type="danger">
