@@ -10,14 +10,35 @@ export const ME = gql`
   }
 `;
 
+export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
+  fragment AccountBasicData on UserNode {
+    username
+    email
+    accountStatus
+    verified
+    isActive
+  }
+`;
+
 export const MY_ACCOUNT = gql`
   query MyAccount {
     me {
       id
-      username
-      email
-      accountStatus
-      verified
+      ...AccountBasicData
+      customer {
+        id
+        defaultPaymentMethod {
+          id
+        }
+        paymentMethods {
+          edges {
+            node {
+              id
+              card
+            }
+          }
+        }
+      }
       apps {
         edges {
           node {
@@ -41,6 +62,7 @@ export const MY_ACCOUNT = gql`
       }
     }
   }
+  ${ACCOUNT_BASIC_DATA_FRAGMENT}
 `;
 
 export const TEMPLATES = gql`
@@ -141,11 +163,7 @@ export const CLIENT = gql`
   query Client($id: ID!) {
     user(id: $id) {
       id
-      username
-      isActive
-      email
-      verified
-      accountStatus
+      ...AccountBasicData
       apps {
         edges {
           node {
@@ -172,6 +190,7 @@ export const CLIENT = gql`
       }
     }
   }
+  ${ACCOUNT_BASIC_DATA_FRAGMENT}
 `;
 
 export const BUILDS = gql`

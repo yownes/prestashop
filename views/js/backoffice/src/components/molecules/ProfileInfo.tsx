@@ -1,10 +1,10 @@
 import React, { ReactNode } from "react";
 import { Descriptions, Typography } from "antd";
-import { MyAccount_me } from "../../api/types/MyAccount";
 import UserState from "./UserState";
+import { AccountBasicData } from "../../api/types/AccountBasicData";
 
 interface ProfileInfoProps {
-  profile?: MyAccount_me | null;
+  profile?: AccountBasicData | null;
   action?: ReactNode;
 }
 
@@ -27,11 +27,6 @@ const ProfileInfo = ({ profile, action }: ProfileInfoProps) => {
       )}
       {profile?.email && (
         <Descriptions.Item label="Email">{profile.email}</Descriptions.Item>
-      )}
-      {profile?.apps && (
-        <Descriptions.Item label="Apps">
-          {profile.apps.edges.length}
-        </Descriptions.Item>
       )}
       {profile?.accountStatus && (
         <Descriptions.Item label="Estado de la cuenta">

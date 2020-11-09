@@ -9,6 +9,58 @@ import { AccountAccountStatus, BuildBuildStatus } from "./globalTypes";
 // GraphQL query operation: MyAccount
 // ====================================================
 
+export interface MyAccount_me_customer_defaultPaymentMethod {
+  __typename: "StripePaymentMethodType";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+}
+
+export interface MyAccount_me_customer_paymentMethods_edges_node {
+  __typename: "StripePaymentMethodType";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+  /**
+   * If this is a card PaymentMethod, this hash contains details about the card.
+   */
+  card: string;
+}
+
+export interface MyAccount_me_customer_paymentMethods_edges {
+  __typename: "StripePaymentMethodTypeEdge";
+  /**
+   * The item at the end of the edge
+   */
+  node: MyAccount_me_customer_paymentMethods_edges_node | null;
+}
+
+export interface MyAccount_me_customer_paymentMethods {
+  __typename: "StripePaymentMethodTypeConnection";
+  /**
+   * Contains the nodes in this connection.
+   */
+  edges: (MyAccount_me_customer_paymentMethods_edges | null)[];
+}
+
+export interface MyAccount_me_customer {
+  __typename: "StripeCustomerType";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+  /**
+   * default payment method used for subscriptions and invoices for the customer.
+   */
+  defaultPaymentMethod: MyAccount_me_customer_defaultPaymentMethod | null;
+  /**
+   * Customer to which this PaymentMethod is saved.This will not be set when the PaymentMethod has not been saved to a Customer.
+   */
+  paymentMethods: MyAccount_me_customer_paymentMethods;
+}
+
 export interface MyAccount_me_apps_edges_node_storeLinks {
   __typename: "StoreLinks";
   ios: string | null;
@@ -81,6 +133,10 @@ export interface MyAccount_me {
   email: string;
   accountStatus: AccountAccountStatus;
   verified: boolean | null;
+  /**
+   * The user's Stripe Customer object, if it exists
+   */
+  customer: MyAccount_me_customer | null;
   apps: MyAccount_me_apps;
 }
 
