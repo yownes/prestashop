@@ -7,14 +7,14 @@
 // GraphQL mutation operation: Unsubscribe
 // ====================================================
 
-export interface Unsubscribe_dropOutUser {
+export interface Unsubscribe_dropOut {
   __typename: "Return";
   ok: boolean | null;
   error: string | null;
 }
 
 export interface Unsubscribe {
-  dropOutUser: Unsubscribe_dropOutUser | null;
+  dropOut: Unsubscribe_dropOut | null;
 }
 
 export interface UnsubscribeVariables {
