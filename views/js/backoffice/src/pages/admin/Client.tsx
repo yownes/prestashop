@@ -102,11 +102,11 @@ const Client = () => {
             }
           }}
         >
-          <Typography.Text type="danger">
+          <Text type="danger">
             {data?.user?.accountStatus === AccountAccountStatus.BANNED
               ? "Desbanear"
               : "Banear Cuenta"}
-          </Typography.Text>
+          </Text>
         </Popconfirm>
       </Menu.Item>
       <Menu.Item>
@@ -118,9 +118,9 @@ const Client = () => {
             unsubscribe({ variables: { userId: id } });
           }}
         >
-          <Typography.Text type="danger">
+          <Text type="danger">
             Dar de baja la suscripción
-          </Typography.Text>
+          </Text>
         </Popconfirm>
       </Menu.Item>
     </Menu>

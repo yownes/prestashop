@@ -1,8 +1,7 @@
 import React, { ReactNode } from "react";
-import { Button, Descriptions, Typography } from "antd";
+import { Descriptions, Typography } from "antd";
 import { MyAccount_me } from "../../api/types/MyAccount";
 import UserState from "./UserState";
-import { Link } from "react-router-dom";
 
 interface ProfileInfoProps {
   profile?: MyAccount_me | null;

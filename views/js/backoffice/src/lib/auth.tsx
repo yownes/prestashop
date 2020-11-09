@@ -188,7 +188,6 @@ function useAuthLogic(): IAuth {
 
   function refreshToken() {
     const thRefreshToken = localStorage.getItem(TOKEN_KEY);
-    console.log("refreshToken", thRefreshToken);
     if (thRefreshToken) {
       refreshTokenMutation({
         variables: { refreshToken: thRefreshToken },
