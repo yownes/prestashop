@@ -5,9 +5,10 @@ import {
   Col,
   Dropdown,
   Menu,
+  Modal,
   Popconfirm,
+  Radio,
   Row,
-  Table,
   Typography,
 } from "antd";
 import { ColumnsType } from "antd/lib/table";
@@ -29,6 +30,8 @@ import AppsTable from "../../components/molecules/AppsTable";
 import { UNSUBSCRIBE } from "../../api/mutations";
 import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
 import { EllipsisOutlined } from "@ant-design/icons";
+import connectionToNodes from "../../lib/connectionToNodes";
+import CreditCard from "../../components/molecules/CreditCard";
 
 const paymentsColumns: ColumnsType<Payment> = [
   {
@@ -58,18 +61,48 @@ const Profile = () => {
   const history = useHistory();
   const [confirmPassword, setConfirmPassword] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const [changePaymentMethod, setChangePaymentMethod] = useState(false);
   const { loading, data } = useQuery<MyAccount>(MY_ACCOUNT);
   const [unsubscribe] = useMutation<Unsubscribe, UnsubscribeVariables>(
     UNSUBSCRIBE
   );
   if (loading) return <Loading />;
 
-  const menu = (
+  const profileMenu = (
     <Menu>
       <Menu.Item>
         <Link to="/profile/edit">Editar</Link>
       </Menu.Item>
+      <Menu.Item onClick={() => setChangePaymentMethod(true)}>
+        Cambiar método de pago
+      </Menu.Item>
       <Menu.Divider></Menu.Divider>
+      {data?.me?.accountStatus === AccountAccountStatus.PAID_ACCOUNT && (
+        <Menu.Item>
+          <Popconfirm
+            title={
+              <>
+                <h4>¿Realmente deseas cancelar la suscripción al servicio?</h4>
+                <p>
+                  Todas las apps que tengas serán eliminadas de las tiendas de
+                  aplicaciones
+                </p>
+              </>
+            }
+            placement="left"
+            onConfirm={() => {
+              setIsOverlayVisible(false);
+              if (data?.me?.id) {
+                unsubscribe({ variables: { userId: data?.me?.id } });
+              }
+            }}
+          >
+            <Typography.Text type="danger">
+              Cancelar suscripción
+            </Typography.Text>
+          </Popconfirm>
+        </Menu.Item>
+      )}
       <Menu.Item>
         <Popconfirm
           title="¿Realmente deseas eliminar la cuenta?"
@@ -86,7 +119,7 @@ const Profile = () => {
   );
   const profieActions = (
     <Dropdown
-      overlay={menu}
+      overlay={profileMenu}
       trigger={["click"]}
       visible={isOverlayVisible}
       onVisibleChange={setIsOverlayVisible}
@@ -108,88 +141,75 @@ const Profile = () => {
           </Col>
         </Row>
       )}
-      <Row gutter={20}>
-        <Col span={12}>
-          <Row style={{ marginBottom: 20 }}>
-            <Col span="24">
-              <Card>
-                <ProfileInfo profile={data?.me} action={profieActions} />
-                <ProfileDangerZone
-                  id={data?.me?.id ?? ""}
-                  confirmPassword={confirmPassword}
-                />
-              </Card>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="24">
-              <Card>
-                {(data?.me?.apps?.edges.length ?? 0) > 0 ? (
-                  <>
-                    <TitleWithAction
-                      title="Apps"
-                      action={{
-                        action: () => history.push("/app/new"),
-                        label: "Añadir nueva",
-                      }}
-                    />
-                    <AppsTable dataSource={data?.me?.apps} />
-                  </>
-                ) : (
-                  <Placeholder
-                    claim="Crea tu primera App y empieza a vender"
-                    cta={{ title: "Añadir nueva app", link: "/app/new" }}
-                  ></Placeholder>
-                )}
-              </Card>
-            </Col>
-          </Row>
-        </Col>
-        <Col span={12}>
+      <Row gutter={[20, 20]}>
+        <Col lg={12} xs={24}>
           <Card>
-            {data?.me?.accountStatus === AccountAccountStatus.REGISTERED ? (
+            <ProfileInfo profile={data?.me} action={profieActions} />
+            {data?.me?.accountStatus === AccountAccountStatus.REGISTERED && (
               <Placeholder
                 claim="Suscríbete para poder tener tu propia App"
                 cta={{ title: "Suscribirse", link: "/pay" }}
               ></Placeholder>
-            ) : (
+            )}
+          </Card>
+        </Col>
+        <Col lg={12} xs={24}>
+          <Card>
+            {(data?.me?.apps?.edges.length ?? 0) > 0 ? (
               <>
                 <TitleWithAction
-                  title="Pagos"
+                  title="Apps"
                   action={{
-                    action: () => {
-                      if (data?.me?.id) {
-                        unsubscribe({
-                          variables: {
-                            userId: data?.me?.id,
-                          },
-                        });
-                      }
-                    },
-                    label: "Cancelar suscripción",
-                    needsConfirmation: true,
-                    confirmationTitle: (
-                      <>
-                        <h4>
-                          ¿Realmente deseas cancelar la suscripción al servicio?
-                        </h4>
-                        <p>
-                          Todas las apps que tengas serán eliminadas de las
-                          tiendas de aplicaciones
-                        </p>
-                      </>
-                    ),
+                    action: () => history.push("/app/new"),
+                    label: "Añadir nueva",
                   }}
                 />
-                <Table
-                  columns={paymentsColumns}
-                  dataSource={[]} // TODO: Payments
-                />
+                <AppsTable dataSource={data?.me?.apps} />
               </>
+            ) : (
+              <Placeholder
+                claim="Crea tu primera App y empieza a vender"
+                cta={{ title: "Añadir nueva app", link: "/app/new" }}
+              ></Placeholder>
             )}
           </Card>
         </Col>
       </Row>
+      <Modal
+        visible={changePaymentMethod}
+        onOk={() => {
+          setChangePaymentMethod(false);
+        }}
+        onCancel={() => {
+          setChangePaymentMethod(false);
+        }}
+      >
+        <Radio.Group
+          value={data?.me?.customer?.defaultPaymentMethod?.id}
+          onChange={(e) => {
+            console.log(e.target.value);
+          }}
+        >
+          {connectionToNodes(data?.me?.customer?.paymentMethods).map((node) => (
+            <Radio key={node.id} value={node.id}>
+              <CreditCard data={node.card} />
+            </Radio>
+          ))}
+        </Radio.Group>
+      </Modal>
+      <Modal
+        visible={confirmPassword}
+        title="Eliminación de cuenta"
+        onCancel={() => {
+          setConfirmPassword(false);
+        }}
+        okButtonProps={{style:{display: 'none'}}}
+      >
+        <ProfileDangerZone
+          id={data?.me?.id ?? ""}
+          confirmPassword={confirmPassword}
+        />
+      </Modal>
     </>
   );
 };

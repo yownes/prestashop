@@ -9,7 +9,7 @@ interface TitleWithActionProps {
   title: string;
   action?: {
     action: () => void;
-    label: string;
+    label: ReactNode;
     needsConfirmation?: boolean;
     confirmationTitle?: ReactNode;
   };

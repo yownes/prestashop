@@ -44,7 +44,8 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
   >(SUBSCRIBE);
   return (
     <Form
-      onFinish={async () => {
+      validateMessages={{ required: "El campo '${label}' es obligatorio" }}
+      onFinish={async (values) => {
         if (!stripe || !elements) {
           return;
         }
@@ -59,6 +60,16 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
         const { error, paymentMethod } = await stripe.createPaymentMethod({
           type: "card",
           card: cardElement,
+          billing_details: {
+            address: {
+              city: values.city,
+              country: values.country,
+              line1: values.direction,
+              state: values.state,
+            },
+            email: values.email,
+            name: values.name,
+          },
         });
 
         if (error) {
@@ -85,9 +96,9 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
                 paymentMethodId,
                 planId: plan.stripeId!!,
               },
-            }).then(({    data    }) => {
+            }).then(({ data }) => {
               if (data?.subscribe?.ok) {
-                history.replace("/profile");;;;
+                history.replace("/profile");
               } else {
                 message.error(data?.subscribe?.error);
               }
@@ -111,37 +122,81 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
         </Col>
         <Col span={24}>
           <Card>
-            <Title level={2}>Datos Personales</Title>
+            <Title level={2}>Datos de Facturación</Title>
             <Row gutter={[15, 15]}>
               <Col md={12} sm={24}>
-                <Input placeholder="Nombre" />
+                <Form.Item
+                  name="name"
+                  rules={[{ required: true }]}
+                  label="Nombre"
+                >
+                  <Input placeholder="Nombre" />
+                </Form.Item>
               </Col>
               <Col md={12} sm={24}>
-                <Input placeholder="Apellidos" />
+                <Form.Item
+                  name="surname"
+                  rules={[{ required: true }]}
+                  label="Apellidos"
+                >
+                  <Input placeholder="Apellidos" />
+                </Form.Item>
               </Col>
             </Row>
             <Row gutter={[15, 15]}>
               <Col md={12} sm={24}>
-                <Input placeholder="Mail" />
+                <Form.Item
+                  name="email"
+                  rules={[{ required: true }]}
+                  label="Email"
+                >
+                  <Input placeholder="Email" type="email" />
+                </Form.Item>
               </Col>
               <Col md={12} sm={24}>
-                <Input placeholder="Dirección" />
+                <Form.Item
+                  name="direction"
+                  rules={[{ required: true }]}
+                  label="Dirección"
+                >
+                  <Input placeholder="Dirección" />
+                </Form.Item>
               </Col>
             </Row>
             <Row gutter={[15, 15]}>
               <Col md={12} sm={24}>
-                <Input placeholder="Ciudad" />
+                <Form.Item
+                  name="city"
+                  rules={[{ required: true }]}
+                  label="Ciudad"
+                >
+                  <Input placeholder="Ciudad" />
+                </Form.Item>
               </Col>
               <Col md={12} sm={24}>
-                <Input placeholder="País" />
+                <Form.Item
+                  name="state"
+                  rules={[{ required: true }]}
+                  label="Provincia"
+                >
+                  <Input placeholder="Provincia" />
+                </Form.Item>
               </Col>
             </Row>
             <Row gutter={[15, 15]}>
               <Col md={12} sm={24}>
-                <Input placeholder="Dirección de facturación" />
+                <Form.Item
+                  name="country"
+                  rules={[{ required: true }]}
+                  label="País"
+                >
+                  <Input placeholder="País" />
+                </Form.Item>
               </Col>
               <Col md={12} sm={24}>
-                <Input placeholder="DNI - NIF" />
+                <Form.Item name="documentId" label="DNI - NIF">
+                  <Input placeholder="DNI - NIF" />
+                </Form.Item>
               </Col>
             </Row>
           </Card>

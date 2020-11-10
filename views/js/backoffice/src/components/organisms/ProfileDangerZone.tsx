@@ -25,7 +25,6 @@ const ProfileDangerZone = ({ id, confirmPassword }: ProfileDangerZoneProps) => {
   }
   return (
     <div>
-      <Divider />
       <Errors errors={errors} fields={["password"]} />
       <Form
         onFinish={(values) => {
