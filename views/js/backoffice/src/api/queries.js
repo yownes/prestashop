@@ -111,12 +111,19 @@ export const APP = gql`
 
 export const PLANS = gql`
   query Plans {
+    features {
+      id
+      name
+    }
     plans {
       edges {
         node {
           id
           name
           description
+          features {
+            id
+          }
           planSet {
             edges {
               node {

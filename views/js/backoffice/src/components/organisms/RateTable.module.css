@@ -1,10 +1,20 @@
+.table {
+  width: 100%;
+  min-width: 1000px;
+  table-layout: fixed;
+  overflow-x: scroll;
+}
 .table td {
   padding: 1rem;
 }
 
 .table th {
-  padding: 0 1rem 2rem;
+  /* padding: 0 1rem 2rem; */
   vertical-align: bottom;
+}
+
+.table .titleColumn {
+  padding: 1rem;
 }
 
 .table td:not(:last-child),

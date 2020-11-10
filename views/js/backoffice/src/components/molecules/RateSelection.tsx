@@ -4,38 +4,35 @@ import { Link } from "react-router-dom";
 import { PlanInterval } from "../../api/types/globalTypes";
 import { CheckoutLocationState } from "../../pages/client/Checkout";
 
+import styles from "./RateSelection.module.css";
+
 const { Text, Title } = Typography;
 
 interface RateSelectionProps {
-  id: string;
   subtitle?: string;
   title: string;
   plan: CheckoutLocationState;
-  onSelected: (id: string) => void;
 }
 
 const RateSelection = ({
-  id,
   subtitle,
   title,
   plan,
-  onSelected,
 }: RateSelectionProps) => {
   return (
-    <div>
+    <div className={styles.container}>
       <Text>{subtitle}</Text>
-      <Title>{title}</Title>
-      <Title>
+      <Title level={2}>{title}</Title>
+      <Title level={3}>
         <Text strong>{plan.amount}</Text>€/
-        
         {plan.interval === PlanInterval.MONTH ? "mes" : "año"}
       </Title>
-      <Link to={{pathname :`/checkout`, state: plan}}>
-        <Button type="primary" onClick={() => onSelected(id)}>
-          Seleccionar
-        </Button>
+      <Link to={{ pathname: `/checkout`, state: plan }}>
+        <Button type="primary">Seleccionar</Button>
       </Link>
-      <Text>Precio con IVA incluido</Text>
+      <Text type="secondary" style={{ display: "block" }}>
+        Precio con IVA incluido
+      </Text>
     </div>
   );
 };

@@ -9,6 +9,17 @@ import { PlanInterval } from "./globalTypes";
 // GraphQL query operation: Plans
 // ====================================================
 
+export interface Plans_features {
+  __typename: "FeaturesType";
+  id: string;
+  name: string;
+}
+
+export interface Plans_plans_edges_node_features {
+  __typename: "FeaturesType";
+  id: string;
+}
+
 export interface Plans_plans_edges_node_planSet_edges_node {
   __typename: "StripePlanType";
   /**
@@ -60,6 +71,7 @@ export interface Plans_plans_edges_node {
    * A description of this object.
    */
   description: string | null;
+  features: Plans_plans_edges_node_features[];
   /**
    * The product whose pricing this plan determines.
    */
@@ -83,5 +95,6 @@ export interface Plans_plans {
 }
 
 export interface Plans {
+  features: (Plans_features | null)[] | null;
   plans: Plans_plans | null;
 }

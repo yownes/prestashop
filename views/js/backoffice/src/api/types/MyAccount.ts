@@ -134,6 +134,10 @@ export interface MyAccount_me {
   accountStatus: AccountAccountStatus;
   verified: boolean | null;
   /**
+   * Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+   */
+  isActive: boolean;
+  /**
    * The user's Stripe Customer object, if it exists
    */
   customer: MyAccount_me_customer | null;

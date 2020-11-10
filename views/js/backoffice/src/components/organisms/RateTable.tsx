@@ -1,11 +1,13 @@
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
-import { Switch } from "antd";
+import { Switch, Table } from "antd";
 import React, { useState } from "react";
 import { PLANS } from "../../api/queries";
 import { PlanInterval } from "../../api/types/globalTypes";
 import {
   Plans,
+  Plans_features,
+  Plans_plans_edges_node,
   Plans_plans_edges_node_planSet_edges_node,
 } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
@@ -28,87 +30,111 @@ export interface Feature {
   id: string;
 }
 
-interface RateTableProps {
-  onSelected: (id: string) => void;
-  rates: Rate[];
-  features: Feature[];
-}
-
 function selectPlan(
   plans: Plans_plans_edges_node_planSet_edges_node[],
   interval: PlanInterval,
   name: string
 ): CheckoutLocationState {
   const plan = plans
-      .filter((plan) => plan.active)
-      .find((plan) => plan.interval === interval)
-      if (plan) {
-        return {
-          ...plan,
-          name
-        }
-      } else {
-        return  {
-            __typename: "StripePlanType",
-            amount: 0,
-            id: "-1",
-            stripeId: "-1",
-            interval: PlanInterval.MONTH,
-            name,
-            active: true,
-          };
-      }
+    .filter((plan) => plan.active)
+    .find((plan) => plan.interval === interval);
+  if (plan) {
+    return {
+      ...plan,
+      name,
+    };
+  } else {
+    return {
+      __typename: "StripePlanType",
+      amount: 0,
+      id: "-1",
+      stripeId: "-1",
+      interval: PlanInterval.MONTH,
+      name,
+      active: true,
+    };
+  }
 }
 
-const RateTable = ({ rates, features, onSelected }: RateTableProps) => {
+function notNull(
+  value: Plans_features | null,
+  index: number,
+  array: (Plans_features | null)[]
+): value is Plans_features {
+  return (value as Plans_features).id !== undefined;
+}
+
+const RateTable = () => {
   const { data, loading } = useQuery<Plans>(PLANS);
   const [interval, setInterval] = useState(PlanInterval.MONTH);
   if (loading) return <Loading />;
+  const nodes = connectionToNodes(data?.plans);
+  const features = data?.features?.filter<Plans_features>(notNull) ?? [];
+  const featuresw = features.filter((a) => a);
+  const dataSource = features.map((feat) => {
+    const ids = nodes
+      .map((node) => ({
+        [node.id]: node.features.map((f) => f.id).includes(feat.id),
+      }))
+      .reduce((a, b) => ({ ...a, ...b }), {});
+    return {
+      ...feat,
+      ...ids,
+    };
+  });
+  console.log("dataSource", dataSource);
   return (
     <>
-      <p>
-        Cargo mensual:{" "}
-        <Switch
-          checked={interval === PlanInterval.MONTH}
-          onChange={(checked) => {
-            setInterval(checked ? PlanInterval.MONTH : PlanInterval.YEAR);
-          }}
-        />
-      </p>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Características</th>
-            {connectionToNodes(data?.plans).map((rate) => (
-              <th key={rate.id}>
-                <RateSelection
-                  id={rate.id}
-                  title={rate.name}
-                  subtitle={rate.description ?? "-"}
-                  plan={selectPlan(connectionToNodes(rate.planSet), interval, rate.name)}
-                  onSelected={onSelected}
+      <Table
+        columns={[
+          {
+            title: (
+              <>
+                <span>Cargo mensual: </span>
+                <Switch
+                  checked={interval === PlanInterval.MONTH}
+                  onChange={(checked) => {
+                    setInterval(
+                      checked ? PlanInterval.MONTH : PlanInterval.YEAR
+                    );
+                  }}
                 />
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {features.map((feature) => (
-            <tr key={feature.id}>
-              <td>{feature.title}</td>
-              {rates.map((rate) => (
-                <td key={rate.id}>
-                  {rate.features.includes(feature.id) ? (
-                    <CheckOutlined style={{ fontSize: 20, color: "#00ec93" }} />
-                  ) : (
-                    <CloseOutlined style={{ fontSize: 20, color: "#dd0000" }} />
-                  )}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </>
+            ),
+            dataIndex: "name",
+            fixed: "left",
+          },
+          ...nodes.map((rate, i) => ({
+            title: (
+              <RateSelection
+                key={rate.id}
+                title={rate.name}
+                subtitle={rate.description ?? "-"}
+                plan={selectPlan(
+                  connectionToNodes(rate.planSet),
+                  interval,
+                  rate.name
+                )}
+              />
+            ),
+            key: rate.id,
+            dataIndex: rate.id,
+            render(text: any, record: Plans_features, index: number) {
+              console.log("record", record);
+              console.log("text", text);
+              console.log("index", index);
+              return text ? (
+                <CheckOutlined style={{ fontSize: 20, color: "#00ec93" }} />
+              ) : (
+                <CloseOutlined style={{ fontSize: 20, color: "#dd0000" }} />
+              );
+            },
+          })),
+        ]}
+        pagination={false}
+        scroll={{ x: 1500, y: "40vh" }}
+        dataSource={dataSource}
+      />
     </>
   );
 };
