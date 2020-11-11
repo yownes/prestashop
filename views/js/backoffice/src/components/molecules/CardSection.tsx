@@ -25,7 +25,7 @@ const CARD_ELEMENT_OPTIONS = {
 const CardSection = () => {
   return (
     <Row>
-      <Col span={6}>
+      <Col span={12}>
         <label>
           Detalles de la tarjeta
           <Card>

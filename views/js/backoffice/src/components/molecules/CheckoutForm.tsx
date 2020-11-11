@@ -108,117 +108,129 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
       }}
     >
       <Row gutter={[20, 20]}>
-        <Col span={24}>
-          <Card>
-            <Title level={2}>Tu Pedido</Title>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Text type="secondary">{plan.name}</Text>
-              <Text type="secondary">
-                Suscripción de {plan.amount}€ al{" "}
-                {plan.interval === PlanInterval.MONTH ? "mes" : "año"}
-              </Text>
-            </div>
-          </Card>
+        <Col sm={24} md={14}>
+          <Row gutter={[20, 20]}>
+            <Col span={24}>
+              <Card>
+                <Title level={2}>Datos de Facturación</Title>
+                <Row gutter={[15, 15]}>
+                  <Col md={12} sm={24}>
+                    <Form.Item
+                      name="name"
+                      rules={[{ required: true }]}
+                      label="Nombre"
+                    >
+                      <Input placeholder="Nombre" />
+                    </Form.Item>
+                  </Col>
+                  <Col md={12} sm={24}>
+                    <Form.Item
+                      name="surname"
+                      rules={[{ required: true }]}
+                      label="Apellidos"
+                    >
+                      <Input placeholder="Apellidos" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={[15, 15]}>
+                  <Col md={12} sm={24}>
+                    <Form.Item
+                      name="email"
+                      rules={[{ required: true }]}
+                      label="Email"
+                    >
+                      <Input placeholder="Email" type="email" />
+                    </Form.Item>
+                  </Col>
+                  <Col md={12} sm={24}>
+                    <Form.Item
+                      name="direction"
+                      rules={[{ required: true }]}
+                      label="Dirección"
+                    >
+                      <Input placeholder="Dirección" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={[15, 15]}>
+                  <Col md={12} sm={24}>
+                    <Form.Item
+                      name="city"
+                      rules={[{ required: true }]}
+                      label="Ciudad"
+                    >
+                      <Input placeholder="Ciudad" />
+                    </Form.Item>
+                  </Col>
+                  <Col md={12} sm={24}>
+                    <Form.Item
+                      name="state"
+                      rules={[{ required: true }]}
+                      label="Provincia"
+                    >
+                      <Input placeholder="Provincia" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={[15, 15]}>
+                  <Col md={12} sm={24}>
+                    <Form.Item
+                      name="country"
+                      rules={[{ required: true }]}
+                      label="País"
+                    >
+                      <Input placeholder="País" />
+                    </Form.Item>
+                  </Col>
+                  <Col md={12} sm={24}>
+                    <Form.Item name="documentId" label="DNI - NIF">
+                      <Input placeholder="DNI - NIF" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+            <Col span={24}>
+              <Card>
+                <Title level={2}>Método de Pago</Title>
+                <CardSection />
+              </Card>
+            </Col>
+          </Row>
         </Col>
-        <Col span={24}>
-          <Card>
-            <Title level={2}>Datos de Facturación</Title>
-            <Row gutter={[15, 15]}>
-              <Col md={12} sm={24}>
-                <Form.Item
-                  name="name"
-                  rules={[{ required: true }]}
-                  label="Nombre"
+        <Col sm={24} md={10}>
+          <Row gutter={[20, 20]}>
+            <Col span={24}>
+              <Card>
+                <Title level={2}>Tu Pedido</Title>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  <Input placeholder="Nombre" />
-                </Form.Item>
-              </Col>
-              <Col md={12} sm={24}>
-                <Form.Item
-                  name="surname"
-                  rules={[{ required: true }]}
-                  label="Apellidos"
-                >
-                  <Input placeholder="Apellidos" />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={[15, 15]}>
-              <Col md={12} sm={24}>
-                <Form.Item
-                  name="email"
-                  rules={[{ required: true }]}
-                  label="Email"
-                >
-                  <Input placeholder="Email" type="email" />
-                </Form.Item>
-              </Col>
-              <Col md={12} sm={24}>
-                <Form.Item
-                  name="direction"
-                  rules={[{ required: true }]}
-                  label="Dirección"
-                >
-                  <Input placeholder="Dirección" />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={[15, 15]}>
-              <Col md={12} sm={24}>
-                <Form.Item
-                  name="city"
-                  rules={[{ required: true }]}
-                  label="Ciudad"
-                >
-                  <Input placeholder="Ciudad" />
-                </Form.Item>
-              </Col>
-              <Col md={12} sm={24}>
-                <Form.Item
-                  name="state"
-                  rules={[{ required: true }]}
-                  label="Provincia"
-                >
-                  <Input placeholder="Provincia" />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={[15, 15]}>
-              <Col md={12} sm={24}>
-                <Form.Item
-                  name="country"
-                  rules={[{ required: true }]}
-                  label="País"
-                >
-                  <Input placeholder="País" />
-                </Form.Item>
-              </Col>
-              <Col md={12} sm={24}>
-                <Form.Item name="documentId" label="DNI - NIF">
-                  <Input placeholder="DNI - NIF" />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Card>
+                  <Text type="secondary">{plan.name}</Text>
+                  <Text type="secondary">
+                    Suscripción de {plan.amount}€ al{" "}
+                    {plan.interval === PlanInterval.MONTH ? "mes" : "año"}
+                  </Text>
+                </div>
+              </Card>
+            </Col>
+            <Col span={24}>
+              <Button htmlType="submit" type="primary" size="large">
+                Confirmar
+              </Button>
+            </Col>
+            <Col span={24}>
+              <Errors
+                errors={{
+                  nonFieldErrors: data?.subscribe?.error
+                    ? [{ message: data?.subscribe?.error, code: "error" }]
+                    : undefined,
+                }}
+              />
+            </Col>
+          </Row>
         </Col>
-        <Col span={24}>
-          <Card>
-            <Title level={2}>Método de Pago</Title>
-            <CardSection />
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Errors
-          errors={{
-            nonFieldErrors: data?.subscribe?.error
-              ? [{ message: data?.subscribe?.error, code: "error" }]
-              : undefined,
-          }}
-        />
-      </Row>
-      <Row>
-        <Button htmlType="submit">Confirmar</Button>
       </Row>
     </Form>
   );
