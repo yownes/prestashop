@@ -19,12 +19,8 @@ const Validate = () => {
     VerifyAccount,
     VerifyAccountVariables
   >(VERIFY_ACCOUNT);
-  console.log(location);
-  console.log({ loading, data });
 
   useEffect(() => {
-    console.log("useEffect");
-
     verifyAccount({ variables: { token: location.token } });
   }, [location.token, verifyAccount]);
   if (loading) {

@@ -163,7 +163,6 @@ const Client = () => {
                       <Popconfirm
                         title="¿Quieres eliminar esta app?"
                         onConfirm={() => {
-                          console.log("eliminar", record);
                           deleteApp({
                             variables: {
                               id: record.id,

@@ -4,6 +4,7 @@ import App from "../pages/client/App";
 import Checkout from "../pages/client/Checkout";
 import EditProfile from "../pages/client/EditProfile";
 import Pay from "../pages/client/Pay";
+import PaymentMethod from "../pages/client/PaymentMethod";
 import Profile from "../pages/client/Profile";
 
 const routes: RoutePath[] = [
@@ -23,6 +24,12 @@ const routes: RoutePath[] = [
     path: "/profile/edit",
     name: "Editar Perfil",
     component: EditProfile,
+  },
+  {
+    exact: true,
+    path: "/profile/paymentMethods",
+    name: "Editar Métodos de Pago",
+    component: PaymentMethod,
   },
   {
     exact: true,

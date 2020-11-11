@@ -4,6 +4,7 @@ import styles from "./CreditCard.module.css";
 
 interface CreditCardProps {
   data: string;
+  billing: string;
 }
 
 interface ICreditCardStripe {
@@ -16,6 +17,18 @@ interface ICreditCardStripe {
   exp_month: number;
   exp_year: number;
   last4: string;
+}
+
+interface IBillingDetailsStripe {
+  address: {
+    city: string;
+    country: string;
+    line1: string;
+    postal_code: string;
+    state: string;
+  };
+  email: string;
+  name: string;
 }
 
 const CARDS = {
@@ -36,36 +49,42 @@ const CARDS = {
   },
 };
 
-const CreditCard = ({ data }: CreditCardProps) => {
-  console.log("data", data);
-  const aux = data
+const CreditCard = ({ data, billing }: CreditCardProps) => {
+  const normalizedData = data
     .replace(/None/g, "null")
     .replace(/True/g, "true")
+    .replace(/False/g, "false")
     .replace(/'/g, '"');
-  console.log("aux", aux);
+  const normalizedBilling = billing
+    .replace(/None/g, "null")
+    .replace(/True/g, "true")
+    .replace(/False/g, "false")
+    .replace(/'/g, '"');
 
-  const card: ICreditCardStripe = JSON.parse(aux);
-  console.log("card", card);
+  const card: ICreditCardStripe = JSON.parse(normalizedData);
+  const billingData: IBillingDetailsStripe = JSON.parse(normalizedBilling);
   return (
     <div className={styles.creditcard}>
       <div className={styles.front}>
         <div
           id={styles.ccsingle}
-          dangerouslySetInnerHTML={{ __html: CARDS[card.brand].icon }}
+          dangerouslySetInnerHTML={{ __html: CARDS[card.brand]?.icon }}
         ></div>
         <svg viewBox="0 0 750 471" id={styles.cardfront}>
           <g id="CardBackground">
             <g id="amex_1_">
               <path
                 className={`${styles.lightcolor} ${
-                  CARDS[card.brand].lightColor
+                  CARDS[card.brand]?.lightColor ?? styles.grey
                 }`}
                 d="M40 0h670c22.1 0 40 17.9 40 40v391c0 22.1-17.9 40-40 40H40c-22.1 0-40-17.9-40-40V40C0 17.9 17.9 0 40 0z"
               />
             </g>
           </g>
           <path
-            className={`${styles.darkcolor} ${CARDS[card.brand].darkColor}`}
+            className={`${styles.darkcolor} ${
+              CARDS[card.brand]?.darkColor ?? styles.greydark
+            }`}
             d="M750 431V193.2c-217.6-57.5-556.4-13.5-750 24.9V431c0 22.1 17.9 40 40 40h670c22.1 0 40-17.9 40-40z"
           />
           <text
@@ -76,7 +95,7 @@ const CreditCard = ({ data }: CreditCardProps) => {
             transform="translate(54.106 428.172)"
             className={`${styles.st2} ${styles.st5} ${styles.st6}`}
           >
-            {"JOHN DOE"}
+            {billingData?.name?.toUpperCase()}
           </text>
           <text
             transform="translate(54.107 389.88)"

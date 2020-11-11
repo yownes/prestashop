@@ -20,11 +20,10 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
   }
 `;
 
-export const MY_ACCOUNT = gql`
-  query MyAccount {
+export const MY_PAYMENT_METHODS = gql`
+  query MyPaymentMethods {
     me {
       id
-      ...AccountBasicData
       customer {
         id
         defaultPaymentMethod {
@@ -35,10 +34,20 @@ export const MY_ACCOUNT = gql`
             node {
               id
               card
+              billingDetails
             }
           }
         }
       }
+    }
+  }
+`;
+
+export const MY_ACCOUNT = gql`
+  query MyAccount {
+    me {
+      id
+      ...AccountBasicData
       apps {
         edges {
           node {

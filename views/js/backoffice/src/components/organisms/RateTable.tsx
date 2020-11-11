@@ -79,7 +79,6 @@ const RateTable = () => {
         ...ids,
       };
     });
-  console.log("dataSource", dataSource);
   return (
     <>
       <Table
@@ -117,9 +116,6 @@ const RateTable = () => {
             key: rate.id,
             dataIndex: rate.id,
             render(text: any, record: Plans_features, index: number) {
-              console.log("record", record);
-              console.log("text", text);
-              console.log("index", index);
               return text ? (
                 <CheckOutlined style={{ fontSize: 20, color: "#00ec93" }} />
               ) : (

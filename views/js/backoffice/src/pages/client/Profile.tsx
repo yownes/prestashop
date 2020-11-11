@@ -7,7 +7,6 @@ import {
   Menu,
   Modal,
   Popconfirm,
-  Radio,
   Row,
   Typography,
 } from "antd";
@@ -28,14 +27,11 @@ import AppsTable from "../../components/molecules/AppsTable";
 import { UNSUBSCRIBE } from "../../api/mutations";
 import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
 import { EllipsisOutlined } from "@ant-design/icons";
-import connectionToNodes from "../../lib/connectionToNodes";
-import CreditCard from "../../components/molecules/CreditCard";
 
 const Profile = () => {
   const history = useHistory();
   const [confirmPassword, setConfirmPassword] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
-  const [changePaymentMethod, setChangePaymentMethod] = useState(false);
   const { loading, data } = useQuery<MyAccount>(MY_ACCOUNT);
   const [unsubscribe] = useMutation<Unsubscribe, UnsubscribeVariables>(
     UNSUBSCRIBE
@@ -47,8 +43,8 @@ const Profile = () => {
       <Menu.Item>
         <Link to="/profile/edit">Editar</Link>
       </Menu.Item>
-      <Menu.Item onClick={() => setChangePaymentMethod(true)}>
-        Cambiar método de pago
+      <Menu.Item>
+        <Link to="/profile/paymentMethods">Cambiar método de pago</Link>
       </Menu.Item>
       <Menu.Divider></Menu.Divider>
       {data?.me?.accountStatus === AccountAccountStatus.PAID_ACCOUNT && (
@@ -150,34 +146,12 @@ const Profile = () => {
         </Col>
       </Row>
       <Modal
-        visible={changePaymentMethod}
-        onOk={() => {
-          setChangePaymentMethod(false);
-        }}
-        onCancel={() => {
-          setChangePaymentMethod(false);
-        }}
-      >
-        <Radio.Group
-          value={data?.me?.customer?.defaultPaymentMethod?.id}
-          onChange={(e) => {
-            console.log(e.target.value);
-          }}
-        >
-          {connectionToNodes(data?.me?.customer?.paymentMethods).map((node) => (
-            <Radio key={node.id} value={node.id}>
-              <CreditCard data={node.card} />
-            </Radio>
-          ))}
-        </Radio.Group>
-      </Modal>
-      <Modal
         visible={confirmPassword}
         title="Eliminación de cuenta"
         onCancel={() => {
           setConfirmPassword(false);
         }}
-        okButtonProps={{style:{display: 'none'}}}
+        okButtonProps={{ style: { display: "none" } }}
       >
         <ProfileDangerZone
           id={data?.me?.id ?? ""}

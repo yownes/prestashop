@@ -139,7 +139,6 @@ function useAuthLogic(): IAuth {
   });
 
   function login(variables: TokenAuthVariables) {
-    console.log("login", variables);
     return tokenAuth({
       variables,
     }).then(({ data }) => {
