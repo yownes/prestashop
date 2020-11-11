@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Button, Col, Drawer, Radio, Row } from "antd";
+import { Button, Col, Drawer, Row } from "antd";
 import CreditCard from "../../components/molecules/CreditCard";
-import connectionToNodes from "../../lib/connectionToNodes";
 import { useMutation, useQuery } from "@apollo/client";
 import { MY_PAYMENT_METHODS } from "../../api/queries";
 import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
@@ -27,22 +26,14 @@ const PaymentMethod = () => {
     <Row gutter={20}>
       <Col span={24}>
         <Title level={2}>Tarjeta por defecto</Title>
-        <Radio.Group
-          value={data?.me?.customer?.defaultPaymentMethod?.id}
-          onChange={(e) => {
-            console.log(e.target.value);
-          }}
-        >
-          {connectionToNodes(data?.me?.customer?.paymentMethods).map((node) => (
-            <Radio key={node.id} value={node.id}>
-              <CreditCard data={node.card} billing={node.billingDetails} />
-            </Radio>
-          ))}
-        </Radio.Group>
+        {data?.me?.customer?.defaultPaymentMethod && <CreditCard
+          data={data?.me?.customer?.defaultPaymentMethod?.card}
+          billing={data?.me?.customer?.defaultPaymentMethod?.billingDetails}
+        />}
       </Col>
       <Col span={24}>
         <Button onClick={() => setIsDrawerOpen(true)}>
-          Añadir nueva tarjeta
+          Cambiar Tarjeta
         </Button>
       </Col>
       <Drawer

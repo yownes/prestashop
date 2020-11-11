@@ -28,15 +28,8 @@ export const MY_PAYMENT_METHODS = gql`
         id
         defaultPaymentMethod {
           id
-        }
-        paymentMethods {
-          edges {
-            node {
-              id
-              card
-              billingDetails
-            }
-          }
+          card
+          billingDetails
         }
       }
     }

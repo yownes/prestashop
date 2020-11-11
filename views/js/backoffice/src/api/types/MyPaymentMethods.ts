@@ -13,14 +13,6 @@ export interface MyPaymentMethods_me_customer_defaultPaymentMethod {
    * The ID of the object.
    */
   id: string;
-}
-
-export interface MyPaymentMethods_me_customer_paymentMethods_edges_node {
-  __typename: "StripePaymentMethodType";
-  /**
-   * The ID of the object.
-   */
-  id: string;
   /**
    * If this is a card PaymentMethod, this hash contains details about the card.
    */
@@ -29,22 +21,6 @@ export interface MyPaymentMethods_me_customer_paymentMethods_edges_node {
    * Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
    */
   billingDetails: string;
-}
-
-export interface MyPaymentMethods_me_customer_paymentMethods_edges {
-  __typename: "StripePaymentMethodTypeEdge";
-  /**
-   * The item at the end of the edge
-   */
-  node: MyPaymentMethods_me_customer_paymentMethods_edges_node | null;
-}
-
-export interface MyPaymentMethods_me_customer_paymentMethods {
-  __typename: "StripePaymentMethodTypeConnection";
-  /**
-   * Contains the nodes in this connection.
-   */
-  edges: (MyPaymentMethods_me_customer_paymentMethods_edges | null)[];
 }
 
 export interface MyPaymentMethods_me_customer {
@@ -57,10 +33,6 @@ export interface MyPaymentMethods_me_customer {
    * default payment method used for subscriptions and invoices for the customer.
    */
   defaultPaymentMethod: MyPaymentMethods_me_customer_defaultPaymentMethod | null;
-  /**
-   * Customer to which this PaymentMethod is saved.This will not be set when the PaymentMethod has not been saved to a Customer.
-   */
-  paymentMethods: MyPaymentMethods_me_customer_paymentMethods;
 }
 
 export interface MyPaymentMethods_me {
