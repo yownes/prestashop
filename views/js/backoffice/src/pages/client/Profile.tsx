@@ -11,10 +11,8 @@ import {
   Row,
   Typography,
 } from "antd";
-import { ColumnsType } from "antd/lib/table";
 import React, { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { Payment } from "../../models/App";
 import { Link, useHistory } from "react-router-dom";
 import {
   Placeholder,
@@ -32,30 +30,6 @@ import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
 import { EllipsisOutlined } from "@ant-design/icons";
 import connectionToNodes from "../../lib/connectionToNodes";
 import CreditCard from "../../components/molecules/CreditCard";
-
-const paymentsColumns: ColumnsType<Payment> = [
-  {
-    title: "Fecha",
-    dataIndex: "initial",
-    key: "date",
-    render: (date: Date) => date.toLocaleDateString(),
-  },
-  {
-    title: "Concepto",
-    dataIndex: "concept",
-    key: "concept",
-  },
-  {
-    title: "Total",
-    dataIndex: "quantity",
-    key: "total",
-    render: (total: number) =>
-      new Intl.NumberFormat("es-ES", {
-        style: "currency",
-        currency: "EUR",
-      }).format(total),
-  },
-];
 
 const Profile = () => {
   const history = useHistory();

@@ -41,7 +41,7 @@ const CreditCard = ({ data }: CreditCardProps) => {
   const aux = data
     .replace(/None/g, "null")
     .replace(/True/g, "true")
-    .replace(/\'/g, '"');
+    .replace(/'/g, '"');
   console.log("aux", aux);
 
   const card: ICreditCardStripe = JSON.parse(aux);

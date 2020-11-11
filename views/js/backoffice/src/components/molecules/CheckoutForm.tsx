@@ -44,7 +44,7 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
   >(SUBSCRIBE);
   return (
     <Form
-      validateMessages={{ required: "El campo '${label}' es obligatorio" }}
+      validateMessages={{ required: "El campo '${label}' es obligatorio" }} // eslint-disable-line no-template-curly-in-string
       onFinish={async (values) => {
         if (!stripe || !elements) {
           return;

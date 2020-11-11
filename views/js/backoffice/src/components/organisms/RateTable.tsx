@@ -7,15 +7,12 @@ import { PlanInterval } from "../../api/types/globalTypes";
 import {
   Plans,
   Plans_features,
-  Plans_plans_edges_node,
   Plans_plans_edges_node_planSet_edges_node,
 } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { CheckoutLocationState } from "../../pages/client/Checkout";
 import Loading from "../atoms/Loading";
 import RateSelection from "../molecules/RateSelection";
-
-import styles from "./RateTable.module.css";
 
 export interface Rate {
   title: string;
@@ -69,19 +66,19 @@ const RateTable = () => {
   const [interval, setInterval] = useState(PlanInterval.MONTH);
   if (loading) return <Loading />;
   const nodes = connectionToNodes(data?.plans);
-  const features = data?.features?.filter<Plans_features>(notNull) ?? [];
-  const featuresw = features.filter((a) => a);
-  const dataSource = features.map((feat) => {
-    const ids = nodes
-      .map((node) => ({
-        [node.id]: node.features.map((f) => f.id).includes(feat.id),
-      }))
-      .reduce((a, b) => ({ ...a, ...b }), {});
-    return {
-      ...feat,
-      ...ids,
-    };
-  });
+  const dataSource = data?.features
+    ?.filter<Plans_features>(notNull)
+    .map((feat) => {
+      const ids = nodes
+        .map((node) => ({
+          [node.id]: node.features.map((f) => f.id).includes(feat.id),
+        }))
+        .reduce((a, b) => ({ ...a, ...b }), {});
+      return {
+        ...feat,
+        ...ids,
+      };
+    });
   console.log("dataSource", dataSource);
   return (
     <>
