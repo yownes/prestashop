@@ -39,6 +39,13 @@ export enum PlanInterval {
   YEAR = "YEAR",
 }
 
+export interface PaymentMethodAppInput {
+  stripeTestPublic: string;
+  stripeTestSecret: string;
+  stripeProdPublic: string;
+  stripeProdSecret: string;
+}
+
 export interface StoreAppColorInput {
   color?: string | null;
   text?: string | null;

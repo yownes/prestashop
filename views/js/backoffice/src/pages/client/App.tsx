@@ -9,6 +9,7 @@ import { TitleWithAction, AppInfo } from "../../components/molecules";
 import { TemplateSelector, ColorPicker } from "../../components/organisms";
 import AppPreview from "../../components/organisms/AppPreview";
 import { StoreAppInput } from "../../api/types/globalTypes";
+import AppPayment from "../../components/organisms/AppPayment";
 
 interface AppParamTypes {
   appId?: string;
@@ -88,6 +89,7 @@ const App = () => {
                     }));
                   }}
                 />
+                <AppPayment appId={appId!!} />
               </Card>
             </Col>
           </Row>

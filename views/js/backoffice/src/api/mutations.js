@@ -114,6 +114,15 @@ export const DELETE_APP = gql`
   }
 `;
 
+export const MODIFY_APP_PAYMENT = gql`
+  mutation ModifyAppPayment($data: PaymentMethodAppInput!, $appId: ID!) {
+    modifyPaymentMethodApp(data: $data, storeAppId: $appId) {
+      ok
+      error
+    }
+  }
+`;
+
 /**
  * ACCOUNT
  */

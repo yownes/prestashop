@@ -111,6 +111,21 @@ export const APP = gql`
   }
 `;
 
+export const APP_PAYMENTS = gql`
+  query AppPayments($id: ID!) {
+    app(id: $id) {
+      id
+      paymentMethod {
+        id
+        stripeTestPublic
+        stripeTestSecret
+        stripeProdPublic
+        stripeProdSecret
+      }
+    }
+  }
+`;
+
 export const PLANS = gql`
   query Plans {
     features {
