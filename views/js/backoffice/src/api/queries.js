@@ -33,6 +33,7 @@ export const MY_PAYMENT_METHODS = gql`
           edges {
             node {
               id
+              stripeId
               card
               billingDetails
             }

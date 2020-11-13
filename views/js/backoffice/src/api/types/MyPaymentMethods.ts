@@ -21,6 +21,7 @@ export interface MyPaymentMethods_me_customer_paymentMethods_edges_node {
    * The ID of the object.
    */
   id: string;
+  stripeId: string | null;
   /**
    * If this is a card PaymentMethod, this hash contains details about the card.
    */

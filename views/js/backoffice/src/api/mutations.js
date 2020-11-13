@@ -170,6 +170,15 @@ export const ADD_PAYMENT_METHOD = gql`
   }
 `;
 
+export const REMOVE_PAYMENT_METHOD = gql`
+  mutation RemovePaymentMethod($paymentMethodId: ID!) {
+    detachPaymentMethod(paymentMethodId: $paymentMethodId) {
+      ok
+      error
+    }
+  }
+`;
+
 export const SUBSCRIBE = gql`
   mutation Subscribe($paymentMethodId: ID!, $planId: ID!) {
     subscribe(paymentMethodId: $paymentMethodId, planId: $planId) {
