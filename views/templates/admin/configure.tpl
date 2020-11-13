@@ -12,6 +12,12 @@
  *}
  
 <div id="root"></div>
+  <script type="text/javascript">
+    window.__YOWNES_STORE_INFO__ = {
+      link: {$siteUrl},
+      name: {$shopName}
+    }
+  </script>
 {foreach from=$scripts item=script}
   <script type="text/javascript" src="{$script}"></script>
 {/foreach}

@@ -44,7 +44,10 @@ const App = () => {
       setState({
         template: data.app.template?.id,
         name: data.app.name,
-        color: { color: data.app.color?.color, text: data.app.color?.text },
+        color: {
+          color: data.app.color?.color ?? baseApp.color?.color,
+          text: data.app.color?.text ?? baseApp.color?.text,
+        },
         logo: data.app.logo,
       });
     }

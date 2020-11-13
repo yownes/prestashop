@@ -123,6 +123,18 @@ export const MODIFY_APP_PAYMENT = gql`
   }
 `;
 
+export const CREATE_APP = gql`
+  mutation CreateApp($data: StoreAppInput!) {
+    createApp(data: $data) {
+      ok
+      error
+      storeApp {
+        id
+      }
+    }
+  }
+`;
+
 /**
  * ACCOUNT
  */

@@ -3,6 +3,7 @@ import Validate from "../pages/auth/Validate";
 import App from "../pages/client/App";
 import Checkout from "../pages/client/Checkout";
 import EditProfile from "../pages/client/EditProfile";
+import NewApp from "../pages/client/NewApp";
 import Pay from "../pages/client/Pay";
 import PaymentMethod from "../pages/client/PaymentMethod";
 import Profile from "../pages/client/Profile";
@@ -47,7 +48,7 @@ const routes: RoutePath[] = [
     exact: true,
     path: "/app/new",
     name: "Nueva App",
-    component: App,
+    component: NewApp,
   },
   {
     exact: false,

@@ -104,6 +104,7 @@ class Yownes extends Module
             'blog' => Module::isInstalled('prestablog'),
             'baseUrl' => '',
             'scripts' => $scripts,
+            'shopName' => Configuration::get('PS_SHOP_NAME'),
             'siteUrl' => Tools::getHttpHost(true).
             __PS_BASE_URI__,
             'tokenYownes' => Tools::getAdminTokenLite('AdminYownesAjax')

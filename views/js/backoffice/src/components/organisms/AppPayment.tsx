@@ -17,9 +17,14 @@ interface AppPaymentProps {
 
 const AppPayment = ({ appId }: AppPaymentProps) => {
   const { data, loading } = useQuery<AppPayments, AppPaymentsVariables>(
-    APP_PAYMENTS
+    APP_PAYMENTS,
+    {
+      variables: {
+        id: appId,
+      },
+    }
   );
-  const [updatePayment] = useMutation<
+  const [updatePayment, { data: mutationData }] = useMutation<
     ModifyAppPayment,
     ModifyAppPaymentVariables
   >(MODIFY_APP_PAYMENT);
@@ -61,6 +66,9 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
               <Input.Password />
             </Form.Item>
             <Button htmlType="submit">Actualizar claves de Stripe</Button>
+            {mutationData?.modifyPaymentMethodApp?.error && (
+              <p>{mutationData.modifyPaymentMethodApp.error}</p>
+            )}
           </Form>
         </Collapse.Panel>
       </Collapse>

@@ -26,11 +26,11 @@ const TemplateSelector = ({ value, onChange }: TemplateSelectorProps) => {
     <div className={styles.container}>
       <Title level={3}>Plantilla</Title>
       <Radio.Group
-        value={value ?? templates[templates.length -   1]?.id}
+        value={value ?? templates[0]?.id}
         onChange={(e) => onChange(e.target.value)}
         style={{ overflowX: "scroll", display: "flex" }}
       >
-        { templates.map((template) => (
+        {templates.map((template) => (
           <Radio.Button
             value={template.id}
             key={template.id}
