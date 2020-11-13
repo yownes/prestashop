@@ -52,7 +52,7 @@ export interface StoreAppColorInput {
 }
 
 export interface StoreAppInput {
-  name?: string | null;
+  name: string;
   color?: StoreAppColorInput | null;
   links?: StoreAppLinksInput | null;
   apiLink?: string | null;

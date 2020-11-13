@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Col, Drawer, Row } from "antd";
+import { Button, Col, Drawer, Radio, Row } from "antd";
 import CreditCard from "../../components/molecules/CreditCard";
 import { useMutation, useQuery } from "@apollo/client";
 import { MY_PAYMENT_METHODS } from "../../api/queries";
@@ -12,6 +12,7 @@ import {
   AddPaymentMethod,
   AddPaymentMethodVariables,
 } from "../../api/types/AddPaymentMethod";
+import connectionToNodes from "../../lib/connectionToNodes";
 
 const PaymentMethod = () => {
   const { data, loading } = useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
@@ -26,15 +27,21 @@ const PaymentMethod = () => {
     <Row gutter={20}>
       <Col span={24}>
         <Title level={2}>Tarjeta por defecto</Title>
-        {data?.me?.customer?.defaultPaymentMethod && <CreditCard
-          data={data?.me?.customer?.defaultPaymentMethod?.card}
-          billing={data?.me?.customer?.defaultPaymentMethod?.billingDetails}
-        />}
+        <Radio.Group
+          value={data?.me?.customer?.defaultPaymentMethod?.id}
+          onChange={(e) => {
+            console.log(e.target.value);
+          }}
+        >
+          {connectionToNodes(data?.me?.customer?.paymentMethods).map((node) => (
+            <Radio key={node.id} value={node.id}>
+              <CreditCard data={node.card} billing={node.billingDetails} />
+            </Radio>
+          ))}
+        </Radio.Group>
       </Col>
       <Col span={24}>
-        <Button onClick={() => setIsDrawerOpen(true)}>
-          Cambiar Tarjeta
-        </Button>
+        <Button onClick={() => setIsDrawerOpen(true)}>Cambiar Tarjeta</Button>
       </Col>
       <Drawer
         width={720}
