@@ -83,18 +83,24 @@ class Yownes extends Module
         $base_path = $this->_path . 'views/js/yownes';
         $base_script = $base_path . "/static/js/base.js";
         $scripts = [$base_script];
-        
-        $this->context->controller->addCSS($base_path . $files['main.css'], [
-            'media' => 'all',
-            'priority' => 1000
-        ]);
 
         foreach ($entrypoints as $key) {
             $type = explode("/", $key)[1];
             if ($type == 'js' && $files[$key]) {
                 array_push($scripts, $base_path . $files[$key]);
             }
+            if ($type == 'css' && $files[$key]) {
+                $this->context->controller->addCSS($base_path . $files[$key], [
+                    'media' => 'all',
+                    'priority' => 1000
+                ]);
+            }
         }
+
+        $this->context->controller->addCSS($base_path . $files['main.css'], [
+            'media' => 'all',
+            'priority' => 1000
+        ]);
 
         array_push($scripts, $base_path . $files['main.js']);
 

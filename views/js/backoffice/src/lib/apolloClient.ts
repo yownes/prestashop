@@ -32,7 +32,9 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = createUploadLink({
-  uri: "http://localhost:8000/graphql",
+  uri: `index.php?controller=AdminYownesAjax&action=proxy&ajax=true&${
+    (window as any).__TOKEN__
+  }`, // eslint-disable-line
 });
 
 const authLink = setContext((_, { headers }) => {

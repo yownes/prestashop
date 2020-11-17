@@ -308,8 +308,15 @@ RewriteRule ^([^?]*) yownes/200.html [L,QSA]";
     if(!empty($headers['Token'])) {
         $cHeaders[] = 'token: '.$headers['Token'];
     }
+    if (!empty($headers['Authorization'])) {
+        $cHeaders[] = 'Authorization: '.$headers['Authorization'];
+    }
+    if (!empty($headers['authorization'])) {
+        $cHeaders[] = 'authorization: '.$headers['authorization'];
+    }
+
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://api.yownes.com/graphql');
+    curl_setopt($ch, CURLOPT_URL, 'http://localhost:8000/graphql');
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);

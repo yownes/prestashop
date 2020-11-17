@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import { ApolloProvider } from "@apollo/client";
 import "./App.css";
 import Auth from "./pages/auth";
