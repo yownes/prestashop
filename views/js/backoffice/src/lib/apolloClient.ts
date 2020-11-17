@@ -31,10 +31,15 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 });
 
+const uri =
+  process.env.NODE_ENV === "development"
+    ? "/graphql"
+    : `index.php?controller=AdminYownesAjax&action=proxy&ajax=true&${
+        (window as any).__TOKEN__
+      }`;
+
 const httpLink = createUploadLink({
-  uri: `index.php?controller=AdminYownesAjax&action=proxy&ajax=true&${
-    (window as any).__TOKEN__
-  }`, // eslint-disable-line
+  uri, // eslint-disable-line
 });
 
 const authLink = setContext((_, { headers }) => {

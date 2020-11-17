@@ -80,29 +80,29 @@ class Yownes extends Module
         $app = json_decode(file_get_contents(__DIR__ . '/views/js/yownes/asset-manifest.json'), true);
         $entrypoints = $app['entrypoints'];
         $files = $app['files'];
-        $base_path = $this->_path . 'views/js/yownes';
-        $base_script = $base_path . "/static/js/base.js";
-        $scripts = [$base_script];
+        $base_path = $this->_path . 'views/js/yownes/';
+        // $base_script = $base_path . "/static/js/base.js";
+        $scripts = [];
 
         foreach ($entrypoints as $key) {
             $type = explode("/", $key)[1];
-            if ($type == 'js' && $files[$key]) {
-                array_push($scripts, $base_path . $files[$key]);
+            if ($type == 'js') {
+                array_push($scripts, $base_path . $key);
             }
-            if ($type == 'css' && $files[$key]) {
-                $this->context->controller->addCSS($base_path . $files[$key], [
+            else if ($type == 'css') {
+                $this->context->controller->addCSS($base_path . $key, [
                     'media' => 'all',
                     'priority' => 1000
                 ]);
             }
         }
 
-        $this->context->controller->addCSS($base_path . $files['main.css'], [
-            'media' => 'all',
-            'priority' => 1000
-        ]);
+        // $this->context->controller->addCSS($base_path . $files['main.css'], [
+        //     'media' => 'all',
+        //     'priority' => 1000
+        // ]);
 
-        array_push($scripts, $base_path . $files['main.js']);
+        // array_push($scripts, $base_path . $files['main.js']);
 
         $this->context->smarty->assign(array(
             'catalog' => Tools::getHttpHost(true).

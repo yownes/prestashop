@@ -1,4 +1,9 @@
 @import "~antd/dist/antd.css";
+@import "~normalize.css/normalize.css";
+
+/*Prestashop container*/
+.bootstrap#content { padding: 104px 0 0 205px;}
+.page-sidebar-closed:not(.mobile) #content{padding-left: 3.0625rem;}
 
 :root {
   --header-height: 60px;
