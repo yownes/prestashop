@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import { ApolloProvider } from "@apollo/client";
 import "./App.css";
@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import client from "./lib/apolloClient";
 import { AuthProvider } from "./lib/auth";
 import Tos from "./pages/Tos";
+import Loading from "./components/atoms/Loading";
 
 function App() {
   return (
@@ -16,7 +17,9 @@ function App() {
         <Router>
           <Switch>
             <Route path="/auth">
-              <Auth />
+              <Suspense fallback={<Loading />}>
+                <Auth />
+              </Suspense>
             </Route>
             <Route exact path={`/tos`}>
               <Tos />

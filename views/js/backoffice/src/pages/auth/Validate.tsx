@@ -8,6 +8,7 @@ import {
 } from "../../api/types/VerifyAccount";
 import Errors from "../../components/molecules/Errors";
 import { Button } from "antd";
+import { useTranslation } from "react-i18next";
 
 interface ValidateParamTypes {
   token: string;
@@ -15,6 +16,7 @@ interface ValidateParamTypes {
 
 const Validate = () => {
   const location = useParams<ValidateParamTypes>();
+  const { t } = useTranslation("auth");
   const [verifyAccount, { loading, data }] = useMutation<
     VerifyAccount,
     VerifyAccountVariables
@@ -28,10 +30,10 @@ const Validate = () => {
   }
   return (
     <div>
-      {data?.verifyAccount?.success && <h1>Cuenta validada correctamente</h1>}
+      {data?.verifyAccount?.success && <h1>{t("successfulValidation")}</h1>}
       <Errors errors={data?.verifyAccount?.errors} />
       <Link to="/profile">
-        <Button>Volver al Perfil</Button>
+        <Button>{t("backToProfile")}</Button>
       </Link>
     </div>
   );

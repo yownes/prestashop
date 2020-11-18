@@ -6,6 +6,7 @@ import { Form, Input, Button, Checkbox } from "antd";
 import styles from "./auth.module.css";
 import { useAuth } from "../../lib/auth";
 import Errors from "../../components/molecules/Errors";
+import { Trans, useTranslation } from "react-i18next";
 
 interface LocationState {
   from: {
@@ -15,6 +16,7 @@ interface LocationState {
 
 const Register = () => {
   const location = useLocation<LocationState>();
+  const {t} = useTranslation("auth");
   let { from } = location.state || { from: { pathname: "/" } };
   const { register, isAuthenticated, errors } = useAuth();
   if (isAuthenticated) {
@@ -23,7 +25,7 @@ const Register = () => {
   return (
     <Auth image="https://images.unsplash.com/photo-1586244439413-bc2288941dda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80">
       <div>
-        <h1 className={styles.centerText}>Crear una cuenta</h1>
+        <h1 className={styles.centerText}>{t("createAnAccount")}</h1>
         <Errors errors={errors} fields={["email", "password1", "password2"]} />
         <Form
           onFinish={(values) => {
@@ -38,49 +40,49 @@ const Register = () => {
           <Form.Item
             name="name"
             rules={[
-              { required: true, message: "Introduce tu nombre" },
-              { min: 2, message: "Introduce al menos dos caracteres" },
+              { required: true, message: t("required.name") },
+              { min: 2, message: t("required.min", { num: 2 }) },
             ]}
           >
-            <Input placeholder="Nombre" />
+            <Input placeholder={t("name")} />
           </Form.Item>
           <Form.Item
             name="email"
             rules={[
-              { required: true, message: "Introduce tu mail" },
+              { required: true, message: t("required.email") },
               { type: "email" },
             ]}
           >
-            <Input placeholder="Mail" />
+            <Input placeholder={t("email")} />
           </Form.Item>
           <Form.Item
             name="password"
             rules={[
-              { required: true, message: "Introduce una contraseña" },
+              { required: true, message: t("required.password") },
               {
                 min: 8,
-                message: "La contraseña debe contener al menos 8 caracteres",
+                message: t("required.minPassword", {num: 8}),
               },
             ]}
           >
-            <Input.Password placeholder="Contraseña" />
+            <Input.Password placeholder={t("password")} />
           </Form.Item>
           <Form.Item
             name="confirmPassword"
             rules={[
-              { required: true, message: "Las contraseñas deben coincidir" },
+              { required: true, message: t("required.passwordMatch") },
               ({ getFieldValue }) => ({
                 validator(rule, value) {
                   if (!value || getFieldValue("password") === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject("Las contraseñas deben coincidir");
+                  return Promise.reject(t("required.passwordMatch"));
                 },
               }),
             ]}
             dependencies={["password"]}
           >
-            <Input.Password placeholder="Confirmar contraseña" />
+            <Input.Password placeholder={t("confirmPassword")} />
           </Form.Item>
           <Form.Item
             name="agreement"
@@ -91,21 +93,23 @@ const Register = () => {
                   value
                     ? Promise.resolve()
                     : Promise.reject(
-                        "Debes aceptar los Términos y Condiciones"
+                        t("required.tos")
                       ),
               },
             ]}
           >
             <Checkbox>
-              Acepto los <Link to="/tos">Términos y Condiciones</Link>
+              <Trans i18nKey="acceptTos" ns="auth">
+                Acepto los <Link to="/tos">Términos y Condiciones</Link>
+              </Trans>
             </Checkbox>
           </Form.Item>
           <div className={styles.buttons}>
             <Button block type="ghost">
-              <Link to={`/auth/login`}>Conectarse</Link>
+              <Link to={`/auth/login`}>{t("connect")}</Link>
             </Button>
             <Button block type="primary" htmlType="submit">
-              Crear cuenta
+              {t("createAccount")}
             </Button>
           </div>
         </Form>

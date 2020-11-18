@@ -6,6 +6,7 @@ import { Form, Input, Button } from "antd";
 
 import styles from "./auth.module.css";
 import Errors from "../../components/molecules/Errors";
+import { useTranslation } from "react-i18next";
 
 interface LocationState {
   from: {
@@ -15,6 +16,7 @@ interface LocationState {
 
 const Login = () => {
   const location = useLocation<LocationState>();
+  const { t } = useTranslation("auth");
   let { from } = location.state || { from: { pathname: "/" } };
   const { login, isAuthenticated, errors } = useAuth();
   if (isAuthenticated) {
@@ -23,7 +25,7 @@ const Login = () => {
   return (
     <Auth image="https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80">
       <div>
-        <h1 className={styles.centerText}>Bienvenido</h1>
+        <h1 className={styles.centerText}>{t("welcome")}</h1>
         <Errors errors={errors} fields={["email", "password"]} />
         <Form
           onFinish={(values) => {
@@ -33,29 +35,29 @@ const Login = () => {
           <Form.Item
             name="email"
             rules={[
-              { required: true, message: "Introduce tu mail" },
+              { required: true, message: t("required.mail") },
               { type: "email" },
             ]}
           >
-            <Input placeholder="Mail" />
+            <Input placeholder={t("email")} />
           </Form.Item>
           <Form.Item
             name="password"
-            rules={[{ required: true, message: "Introduce una contraseña" }]}
+            rules={[{ required: true, message: t("required.password") }]}
           >
-            <Input.Password placeholder="Contraseña" />
+            <Input.Password placeholder={t("password")} />
           </Form.Item>
           <Link to={`/auth/password`} className={styles.rightAlign}>
-            ¿Ha olvidado la contraseña?
+            {t("forgotPassword")}
           </Link>
           <div className={styles.buttons}>
             <Button block type="ghost">
               <Link to={`/auth/register`} style={{ display: "block" }}>
-                Crear Cuenta
+                {t("createAccount")}
               </Link>
             </Button>
             <Button block type="primary" htmlType="submit">
-              Conectarse
+              {t("connect")}
             </Button>
           </div>
         </Form>

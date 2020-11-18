@@ -1,0 +1,21 @@
+{
+  "tos": { "title": "Términos y Condiciones" },
+  "edit": "Editar",
+  "changePaymentMethod": "Cambiar método de pago",
+  "warnings": {
+    "subscription": "<1>¿Realmente deseas cancelar la suscripción al servicio?</1><2>Todas las apps que tengas serán eliminadas de las tiendas de aplicaciones</2>",
+    "account": "¿Realmente deseas eliminar la cuenta?"
+  },
+  "subscribe": "Suscribirse",
+  "subscribeNow": "Suscríbete para poder tener tu propia App",
+  "cancelSubscription": "Cancelar suscripción",
+  "deleteAccount": "Eliminar cuenta",
+  "validate": {
+    "message": "Tu cuenta no está validada todavía",
+    "description": "Comprueba tu correo electrónico en busca del link de validación"
+  },
+  "apps": "Apps",
+  "addNew": "Añadir nueva",
+  "addNewApp": "Añadir nueva app",
+  "addAppClain": "Crea tu primera App y empieza a vender"
+}
