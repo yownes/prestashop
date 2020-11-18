@@ -13,6 +13,7 @@ export interface MyPaymentMethods_me_customer_defaultPaymentMethod {
    * The ID of the object.
    */
   id: string;
+  stripeId: string | null;
 }
 
 export interface MyPaymentMethods_me_customer_paymentMethods_edges_node {

@@ -28,6 +28,7 @@ export const MY_PAYMENT_METHODS = gql`
         id
         defaultPaymentMethod {
           id
+          stripeId
         }
         paymentMethods {
           edges {

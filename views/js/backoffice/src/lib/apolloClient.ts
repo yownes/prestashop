@@ -39,7 +39,7 @@ const uri =
       }`;
 
 const httpLink = createUploadLink({
-  uri, // eslint-disable-line
+  uri,
 });
 
 const authLink = setContext((_, { headers }) => {

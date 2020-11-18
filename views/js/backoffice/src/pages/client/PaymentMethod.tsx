@@ -36,13 +36,13 @@ const PaymentMethod = () => {
       <Col span={24}>
         <Title level={2}>Tarjeta por defecto</Title>
         <Radio.Group
-          value={data?.me?.customer?.defaultPaymentMethod?.id}
+          value={data?.me?.customer?.defaultPaymentMethod?.stripeId}
           onChange={(e) => {
-            console.log(e.target.value);
+            addPayment({ variables: { paymentMethodId: e.target.value } });
           }}
         >
           {connectionToNodes(data?.me?.customer?.paymentMethods).map((node) => (
-            <Radio key={node.id} value={node.id}>
+            <Radio key={node.id} value={node.stripeId}>
               <CreditCard data={node.card} billing={node.billingDetails} />
               <Popconfirm
                 title={"¿Realmente deseas eliminar la tarjeta?"}
