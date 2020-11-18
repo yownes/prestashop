@@ -5,3 +5,15 @@
   height: var(--header-height);
   padding: 0 2rem;
 }
+
+.title {
+  color: #00ec93 !important;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+}
+
+.titleIcon {
+  color: #333;
+  font-size: 16px;
+}

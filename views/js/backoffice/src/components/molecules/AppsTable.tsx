@@ -35,17 +35,24 @@ const appsColumns: ColumnsType<MyAccount_me_apps_edges_node> = [
     key: "name",
     render: (name, record) => <Link to={`/app/${record.id}`}>{name}</Link>,
   },
-  { title: "ID", dataIndex: "id", key: "id" },
   {
     title: "URLs",
     dataIndex: "storeLinks",
     key: "urls",
-    render: (urls) => (
-      <>
-        <a href={urls.ios}>iOS</a>
-        <a href={urls.android}>Android</a>
-      </>
-    ),
+    // responsive: ["md"],
+    render: (urls) => {
+      if (!urls.ios && !urls.android) return <span>-</span>;
+      return (
+        <>
+          <a href={urls.ios} style={{ padding: 5 }}>
+            iOS
+          </a>
+          <a href={urls.android} style={{ padding: 5 }}>
+            Android
+          </a>
+        </>
+      );
+    },
   },
   {
     title: "Estado",
@@ -59,7 +66,13 @@ const appsColumns: ColumnsType<MyAccount_me_apps_edges_node> = [
 
 const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
   const allCols = columns ? [...appsColumns, ...columns] : appsColumns;
-  return <Table columns={allCols} dataSource={connectionToNodes(dataSource)} />;
+  return (
+    <Table
+      columns={allCols}
+      dataSource={connectionToNodes(dataSource)}
+      pagination={false}
+    />
+  );
 };
 
 export default AppsTable;

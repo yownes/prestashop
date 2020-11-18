@@ -5,6 +5,7 @@ import { EllipsisOutlined } from "@ant-design/icons";
 import { useAuth } from "../../lib/auth";
 
 import styles from "./HeaderSessionInfo.module.css";
+import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 
 interface HeaderSessionInfoProps {
   name: string;
@@ -13,6 +14,7 @@ interface HeaderSessionInfoProps {
 
 const HeaderSessionInfo = ({ name, email }: HeaderSessionInfoProps) => {
   const { logout } = useAuth();
+  const screens = useBreakpoint();
 
   const menu = (
     <Menu>
@@ -32,12 +34,14 @@ const HeaderSessionInfo = ({ name, email }: HeaderSessionInfoProps) => {
   );
   return (
     <div className={styles.container}>
-      <div className={styles.info}>
-        <span className={styles.title}>
-          <Link to="/profile">{name}</Link>
-        </span>
-        <span className={styles.subtitle}>{email}</span>
-      </div>
+      {screens.md && (
+        <div className={styles.info}>
+            <span className={styles.title}>
+              <Link to="/profile">{name}</Link>
+            </span>
+            <span className={styles.subtitle}>{email}</span>
+          </div>
+      )}
       <Dropdown overlay={menu} trigger={["click"]}>
         <Button icon={<EllipsisOutlined />} shape="circle" />
       </Dropdown>

@@ -11,6 +11,7 @@ import { ME } from "../../api/queries";
 import { Me } from "../../api/types/Me";
 
 import styles from "./Header.module.css";
+import { RightOutlined } from "@ant-design/icons";
 
 const routes = [...clientRoutes, ...adminoutes];
 
@@ -36,8 +37,8 @@ const Header = () => {
       <Link to="/">
         <Logo />
       </Link>
-      <Typography.Title level={2} style={{ color: "#00ec93" }}>
-        <span style={{ color: "#333" }}>{">"}</span> {route?.name}
+      <Typography.Title level={2} className={styles.title}>
+        <RightOutlined className={styles.titleIcon} /> {route?.name}
       </Typography.Title>
       {data?.me?.email && (
         <HeaderSessionInfo email={data.me.email} name={data.me.username} />
