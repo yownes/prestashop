@@ -53,7 +53,7 @@ const Profile = () => {
         <Menu.Item>
           <Popconfirm
             title={
-              <Trans i18nKey="warnings.subscription">
+              <Trans i18nKey="warnings.subscription" ns="client">
                 <h4>¿Realmente deseas cancelar la suscripción al servicio?</h4>
                 <p>
                   Todas las apps que tengas serán eliminadas de las tiendas de
