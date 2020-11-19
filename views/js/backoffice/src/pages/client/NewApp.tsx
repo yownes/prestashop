@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { Button, Input, Form, Card } from "antd";
 import { Redirect } from "react-router-dom";
 import { CREATE_APP } from "../../api/mutations";
 import { CreateApp, CreateAppVariables } from "../../api/types/CreateApp";
+import { useTranslation } from "react-i18next";
 
 const NewApp = () => {
   const storeInfo: { link: string; name: string } | undefined = (window as any)
     .__YOWNES_STORE_INFO__;
+    const { t } = useTranslation("client");
   const [create, { data, loading }] = useMutation<
     CreateApp,
     CreateAppVariables
@@ -24,7 +26,7 @@ const NewApp = () => {
         },
       });
     }
-  }, [storeInfo]);
+  }, [storeInfo, create]);
   if (data?.createApp?.ok) {
     return <Redirect to={`/app/${data.createApp.storeApp?.id}`} />;
   }
@@ -43,14 +45,14 @@ const NewApp = () => {
       >
         <Form.Item
           name="name"
-          label="Nombre de la app"
+          label={t("appName")}
           rules={[{ required: true }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           name="apiLink"
-          label="Dirección de la tienda"
+          label={t("storeLocation")}
           rules={[{ required: true }]}
         >
           <Input disabled={Boolean(storeInfo?.link)} type="url" />
@@ -62,20 +64,17 @@ const NewApp = () => {
             disabled={loading}
             loading={loading}
           >
-            {loading ? "Comprobando..." : "Comprobar"}
+            {loading ? t("checking") : t("check")}
           </Button>
         </Form.Item>
       </Form>
       {storeInfo?.link && !data?.createApp?.ok && (
-        <div>Comprueba que la dirección es correcta</div>
+        <div>{t("checkLocation")}</div>
       )}
       {!storeInfo?.link && (
         <div>
-          <h2>Instalación</h2>
-          <p>
-            Instala el plugin en tu plataforma de tienda online e introduce en
-            la parte de arriba la dirección web para comprobar que es accesible
-          </p>
+          <h2>{t("installInstructions.title")}</h2>
+          <p>{t("installInstructions.description")}</p>
         </div>
       )}
       {data?.createApp?.error && <span>{data.createApp.error}</span>}

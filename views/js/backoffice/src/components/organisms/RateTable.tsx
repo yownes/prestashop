@@ -2,6 +2,7 @@ import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
 import { Switch, Table } from "antd";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { PLANS } from "../../api/queries";
 import { PlanInterval } from "../../api/types/globalTypes";
 import {
@@ -62,6 +63,7 @@ function notNull(
 }
 
 const RateTable = () => {
+  const { t } = useTranslation("client");
   const { data, loading } = useQuery<Plans>(PLANS);
   const [interval, setInterval] = useState(PlanInterval.MONTH);
   if (loading) return <Loading />;
@@ -86,7 +88,7 @@ const RateTable = () => {
           {
             title: (
               <>
-                <span>Cargo mensual: </span>
+                <span>{t("monthlyPayment")} </span>
                 <Switch
                   checked={interval === PlanInterval.MONTH}
                   onChange={(checked) => {

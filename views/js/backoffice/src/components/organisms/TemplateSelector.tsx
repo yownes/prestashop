@@ -10,6 +10,7 @@ import { TEMPLATES } from "../../api/queries";
 import { Templates } from "../../api/types/Templates";
 import Loading from "../atoms/Loading";
 import connectionToNodes from "../../lib/connectionToNodes";
+import { useTranslation } from "react-i18next";
 
 interface TemplateSelectorProps {
   value?: string;
@@ -17,6 +18,7 @@ interface TemplateSelectorProps {
 }
 
 const TemplateSelector = ({ value, onChange }: TemplateSelectorProps) => {
+  const { t } = useTranslation("client");
   const {loading, data} = useQuery<Templates>(TEMPLATES);
   if (loading) {
     return <Loading />
@@ -24,7 +26,7 @@ const TemplateSelector = ({ value, onChange }: TemplateSelectorProps) => {
   const templates = connectionToNodes(data?.templates);
   return (
     <div className={styles.container}>
-      <Title level={3}>Plantilla</Title>
+      <Title level={3}>{t("template")}</Title>
       <Radio.Group
         value={value ?? templates[0]?.id}
         onChange={(e) => onChange(e.target.value)}

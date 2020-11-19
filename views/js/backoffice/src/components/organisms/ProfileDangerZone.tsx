@@ -8,6 +8,7 @@ import {
 } from "../../api/types/DeleteAccount";
 import { DELETE_ACCOUNT } from "../../api/mutations";
 import Errors from "../molecules/Errors";
+import { useTranslation } from "react-i18next";
 
 interface ProfileDangerZoneProps {
   id: string;
@@ -19,6 +20,7 @@ const ProfileDangerZone = ({ id, confirmPassword }: ProfileDangerZoneProps) => {
   const [deleteAccount] = useMutation<DeleteAccount, DeleteAccountVariables>(
     DELETE_ACCOUNT
   );
+  const {t} = useTranslation("client");
   const { logout } = useAuth();
   if (!confirmPassword) {
     return null;
@@ -41,12 +43,12 @@ const ProfileDangerZone = ({ id, confirmPassword }: ProfileDangerZoneProps) => {
       >
         <Form.Item
           name="password"
-          label="Confirmar contraseña para eliminar la cuenta"
+          label={t("confirmPasswordDelete")}
         >
           <Input.Password />
         </Form.Item>
         <Button htmlType="submit" type="primary" danger>
-          Confirmar eliminación de cuenta
+          {t("confirmDeleteAccount")}
         </Button>
       </Form>
     </div>

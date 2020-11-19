@@ -8,6 +8,7 @@ import {
 } from "@stripe/react-stripe-js";
 import CardSection from "../molecules/CardSection";
 import { loadStripe } from "@stripe/stripe-js";
+import { useTranslation } from "react-i18next";
 
 const { Title } = Typography;
 
@@ -28,6 +29,7 @@ const CreateCreditCardContainer = (props: CreateCreditCardProps) => {
 const CreateCreditCard = ({ onCreated }: CreateCreditCardProps) => {
   const stripe = useStripe();
   const elements = useElements();
+  const { t } = useTranslation(["translation", "client"]);
   return (
     <Form
       validateMessages={{ required: "El campo '${label}' es obligatorio" }} // eslint-disable-line no-template-curly-in-string
@@ -70,24 +72,24 @@ const CreateCreditCard = ({ onCreated }: CreateCreditCardProps) => {
           <Row gutter={[20, 20]}>
             <Col span={24}>
               <Card>
-                <Title level={2}>Datos de Facturación</Title>
+                <Title level={2}>{t("client:billingDirection")}</Title>
                 <Row gutter={[15, 15]}>
                   <Col md={12} sm={24}>
                     <Form.Item
                       name="name"
                       rules={[{ required: true }]}
-                      label="Nombre"
+                      label={t("name")}
                     >
-                      <Input placeholder="Nombre" />
+                      <Input placeholder={t("name")} />
                     </Form.Item>
                   </Col>
                   <Col md={12} sm={24}>
                     <Form.Item
                       name="surname"
                       rules={[{ required: true }]}
-                      label="Apellidos"
+                      label={t("surname")}
                     >
-                      <Input placeholder="Apellidos" />
+                      <Input placeholder={t("surname")} />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -96,18 +98,18 @@ const CreateCreditCard = ({ onCreated }: CreateCreditCardProps) => {
                     <Form.Item
                       name="email"
                       rules={[{ required: true }]}
-                      label="Email"
+                      label={t("email")}
                     >
-                      <Input placeholder="Email" type="email" />
+                      <Input placeholder={t("email")} type="email" />
                     </Form.Item>
                   </Col>
                   <Col md={12} sm={24}>
                     <Form.Item
                       name="direction"
                       rules={[{ required: true }]}
-                      label="Dirección"
+                      label={t("location")}
                     >
-                      <Input placeholder="Dirección" />
+                      <Input placeholder={t("location")} />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -116,18 +118,18 @@ const CreateCreditCard = ({ onCreated }: CreateCreditCardProps) => {
                     <Form.Item
                       name="city"
                       rules={[{ required: true }]}
-                      label="Ciudad"
+                      label={t("city")}
                     >
-                      <Input placeholder="Ciudad" />
+                      <Input placeholder={t("city")} />
                     </Form.Item>
                   </Col>
                   <Col md={12} sm={24}>
                     <Form.Item
                       name="state"
                       rules={[{ required: true }]}
-                      label="Provincia"
+                      label={t("province")}
                     >
-                      <Input placeholder="Provincia" />
+                      <Input placeholder={t("province")} />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -136,14 +138,14 @@ const CreateCreditCard = ({ onCreated }: CreateCreditCardProps) => {
                     <Form.Item
                       name="country"
                       rules={[{ required: true }]}
-                      label="País"
+                      label={t("country")}
                     >
-                      <Input placeholder="País" />
+                      <Input placeholder={t("country")} />
                     </Form.Item>
                   </Col>
                   <Col md={12} sm={24}>
-                    <Form.Item name="documentId" label="DNI - NIF">
-                      <Input placeholder="DNI - NIF" />
+                    <Form.Item name="documentId" label={t("documentId")}>
+                      <Input placeholder={t("documentId")} />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -151,13 +153,13 @@ const CreateCreditCard = ({ onCreated }: CreateCreditCardProps) => {
             </Col>
             <Col span={24}>
               <Card>
-                <Title level={2}>Método de Pago</Title>
+                <Title level={2}>{t("client:paymentMethod")}</Title>
                 <CardSection />
               </Card>
             </Col>
             <Col span={24}>
               <Button htmlType="submit" type="primary" size="large">
-                Crear método de pago
+                {t("client:createPaymentMethod")}
               </Button>
             </Col>
           </Row>

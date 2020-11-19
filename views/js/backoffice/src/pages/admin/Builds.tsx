@@ -8,37 +8,42 @@ import { BUILDS } from "../../api/queries";
 import Loading from "../../components/atoms/Loading";
 import { BuildBuildStatus } from "../../api/types/globalTypes";
 import connectionToNodes from "../../lib/connectionToNodes";
-
-const columns: ColumnsType<Builds_builds_edges_node> = [
-  {
-    title: "Fecha",
-    dataIndex: "date",
-    key: "data",
-    render: (date: Date) => date.toLocaleDateString(),
-  },
-  { title: "ID build", dataIndex: "id", key: "buildId" },
-  { title: "Cliente", dataIndex: ["app", "client", "name"], key: "client" },
-  {
-    title: "ID Cliente",
-    dataIndex: ["app", "customer", "id"],
-    key: "clientId",
-  },
-  { title: "App", dataIndex: ["app", "name"], key: "app" },
-  {
-    title: "Estado",
-    dataIndex: "buildStatus",
-    key: "state",
-    render: (state: BuildBuildStatus) => {
-      return <BuildStateVisualizer state={state}></BuildStateVisualizer>;
-    },
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const Builds = () => {
-  const {loading, data} = useQuery<IBuilds, BuildsVariables>(BUILDS)
+  const { loading, data } = useQuery<IBuilds, BuildsVariables>(BUILDS);
+  const { t } = useTranslation(["translation", "admin"]);
   if (loading) {
     return <Loading />;
   }
+  const columns: ColumnsType<Builds_builds_edges_node> = [
+    {
+      title: t("admin:date"),
+      dataIndex: "date",
+      key: "data",
+      render: (date: Date) => date.toLocaleDateString(),
+    },
+    { title: t("buildId"), dataIndex: "id", key: "buildId" },
+    {
+      title: t("admin:client"),
+      dataIndex: ["app", "client", "name"],
+      key: "client",
+    },
+    {
+      title: t("admin:clientID"),
+      dataIndex: ["app", "customer", "id"],
+      key: "clientId",
+    },
+    { title: t("app"), dataIndex: ["app", "name"], key: "app" },
+    {
+      title: t("state"),
+      dataIndex: "buildStatus",
+      key: "state",
+      render: (state: BuildBuildStatus) => {
+        return <BuildStateVisualizer state={state}></BuildStateVisualizer>;
+      },
+    },
+  ];
   return (
     <div>
       <Table columns={columns} dataSource={connectionToNodes(data?.builds)} />

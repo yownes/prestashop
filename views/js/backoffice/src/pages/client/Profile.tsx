@@ -27,11 +27,13 @@ import AppsTable from "../../components/molecules/AppsTable";
 import { UNSUBSCRIBE } from "../../api/mutations";
 import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
 import { EllipsisOutlined } from "@ant-design/icons";
+import { Trans, useTranslation } from "react-i18next";
 
 const Profile = () => {
   const history = useHistory();
   const [confirmPassword, setConfirmPassword] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const { t } = useTranslation(["client", "translation"]);
   const { loading, data } = useQuery<MyAccount>(MY_ACCOUNT);
   const [unsubscribe] = useMutation<Unsubscribe, UnsubscribeVariables>(
     UNSUBSCRIBE
@@ -41,23 +43,21 @@ const Profile = () => {
   const profileMenu = (
     <Menu>
       <Menu.Item>
-        <Link to="/profile/edit">Editar</Link>
+        <Link to="/profile/edit">{t("edit")}</Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to="/profile/paymentMethods">Cambiar método de pago</Link>
+        <Link to="/profile/paymentMethods">{t("changePaymentMethod")}</Link>
       </Menu.Item>
       <Menu.Divider></Menu.Divider>
       {data?.me?.accountStatus === AccountAccountStatus.PAID_ACCOUNT && (
         <Menu.Item>
           <Popconfirm
             title={
-              <>
-                <h4>¿Realmente deseas cancelar la suscripción al servicio?</h4>
+              <Trans i18nKey="warnings.subscription">
+                <h4></h4>
                 <p>
-                  Todas las apps que tengas serán eliminadas de las tiendas de
-                  aplicaciones
                 </p>
-              </>
+              </Trans>
             }
             placement="left"
             onConfirm={() => {
@@ -68,21 +68,21 @@ const Profile = () => {
             }}
           >
             <Typography.Text type="danger">
-              Cancelar suscripción
+              {t("cancelSubscription")}
             </Typography.Text>
           </Popconfirm>
         </Menu.Item>
       )}
       <Menu.Item>
         <Popconfirm
-          title="¿Realmente deseas eliminar la cuenta?"
+          title={t("warnings.account")}
           placement="left"
           onConfirm={() => {
             setConfirmPassword(true);
             setIsOverlayVisible(false);
           }}
         >
-          <Typography.Text type="danger">Eliminar cuenta</Typography.Text>
+          <Typography.Text type="danger">{t("deleteAccount")}</Typography.Text>
         </Popconfirm>
       </Menu.Item>
     </Menu>
@@ -104,8 +104,8 @@ const Profile = () => {
           <Col span={24}>
             <Alert
               showIcon
-              message="Tu cuenta no está validada todavía"
-              description="Comprueba tu correo electrónico en busca del link de validación"
+              message={t("validate.message")}
+              description={t("validate.description")}
               type="warning"
             />
           </Col>
@@ -117,8 +117,8 @@ const Profile = () => {
             <ProfileInfo profile={data?.me} action={profieActions} />
             {data?.me?.accountStatus === AccountAccountStatus.REGISTERED && (
               <Placeholder
-                claim="Suscríbete para poder tener tu propia App"
-                cta={{ title: "Suscribirse", link: "/pay" }}
+                claim={t("subscribeNow")}
+                cta={{ title: t("subscribe"), link: "/pay" }}
               ></Placeholder>
             )}
           </Card>
@@ -128,18 +128,18 @@ const Profile = () => {
             {(data?.me?.apps?.edges.length ?? 0) > 0 ? (
               <>
                 <TitleWithAction
-                  title="Apps"
+                  title={t("translation:apps")}
                   action={{
                     action: () => history.push("/app/new"),
-                    label: "Añadir nueva",
+                    label: t("addNew"),
                   }}
                 />
                 <AppsTable dataSource={data?.me?.apps} />
               </>
             ) : (
               <Placeholder
-                claim="Crea tu primera App y empieza a vender"
-                cta={{ title: "Añadir nueva app", link: "/app/new" }}
+                claim={t("addAppClaim")}
+                cta={{ title: t("addNewApp"), link: "/app/new" }}
               ></Placeholder>
             )}
           </Card>
@@ -147,7 +147,7 @@ const Profile = () => {
       </Row>
       <Modal
         visible={confirmPassword}
-        title="Eliminación de cuenta"
+        title={t("deleteAccount")}
         onCancel={() => {
           setConfirmPassword(false);
         }}

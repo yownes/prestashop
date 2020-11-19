@@ -6,6 +6,7 @@ import { useAuth } from "../../lib/auth";
 
 import styles from "./HeaderSessionInfo.module.css";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
+import { useTranslation } from "react-i18next";
 
 interface HeaderSessionInfoProps {
   name: string;
@@ -15,11 +16,12 @@ interface HeaderSessionInfoProps {
 const HeaderSessionInfo = ({ name, email }: HeaderSessionInfoProps) => {
   const { logout } = useAuth();
   const screens = useBreakpoint();
+  const { t } = useTranslation();
 
   const menu = (
     <Menu>
       <Menu.Item key="0">
-        <Link to="/profile">Perfil</Link>
+        <Link to="/profile">{t("profile")}</Link>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item
@@ -28,7 +30,7 @@ const HeaderSessionInfo = ({ name, email }: HeaderSessionInfoProps) => {
         }}
         key="1"
       >
-        Cerrar sesión
+        {t("logout")}
       </Menu.Item>
     </Menu>
   );

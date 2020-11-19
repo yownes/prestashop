@@ -17,8 +17,10 @@ import {
   RemovePaymentMethod,
   RemovePaymentMethodVariables,
 } from "../../api/types/RemovePaymentMethod";
+import { useTranslation } from "react-i18next";
 
 const PaymentMethod = () => {
+  const { t } = useTranslation(["client", "translation"]);
   const { data, loading } = useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
   const [addPayment] = useMutation<AddPaymentMethod, AddPaymentMethodVariables>(
     ADD_PAYMENT_METHOD
@@ -34,7 +36,7 @@ const PaymentMethod = () => {
   return (
     <Row gutter={20}>
       <Col span={24}>
-        <Title level={2}>Tarjeta por defecto</Title>
+        <Title level={2}>{t("defaultCard")}</Title>
         <Radio.Group
           value={data?.me?.customer?.defaultPaymentMethod?.stripeId}
           onChange={(e) => {
@@ -45,7 +47,7 @@ const PaymentMethod = () => {
             <Radio key={node.id} value={node.stripeId}>
               <CreditCard data={node.card} billing={node.billingDetails} />
               <Popconfirm
-                title={"¿Realmente deseas eliminar la tarjeta?"}
+                title={t("warnings.card")}
                 placement="topLeft"
                 onConfirm={() => {
                   if (node.stripeId) {
@@ -55,14 +57,14 @@ const PaymentMethod = () => {
                   }
                 }}
               >
-                <Button danger>Eliminar</Button>
+                <Button danger>{t("translation:delete")}</Button>
               </Popconfirm>
             </Radio>
           ))}
         </Radio.Group>
       </Col>
       <Col span={24}>
-        <Button onClick={() => setIsDrawerOpen(true)}>Cambiar Tarjeta</Button>
+        <Button onClick={() => setIsDrawerOpen(true)}>{t("addCard")}</Button>
       </Col>
       <Drawer
         width={720}

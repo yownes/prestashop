@@ -5,6 +5,7 @@ import { PlanInterval } from "../../api/types/globalTypes";
 import { CheckoutLocationState } from "../../pages/client/Checkout";
 
 import styles from "./RateSelection.module.css";
+import { useTranslation } from "react-i18next";
 
 const { Text, Title } = Typography;
 
@@ -19,19 +20,20 @@ const RateSelection = ({
   title,
   plan,
 }: RateSelectionProps) => {
+  const { t } = useTranslation();
   return (
     <div className={styles.container}>
       <Text>{subtitle}</Text>
       <Title level={2}>{title}</Title>
       <Title level={3}>
         <Text strong>{plan.amount}</Text>€/
-        {plan.interval === PlanInterval.MONTH ? "mes" : "año"}
+        {plan.interval === PlanInterval.MONTH ? t("month") : t("year")}
       </Title>
       <Link to={{ pathname: `/checkout`, state: plan }}>
-        <Button type="primary">Seleccionar</Button>
+        <Button type="primary">{t("select")}</Button>
       </Link>
       <Text type="secondary" style={{ display: "block" }}>
-        Precio con IVA incluido
+        {t("priceWithTaxes")}
       </Text>
     </div>
   );

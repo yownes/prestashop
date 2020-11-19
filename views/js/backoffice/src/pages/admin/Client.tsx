@@ -30,6 +30,7 @@ import { AccountAccountStatus } from "../../api/types/globalTypes";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { ProfileInfo } from "../../components/molecules";
 import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
+import { useTranslation } from "react-i18next";
 
 const { Text } = Typography;
 
@@ -52,6 +53,7 @@ function getBuilds(apps?: Client_user_apps) {
 }
 
 const Client = () => {
+  const {t} = useTranslation("admin")
   const { id } = useParams<ClientProps>();
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const { loading, data } = useQuery<IClient, ClientVariables>(CLIENT, {
@@ -72,8 +74,8 @@ const Client = () => {
         <Popconfirm
           title={
             data?.user?.accountStatus === AccountAccountStatus.BANNED
-              ? "Estás seguro que deseas desbanear esta cuenta?"
-              : "Estás seguro que deseas banear esta cuenta?"
+              ? t("warings.unban")
+              : t("warnings.ban")
           }
           onConfirm={() => {
             setIsOverlayVisible(false);
@@ -111,7 +113,7 @@ const Client = () => {
       </Menu.Item>
       <Menu.Item>
         <Popconfirm
-          title="¿Realmente deseas eliminar la cuenta?"
+          title={t("warnings.account")}
           placement="left"
           onConfirm={() => {
             setIsOverlayVisible(false);
@@ -119,7 +121,7 @@ const Client = () => {
           }}
         >
           <Text type="danger">
-            Dar de baja la suscripción
+            {t("unsubscribe")}
           </Text>
         </Popconfirm>
       </Menu.Item>
@@ -156,12 +158,12 @@ const Client = () => {
               dataSource={data?.user?.apps}
               columns={[
                 {
-                  title: "Acciones",
+                  title: t("actions"),
                   key: "actions",
                   render: (_, record) => {
                     return (
                       <Popconfirm
-                        title="¿Quieres eliminar esta app?"
+                        title={t("warnings.app")}
                         onConfirm={() => {
                           deleteApp({
                             variables: {

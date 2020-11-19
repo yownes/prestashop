@@ -8,6 +8,7 @@ import { Subscribe, SubscribeVariables } from "../../api/types/Subscribe";
 import Errors from "./Errors";
 import { CheckoutLocationState } from "../../pages/client/Checkout";
 import CreateCreditCard from "../organisms/CreateCreateCard";
+import { useTranslation } from "react-i18next";
 
 const { Title, Text } = Typography;
 
@@ -22,6 +23,7 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
     Subscribe,
     SubscribeVariables
   >(SUBSCRIBE);
+  const {t} = useTranslation("client")
   return (
     <Row gutter={[20,       20]}>
       <Col sm={24} md={14}>
@@ -31,12 +33,11 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
         <Row gutter={[20, 20]}>
           <Col span={24}>
             <Card>
-              <Title level={2}>Tu Pedido</Title>
+              <Title level={2}>{t("yourPayment")}</Title>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Text type="secondary">{plan.name}</Text>
                 <Text type="secondary">
-                  Suscripción de {plan.amount}€ al{" "}
-                  {plan.interval === PlanInterval.MONTH ? "mes" : "año"}
+                  {t("subscriptionResume", {amount: plan.amount, interval: plan.interval === PlanInterval.MONTH ? t("month") : t("year")})}
                 </Text>
               </div>
             </Card>
@@ -61,7 +62,7 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
                 type="primary"
                 size="large"
               >
-                Confirmar
+                {t("confirm")}
               </Button>
             )}
           </Col>

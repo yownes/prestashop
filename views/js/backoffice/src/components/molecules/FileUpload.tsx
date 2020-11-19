@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, ReactNode } from "react";
 import { Button, Popconfirm } from "antd";
 import {
   DeleteOutlined,
@@ -7,6 +7,7 @@ import {
 } from "@ant-design/icons";
 
 import styles from "./FileUpload.module.css";
+import { useTranslation } from "react-i18next";
 
 type ImageUploadProps = {
   value?: string | Blob | null;
@@ -16,6 +17,7 @@ type ImageUploadProps = {
 
 type UploadButtonProps = {
   loading: boolean;
+  children: ReactNode;
 };
 
 type FilePreview = {
@@ -23,10 +25,10 @@ type FilePreview = {
   file?: string | ArrayBuffer | null;
 };
 
-const UploadButton = ({ loading }: UploadButtonProps) => (
+const UploadButton = ({ loading, children }: UploadButtonProps) => (
   <>
     {loading ? <LoadingOutlined /> : <PlusOutlined />}
-    <div className="ant-upload-text">Upload</div>
+    <div className="ant-upload-text">{children}</div>
   </>
 );
 
@@ -35,6 +37,7 @@ const ImageUpload = ({
   onChange,
   onDeleteClicked,
 }: ImageUploadProps) => {
+  const {t} = useTranslation("client");
   const [filePreview, setFilePreview] = useState<FilePreview>({
     loading: false,
   });
@@ -127,16 +130,16 @@ const ImageUpload = ({
               }}
             />
           ) : (
-            <UploadButton loading={filePreview.loading} />
+          <UploadButton loading={filePreview.loading}>{t("upload")}</UploadButton>
           )}
         </label>
         {file && (
           <Popconfirm
-            title="¿Queres eliminar el logo?"
+            title={t("warnings.logo")}
             onConfirm={onDeleteClicked}
           >
             <Button icon={<DeleteOutlined />} danger onClick={onDeleteClicked}>
-              Eliminar Logo
+              {t("deleteLogo")}
             </Button>
           </Popconfirm>
         )}

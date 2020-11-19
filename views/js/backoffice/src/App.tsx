@@ -14,21 +14,21 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <AuthProvider>
-        <Router>
-          <Switch>
-            <Route path="/auth">
-              <Suspense fallback={<Loading />}>
+        <Suspense fallback={<Loading />}>
+          <Router>
+            <Switch>
+              <Route path="/auth">
                 <Auth />
-              </Suspense>
-            </Route>
-            <Route exact path={`/tos`}>
-              <Tos />
-            </Route>
-            <PrivateRoute path="/">
-              <Dashboard />
-            </PrivateRoute>
-          </Switch>
-        </Router>
+              </Route>
+              <Route exact path={`/tos`}>
+                <Tos />
+              </Route>
+              <PrivateRoute path="/">
+                <Dashboard />
+              </PrivateRoute>
+            </Switch>
+          </Router>
+        </Suspense>
       </AuthProvider>
     </ApolloProvider>
   );

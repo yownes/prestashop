@@ -7,20 +7,22 @@ import {
   PasswordChangeVariables,
 } from "../../api/types/PasswordChange";
 import Errors from "../molecules/Errors";
+import { useTranslation } from "react-i18next";
 
 const { Title, Text } = Typography;
 
 const ChangePassword = () => {
+  const { t } = useTranslation("client");
   const [passwordChange, { loading, data }] = useMutation<
     PasswordChange,
     PasswordChangeVariables
   >(PASSWORD_CHANGE);
   return (
     <>
-      <Title level={2}>Modificar contraseña</Title>
+      <Title level={2}>{t("changePassword")}</Title>
       <Errors errors={data?.passwordChange?.errors} />
       {data?.passwordChange?.success && (
-        <Text type="success">Contraseña cambiada con éxito</Text>
+        <Text type="success">{t("changePasswordSuccessful")}</Text>
       )}
       <Form
         onFinish={(values) => {
@@ -32,21 +34,21 @@ const ChangePassword = () => {
         }}
       >
         <Form.Item
-          label="Contraseña actual"
+          label={t("oldPassword")}
           name="oldPassword"
           rules={[{ required: true }]}
         >
           <Input.Password />
         </Form.Item>
         <Form.Item
-          label="Nueva contraseña"
+          label={t("newPassword")}
           name="newPassword1"
           rules={[{ required: true }, { min: 8 }]}
         >
           <Input.Password />
         </Form.Item>
         <Form.Item
-          label="Repetir nueva contraseña"
+          label={t("newPassword2")}
           name="newPassword2"
           rules={[{ required: true }, { min: 8 }]}
         >
@@ -59,7 +61,7 @@ const ChangePassword = () => {
             disabled={loading}
             loading={loading}
           >
-            Cambiar contraseña
+            {t("changePassword")}
           </Button>
         </Form.Item>
       </Form>

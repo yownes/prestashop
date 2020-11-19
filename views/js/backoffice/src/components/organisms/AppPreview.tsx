@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 
 import styles from "./AppPreview.module.css";
 import { StoreAppInput } from "../../api/types/globalTypes";
+import { Trans, useTranslation } from "react-i18next";
 
 interface AppPreviewProps {
   app: StoreAppInput;
@@ -16,6 +17,7 @@ interface AppPreviewProps {
 }
 
 const AppPreview = ({ id, app, hasChanged }: AppPreviewProps) => {
+  const { t } = useTranslation("client");
   const [deleteApp] = useMutation<DeleteApp, DeleteAppVariables>(DELETE_APP);
   const [updateApp] = useMutation<UpdateApp, UpdateAppVariables>(UPDATE_APP);
   const history = useHistory();
@@ -25,10 +27,10 @@ const AppPreview = ({ id, app, hasChanged }: AppPreviewProps) => {
       <div className={styles.buttons}>
         <Popconfirm
           title={
-            <>
+            <Trans i18nKey="warnings.app" ns="client">
               <div>¿Realmente deseas eliminar la App?</div>
               <div>Será retirada de la AppStore y PlayStore</div>
-            </>
+            </Trans>
           }
           onConfirm={() => {
             deleteApp({
@@ -42,7 +44,7 @@ const AppPreview = ({ id, app, hasChanged }: AppPreviewProps) => {
                     }),
                   });
                   cache.gc();
-                  message.success("La App ha sido eliminada correctamente");
+                  message.success(t("appDeleted"));
                   history.replace("/profile");
                 }
               },
@@ -50,14 +52,14 @@ const AppPreview = ({ id, app, hasChanged }: AppPreviewProps) => {
           }}
         >
           <Button type="primary" danger>
-            Eliminar App
+            {t("deleteApp")}
           </Button>
         </Popconfirm>
         {hasChanged && (
           <Button
             type="ghost"
             onClick={() => {
-              const data = {  ...app  };
+              const data = { ...app };
               // Don't send the image if it's not a Blob
               // If string, means the logo is the server URL
               if (typeof data.logo === "string") {
@@ -71,10 +73,10 @@ const AppPreview = ({ id, app, hasChanged }: AppPreviewProps) => {
               });
             }}
           >
-            Guardar cambios
+            {t("saveChanges")}
           </Button>
         )}
-        <Button type="primary">Publicar App</Button>
+        <Button type="primary">{t("publishApp")}</Button>
       </div>
     </div>
   );

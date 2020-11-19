@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Button, Collapse, Form, Input } from "antd";
 import Title from "antd/lib/typography/Title";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { MODIFY_APP_PAYMENT } from "../../api/mutations";
 import { APP_PAYMENTS } from "../../api/queries";
 import { AppPayments, AppPaymentsVariables } from "../../api/types/AppPayments";
@@ -16,6 +17,7 @@ interface AppPaymentProps {
 }
 
 const AppPayment = ({ appId }: AppPaymentProps) => {
+  const { t } = useTranslation("client");
   const { data, loading } = useQuery<AppPayments, AppPaymentsVariables>(
     APP_PAYMENTS,
     {
@@ -33,7 +35,7 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
   }
   return (
     <>
-      <Title level={2}>Método de pago</Title>
+      <Title level={2}>{t("paymentMethod")}</Title>
       <Collapse>
         <Collapse.Panel key="stripe" header="Stripe">
           <Form
@@ -47,25 +49,19 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
               });
             }}
           >
-            <Form.Item name="stripeTestPublic" label="Clave Pública (test)">
+            <Form.Item name="stripeTestPublic" label={t("testPublicKey")}>
               <Input.Password />
             </Form.Item>
-            <Form.Item name="stripeTestSecret" label="Clave Secreta (test)">
+            <Form.Item name="stripeTestSecret" label={t("testPrivateKey")}>
               <Input.Password />
             </Form.Item>
-            <Form.Item
-              name="stripeProdPublic"
-              label="Clave Pública (producción)"
-            >
+            <Form.Item name="stripeProdPublic" label={t("prodPublicKey")}>
               <Input.Password />
             </Form.Item>
-            <Form.Item
-              name="stripeProdSecret"
-              label="Clave Secreta (producción)"
-            >
+            <Form.Item name="stripeProdSecret" label={t("prodPrivateKey")}>
               <Input.Password />
             </Form.Item>
-            <Button htmlType="submit">Actualizar claves de Stripe</Button>
+            <Button htmlType="submit">{t("updateStripeKeys")}</Button>
             {mutationData?.modifyPaymentMethodApp?.error && (
               <p>{mutationData.modifyPaymentMethodApp.error}</p>
             )}

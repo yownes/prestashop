@@ -7,7 +7,7 @@ import styles from "./auth.module.css";
 import { useTranslation } from "react-i18next";
 
 const ForgottenPassword = () => {
-  const { t } = useTranslation("auth");
+  const { t } = useTranslation(["auth", "translation"]);
   return (
     <Auth image="https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80">
       <div>
@@ -28,7 +28,7 @@ const ForgottenPassword = () => {
               { type: "email" },
             ]}
           >
-            <Input placeholder={t("email")} />
+            <Input placeholder={t("translation:email")} />
           </Form.Item>
           <div className={styles.buttons}>
             <Button block type="ghost">

@@ -10,6 +10,7 @@ import { TemplateSelector, ColorPicker } from "../../components/organisms";
 import AppPreview from "../../components/organisms/AppPreview";
 import { StoreAppInput } from "../../api/types/globalTypes";
 import AppPayment from "../../components/organisms/AppPayment";
+import { useTranslation } from "react-i18next";
 
 interface AppParamTypes {
   appId?: string;
@@ -38,6 +39,7 @@ const baseApp: StoreAppInput = {
 const App = () => {
   const { appId } = useParams<AppParamTypes>();
   const [state, setState] = useState<StoreAppInput>(baseApp);
+  const { t } = useTranslation("client");
   const [getAppById, { loading, data }] = useLazyQuery<IApp, AppVariables>(APP);
   useEffect(() => {
     if (data?.app) {
@@ -73,7 +75,7 @@ const App = () => {
           <Row>
             <Col span={24}>
               <Card>
-                <TitleWithAction title="Estilo" />
+                <TitleWithAction title={t("style")} />
                 <TemplateSelector
                   value={state.template!!}
                   onChange={(selected) => {

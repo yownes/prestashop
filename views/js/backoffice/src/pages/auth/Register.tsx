@@ -16,7 +16,7 @@ interface LocationState {
 
 const Register = () => {
   const location = useLocation<LocationState>();
-  const {t} = useTranslation("auth");
+  const { t } = useTranslation(["auth", "translation"]);
   let { from } = location.state || { from: { pathname: "/" } };
   const { register, isAuthenticated, errors } = useAuth();
   if (isAuthenticated) {
@@ -44,7 +44,7 @@ const Register = () => {
               { min: 2, message: t("required.min", { num: 2 }) },
             ]}
           >
-            <Input placeholder={t("name")} />
+            <Input placeholder={t("translation:name")} />
           </Form.Item>
           <Form.Item
             name="email"
@@ -53,7 +53,7 @@ const Register = () => {
               { type: "email" },
             ]}
           >
-            <Input placeholder={t("email")} />
+            <Input placeholder={t("translation:email")} />
           </Form.Item>
           <Form.Item
             name="password"
@@ -61,7 +61,7 @@ const Register = () => {
               { required: true, message: t("required.password") },
               {
                 min: 8,
-                message: t("required.minPassword", {num: 8}),
+                message: t("required.minPassword", { num: 8 }),
               },
             ]}
           >
@@ -90,11 +90,7 @@ const Register = () => {
             rules={[
               {
                 validator: (_, value) =>
-                  value
-                    ? Promise.resolve()
-                    : Promise.reject(
-                        t("required.tos")
-                      ),
+                  value ? Promise.resolve() : Promise.reject(t("required.tos")),
               },
             ]}
           >

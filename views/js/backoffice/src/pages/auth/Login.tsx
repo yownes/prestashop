@@ -16,7 +16,7 @@ interface LocationState {
 
 const Login = () => {
   const location = useLocation<LocationState>();
-  const { t } = useTranslation("auth");
+  const { t } = useTranslation(["auth", "translation"]);
   let { from } = location.state || { from: { pathname: "/" } };
   const { login, isAuthenticated, errors } = useAuth();
   if (isAuthenticated) {
@@ -39,7 +39,7 @@ const Login = () => {
               { type: "email" },
             ]}
           >
-            <Input placeholder={t("email")} />
+            <Input placeholder={t("translation:email")} />
           </Form.Item>
           <Form.Item
             name="password"

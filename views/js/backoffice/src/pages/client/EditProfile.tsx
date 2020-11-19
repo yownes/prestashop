@@ -2,53 +2,55 @@ import React from "react";
 import { Button, Card, Col, Input, Row, Typography } from "antd";
 import { Link } from "react-router-dom";
 import ChangePassword from "../../components/organisms/ChangePassword";
+import { useTranslation } from "react-i18next";
 
 const { Title } = Typography;
 
 const EditProfile = () => {
+  const { t } = useTranslation(["translation", "client"]);
   return (
     <>
       <Row gutter={[20, 20]}>
         <Col span={24}>
           <Card>
-            <Title level={2}>Datos Personales</Title>
+            <Title level={2}>{t("client:personalData")}</Title>
             <Row gutter={[15, 15]}>
               <Col md={12} sm={24}>
-                <Input placeholder="Nombre" />
+                <Input placeholder={t("name")} />
               </Col>
               <Col md={12} sm={24}>
-                <Input placeholder="Apellidos" />
+                <Input placeholder={t("surname")} />
               </Col>
             </Row>
             <Row gutter={[15, 15]}>
               <Col md={12} sm={24}>
-                <Input placeholder="Mail" />
+                <Input placeholder={t("email")} />
               </Col>
               <Col md={12} sm={24}>
-                <Input placeholder="Dirección" />
-              </Col>
-            </Row>
-            <Row gutter={[15, 15]}>
-              <Col md={12} sm={24}>
-                <Input placeholder="Ciudad" />
-              </Col>
-              <Col md={12} sm={24}>
-                <Input placeholder="País" />
+                <Input placeholder={t("location")} />
               </Col>
             </Row>
             <Row gutter={[15, 15]}>
               <Col md={12} sm={24}>
-                <Input placeholder="Dirección de facturación" />
+                <Input placeholder={t("city")} />
               </Col>
               <Col md={12} sm={24}>
-                <Input placeholder="DNI - NIF" />
+                <Input placeholder={t("country")} />
+              </Col>
+            </Row>
+            <Row gutter={[15, 15]}>
+              <Col md={12} sm={24}>
+                <Input placeholder={t("billingDirection")} />
+              </Col>
+              <Col md={12} sm={24}>
+                <Input placeholder={t("documentId")} />
               </Col>
             </Row>
           </Card>
         </Col>
         <Col span={24}>
           <Card>
-            <Title level={2}>Método de Pago</Title>
+            <Title level={2}>{t("client:paymentMethod")}</Title>
           </Card>
         </Col>
         <Col span={24}>
@@ -59,7 +61,7 @@ const EditProfile = () => {
       </Row>
       <Row>
         <Link to="/profile">
-          <Button danger>Cancelar</Button>
+          <Button danger>{t("cancel")}</Button>
         </Link>
       </Row>
     </>
