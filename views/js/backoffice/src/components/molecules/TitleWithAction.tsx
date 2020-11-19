@@ -17,7 +17,7 @@ interface TitleWithActionProps {
 }
 
 const TitleWithAction = ({ title, action }: TitleWithActionProps) => {
-  const { t } = useTranslation("cliente");
+  const { t } = useTranslation("client");
   return (
     <div className={styles.container}>
       <Title level={2}>{title}</Title>
