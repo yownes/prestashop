@@ -12,6 +12,8 @@ export const TOKEN_AUTH = gql`
       success
       errors
       user {
+        id
+        email
         username
         firstName
         lastName
@@ -130,6 +132,20 @@ export const CREATE_APP = gql`
       error
       storeApp {
         id
+        logo
+        name
+        storeLinks {
+          ios
+          android
+        }
+        builds {
+          edges {
+            node {
+              id
+              buildStatus
+            }
+          }
+        }
       }
     }
   }
