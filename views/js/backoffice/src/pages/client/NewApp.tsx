@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { ApolloCache, FetchResult, useMutation } from "@apollo/client";
 import { Button, Input, Form, Card } from "antd";
 import { Redirect } from "react-router-dom";
@@ -10,17 +10,15 @@ import { useAuth } from "../../lib/auth";
 const NewApp = () => {
   const storeInfo: { link: string; name: string } | undefined = (window as any)
     .__YOWNES_STORE_INFO__;
-    const { t } = useTranslation("client");
-    const { user } = useAuth();
+  const { t } = useTranslation("client");
+  const { user } = useAuth();
   const [create, { data, loading }] = useMutation<
     CreateApp,
     CreateAppVariables
   >(CREATE_APP);
 
-  function update(
-    cache: ApolloCache<CreateApp>,
-    { data }: FetchResult<CreateApp, Record<string, any>, Record<string, any>>
-  ) {
+  const update = useCallback((cache: ApolloCache<CreateApp>,
+    { data }: FetchResult<CreateApp, Record<string, any>, Record<string, any>>) => {
     if (data?.createApp?.ok) {
       const me = cache.identify({ ...user });
       const node = cache.identify({ ...data.createApp?.storeApp });
@@ -35,7 +33,7 @@ const NewApp = () => {
         },
       });
     }
-  }
+  }, [user])
 
   useEffect(() => {
     if (storeInfo) {
@@ -49,7 +47,7 @@ const NewApp = () => {
         update,
       });
     }
-  }, [storeInfo, create]);
+  }, [storeInfo, create, update]);
   if (data?.createApp?.ok) {
     return <Redirect to={`/app/${data.createApp.storeApp?.id}`} />;
   }
