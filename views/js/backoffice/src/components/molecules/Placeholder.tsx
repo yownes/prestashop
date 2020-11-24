@@ -16,7 +16,7 @@ const Placeholder = ({ claim, image, cta }: PlaceholderProps) => {
       <h2 className={styles.title}>{claim}</h2>
       {image && <img src={styles.image} alt="claim" />}
       <Link to={cta.link}>
-        <Button>{cta.title}</Button>
+        <Button type="primary">{cta.title}</Button>
       </Link>
     </div>
   );

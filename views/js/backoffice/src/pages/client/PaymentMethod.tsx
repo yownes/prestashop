@@ -53,6 +53,15 @@ const PaymentMethod = () => {
                   if (node.stripeId) {
                     removePaymentMethod({
                       variables: { paymentMethodId: node.stripeId },
+                      update(cache, { data }) {
+                        if (data?.detachPaymentMethod?.ok) {
+                          const ref = cache.identify({ ...node })
+                          cache.evict({
+                            id: ref
+                          })
+                          cache.gc()
+                        }
+                      }
                     });
                   }
                 }}

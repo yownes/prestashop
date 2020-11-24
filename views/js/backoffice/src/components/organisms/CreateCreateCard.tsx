@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Card, Col, Input, Row, Typography, Form } from "antd";
 import {
   CardElement,
@@ -10,7 +10,7 @@ import CardSection from "../molecules/CardSection";
 import { loadStripe } from "@stripe/stripe-js";
 import { useTranslation } from "react-i18next";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const stripePromise = loadStripe("pk_test_RG1KlTBaXWs8pCamCoLixIIu00FTwuG937");
 
@@ -29,6 +29,7 @@ const CreateCreditCardContainer = (props: CreateCreditCardProps) => {
 const CreateCreditCard = ({ onCreated }: CreateCreditCardProps) => {
   const stripe = useStripe();
   const elements = useElements();
+  const [error, setError] = useState<string>()
   const { t } = useTranslation(["translation", "client"]);
   return (
     <Form
@@ -58,7 +59,9 @@ const CreateCreditCard = ({ onCreated }: CreateCreditCardProps) => {
 
         if (error) {
           console.log("[createPaymentMethod error]", error);
+          setError(error.message);
         } else {
+          setError(undefined);
           const paymentMethodId = paymentMethod?.id;
           if (!paymentMethodId) {
             return;
@@ -135,6 +138,7 @@ const CreateCreditCard = ({ onCreated }: CreateCreditCardProps) => {
                 </Row>
                 <Row gutter={[15, 15]}>
                   <Col md={12} sm={24}>
+                    {/*TODO: Country Select */}
                     <Form.Item
                       name="country"
                       rules={[{ required: true }]}
@@ -158,6 +162,7 @@ const CreateCreditCard = ({ onCreated }: CreateCreditCardProps) => {
               </Card>
             </Col>
             <Col span={24}>
+              {error && <p><Text type="danger">{error}</Text></p>}
               <Button htmlType="submit" type="primary" size="large">
                 {t("client:createPaymentMethod")}
               </Button>

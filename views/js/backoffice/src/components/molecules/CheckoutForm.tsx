@@ -62,7 +62,7 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
                 type="primary"
                 size="large"
               >
-                {t("confirm")}
+                {t("translation:confirm")}
               </Button>
             )}
           </Col>
