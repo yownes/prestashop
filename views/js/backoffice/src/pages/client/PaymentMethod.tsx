@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Col, Drawer, Popconfirm, Radio, Row } from "antd";
+import { Button, Col, Drawer, message, Popconfirm, Radio, Row } from "antd";
 import CreditCard from "../../components/molecules/CreditCard";
 import { useMutation, useQuery } from "@apollo/client";
 import { MY_PAYMENT_METHODS } from "../../api/queries";
@@ -51,18 +51,22 @@ const PaymentMethod = () => {
                 placement="topLeft"
                 onConfirm={() => {
                   if (node.stripeId) {
-                    removePaymentMethod({
-                      variables: { paymentMethodId: node.stripeId },
-                      update(cache, { data }) {
-                        if (data?.detachPaymentMethod?.ok) {
-                          const ref = cache.identify({ ...node })
-                          cache.evict({
-                            id: ref
-                          })
-                          cache.gc()
+                    if (node.stripeId === data?.me?.customer?.defaultPaymentMethod?.stripeId) {
+                      message.info(t("warnings.defaultCard"))
+                    } else {
+                      removePaymentMethod({
+                        variables: { paymentMethodId: node.stripeId },
+                        update(cache, { data }) {
+                          if (data?.detachPaymentMethod?.ok) {
+                            const ref = cache.identify({ ...node })
+                            cache.evict({
+                              id: ref
+                            })
+                            cache.gc()
+                          }
                         }
-                      }
-                    });
+                      });
+                    }
                   }
                 }}
               >
