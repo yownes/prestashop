@@ -4,7 +4,7 @@ import { REFRESH_TOKEN, REGISTER, TOKEN_AUTH } from "../api/mutations";
 import { Register, RegisterVariables } from "../api/types/Register";
 import { TokenAuth, TokenAuthVariables } from "../api/types/TokenAuth";
 import { ME } from "../api/queries";
-import { Me } from "../api/types/Me";
+import { Me, Me_me } from "../api/types/Me";
 import Loading from "../components/atoms/Loading";
 import { RefreshToken, RefreshTokenVariables } from "../api/types/RefreshToken";
 
@@ -30,6 +30,7 @@ interface AuthState {
   token?: Token;
   loading: boolean;
   errors?: Errors;
+  user?: Me_me;
   isAuthenticated: boolean;
 }
 
@@ -49,6 +50,7 @@ type AuthStateAction =
       payload: {
         isAdmin?: boolean;
         token?: Token;
+        user?: Me_me;
       };
     }
   | {
@@ -103,6 +105,7 @@ function reducer(state: AuthState, action: AuthStateAction): AuthState {
         isAdmin: action.payload.isAdmin || false,
         token: action.payload.token || state.token,
         loading: false,
+        user: action.payload.user,
         isAuthenticated: action.payload.token ? true : !!state.token,
       };
     case "LOGOUT":
@@ -131,10 +134,12 @@ function useAuthLogic(): IAuth {
   >(REFRESH_TOKEN);
   const [me] = useLazyQuery<Me>(ME, {
     onCompleted({ me }) {
-      dispatch({
-        type: "LOGIN",
-        payload: { isAdmin: me?.isStaff },
-      });
+      if (me) {
+        dispatch({
+          type: "LOGIN",
+          payload: { isAdmin: me?.isStaff, user: me },
+        });
+      }
     },
   });
 
@@ -148,13 +153,16 @@ function useAuthLogic(): IAuth {
         }
         const token = parseToken(data.tokenAuth.token);
         setTimeout(refreshToken, token.expiry * 1000 - new Date().getTime());
-        dispatch({
-          type: "LOGIN",
-          payload: {
-            token,
-            isAdmin: data.tokenAuth.user?.isStaff ?? false,
-          },
-        });
+        if (data.tokenAuth.user) {
+          dispatch({
+            type: "LOGIN",
+            payload: {
+              token,
+              isAdmin: data.tokenAuth.user?.isStaff ?? false,
+              user: data.tokenAuth.user,
+            },
+          });
+        }
       } else {
         //TODO: Error handling
         dispatch({ type: "ERROR", payload: data?.tokenAuth?.errors });

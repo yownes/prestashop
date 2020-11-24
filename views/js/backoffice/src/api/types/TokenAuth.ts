@@ -10,6 +10,11 @@
 export interface TokenAuth_tokenAuth_user {
   __typename: "UserNode";
   /**
+   * The ID of the object.
+   */
+  id: string;
+  email: string;
+  /**
    * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
    */
   username: string;

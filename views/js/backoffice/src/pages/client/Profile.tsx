@@ -65,7 +65,22 @@ const Profile = () => {
             onConfirm={() => {
               setIsOverlayVisible(false);
               if (data?.me?.id) {
-                unsubscribe({ variables: { userId: data?.me?.id } });
+                unsubscribe({
+                  variables: { userId: data?.me?.id },
+                  update(cache, { data: result }) {
+                    if (result?.dropOut?.ok && data.me) {
+                      cache.modify({
+                        id: cache.identify({
+                          __ref: data?.me.id,
+                          __typename: data?.me.__typename,
+                        }),
+                        fields: {
+                          accountStatus: () => AccountAccountStatus.REGISTERED,
+                        },
+                      });
+                    }
+                  },
+                });
               }
             }}
           >

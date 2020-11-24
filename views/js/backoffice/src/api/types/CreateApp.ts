@@ -3,11 +3,42 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { StoreAppInput } from "./globalTypes";
+import { StoreAppInput, BuildBuildStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: CreateApp
 // ====================================================
+
+export interface CreateApp_createApp_storeApp_storeLinks {
+  __typename: "StoreLinks";
+  ios: string | null;
+  android: string | null;
+}
+
+export interface CreateApp_createApp_storeApp_builds_edges_node {
+  __typename: "BuildType";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+  buildStatus: BuildBuildStatus;
+}
+
+export interface CreateApp_createApp_storeApp_builds_edges {
+  __typename: "BuildTypeEdge";
+  /**
+   * The item at the end of the edge
+   */
+  node: CreateApp_createApp_storeApp_builds_edges_node | null;
+}
+
+export interface CreateApp_createApp_storeApp_builds {
+  __typename: "BuildTypeConnection";
+  /**
+   * Contains the nodes in this connection.
+   */
+  edges: (CreateApp_createApp_storeApp_builds_edges | null)[];
+}
 
 export interface CreateApp_createApp_storeApp {
   __typename: "StoreAppType";
@@ -15,6 +46,10 @@ export interface CreateApp_createApp_storeApp {
    * The ID of the object.
    */
   id: string;
+  logo: string | null;
+  name: string;
+  storeLinks: CreateApp_createApp_storeApp_storeLinks | null;
+  builds: CreateApp_createApp_storeApp_builds;
 }
 
 export interface CreateApp_createApp {
