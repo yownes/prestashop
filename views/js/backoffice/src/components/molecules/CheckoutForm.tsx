@@ -23,7 +23,7 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
     Subscribe,
     SubscribeVariables
   >(SUBSCRIBE);
-  const {t} = useTranslation("client")
+  const {t} = useTranslation(["client", "translation"])
   return (
     <Row gutter={[20,       20]}>
       <Col sm={24} md={14}>
@@ -37,7 +37,7 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Text type="secondary">{plan.name}</Text>
                 <Text type="secondary">
-                  {t("subscriptionResume", {amount: plan.amount, interval: plan.interval === PlanInterval.MONTH ? t("month") : t("year")})}
+                  {t("subscriptionResume", {amount: plan.amount, interval: plan.interval === PlanInterval.MONTH ? t("translation:month") : t("translation:year")})}
                 </Text>
               </div>
             </Card>
