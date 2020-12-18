@@ -528,6 +528,7 @@ type RootQueryType {
     sort: String = "sort_order"
     order: String = "ASC"
   ): ProductResult
+  bestSells: [Product]
   product(id: String): Product
   wishlist: [Product]
   contact: Contact

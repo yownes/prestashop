@@ -12,6 +12,12 @@
  * @version   0.1.0
  */
 
+use PrestaShop\PrestaShop\Adapter\BestSales\BestSalesProductSearchProvider;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
+
+
 class ModelStoreProduct extends Model
 {
     //prestashop doesn't have related products, so we pull 4 related products from the same category
@@ -200,5 +206,32 @@ class ModelStoreProduct extends Model
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
         return $result['count(*)'];
+    }
+
+    public function getBestSalesProducts()
+    {
+        $searchProvider = new BestSalesProductSearchProvider(
+            $this->context->getTranslator()
+        );
+
+        $context = new ProductSearchContext($this->context);
+
+        $query = new ProductSearchQuery();
+
+        // $nProducts = (int) Configuration::get('PS_BLOCK_BESTSELLERS_TO_DISPLAY');
+
+        $query
+            ->setResultsPerPage(6)
+            ->setPage(1)
+        ;
+
+        $query->setSortOrder(SortOrder::random());
+
+        $result = $searchProvider->runQuery(
+            $context,
+            $query
+        );
+
+        return $result->getProducts();
     }
 }

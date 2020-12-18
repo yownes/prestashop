@@ -162,6 +162,48 @@ class ResolverStoreProduct extends Resolver
             'totalElements'    => (int) $product_total,
         );
     }
+
+    public function getBestList($args)
+    {
+        $this->load->model('store/product');
+        $filter_data = array(
+            'sort'  => $args['sort'],
+            'order' => $args['order'],
+        );
+
+        if ($args['size'] != '-1') {
+            $filter_data['start'] = ((int)$args['page'] - 1) * (int)$args['size'];
+            $filter_data['limit'] = $args['size'];
+        }
+
+        if ($filter_data['sort'] == 'id') {
+            $filter_data['sort'] = 'product_id';
+        }
+
+        if ($args['category_id'] !== 0) {
+            $filter_data['filter_category_id'] = $args['category_id'];
+        }
+
+        if (!empty($args['ids'])) {
+            $filter_data['filter_ids'] = $args['ids'];
+        }
+
+        if (!empty($args['special'])) {
+            $filter_data['filter_special'] = true;
+        }
+
+        if (!empty($args['search'])) {
+            $filter_data['filter_search'] = $args['search'];
+        }
+
+        $results = $this->model_store_product->getBestSalesProducts($filter_data);
+        $products = [];
+        foreach ($results as $product) {
+            $products[] = $this->get(array( 'id' => $product['id_product'] ));
+        }
+
+        return $products;
+    }
     public function getRelatedProducts($data)
     {
         $product = $data['parent'];
