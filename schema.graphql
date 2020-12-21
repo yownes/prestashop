@@ -344,8 +344,32 @@ type Meta {
   keyword: String
 }
 
+type SlidesResult {
+  speed: Int
+  slides: [Slide]
+}
+
+type SlideImageSize {
+  width: Int
+  height: Int
+}
+
+type Slide {
+  id: String
+  position: Int
+  url: String
+  legend: String
+  title: String
+  description: String
+  active: Boolean
+  imageUrl: String
+  size: SlideImageSize
+}
+
 type HomeResult {
   meta: Meta
+  banner: String
+  slides: SlidesResult
 }
 
 type LoginResult {

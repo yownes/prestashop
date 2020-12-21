@@ -19,12 +19,47 @@ class ResolverCommonHome extends Resolver
     {
         $meta_info = Meta::getMetaByPage('index', $this->context->language->id);
 
+        $imgname = Configuration::get('BANNER_IMG', $this->context->language->id);
+        $banner_img = $this->context->link->protocol_content . Tools::getMediaServer($imgname) . '/modules/ps_banner/img/' . $imgname;
+
+        $slides = Module::getInstanceByName('ps_imageslider')->getWidgetVariables();
+
         return array(
             'meta' => array(
                 'title' => $meta_info['title'],
                 'description' => $meta_info['description'],
                 'keyword' => $meta_info['keywords'],
             ),
+            'banner' => $banner_img,
+            'slides' => $this->parseSlides($slides)
         );
+    }
+
+    private function parseSlides($raw)
+    {
+        $homeslides = $raw['homeslider'];
+        $slides = [];
+
+        foreach ($homeslides['slides'] as $s) {
+            $slides[] = array(
+                'id' => $s['id_slide'],
+                'position' => $s['position'],
+                'active' => $s['active'],
+                'url' => $s['url'],
+                'imageUrl' => $s['image_url'],
+                'legend' => $s['legend'],
+                'title' => $s['title'],
+                'description' => $s['description'],
+                'size' => array(
+                    'width' => $s['sizes']['0'],
+                    'height' => $s['sizes']['1'],
+                ),
+            );
+        }
+        return array(
+            'speed' => $homeslides['speed'],
+            'slides' => $slides
+        );
+        
     }
 }
