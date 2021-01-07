@@ -1,11 +1,16 @@
 import React from "react";
 import { CardElement } from "@stripe/react-stripe-js";
-import { Card, Col, Row } from "antd";
-import { useTranslation } from "react-i18next";
+import {
+  StripeCardElementChangeEvent,
+  StripeCardElementOptions,
+} from "@stripe/stripe-js";
+import { Card } from "antd";
 
-interface CardSectionProps {}
+interface CardSectionProps {
+  onChange: (e: StripeCardElementChangeEvent) => void;
+}
 
-const CARD_ELEMENT_OPTIONS = {
+const CARD_ELEMENT_OPTIONS: StripeCardElementOptions = {
   style: {
     base: {
       color: "#32325d",
@@ -21,21 +26,16 @@ const CARD_ELEMENT_OPTIONS = {
       iconColor: "#fa755a",
     },
   },
+  hidePostalCode: true,
 };
 
-const CardSection = () => {
-  const { t } = useTranslation("client");
+const CardSection = ({ onChange }: CardSectionProps) => {
   return (
-    <Row>
-      <Col span={12}>
-        <label>
-          {t("cardDetails")}
-          <Card>
-            <CardElement options={CARD_ELEMENT_OPTIONS} />
-          </Card>
-        </label>
-      </Col>
-    </Row>
+    <label>
+      <Card>
+        <CardElement onChange={onChange} options={CARD_ELEMENT_OPTIONS} />
+      </Card>
+    </label>
   );
 };
 

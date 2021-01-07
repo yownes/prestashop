@@ -26,7 +26,10 @@ const Register = () => {
     <Auth image="https://images.unsplash.com/photo-1586244439413-bc2288941dda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80">
       <div>
         <h1 className={styles.centerText}>{t("createAnAccount")}</h1>
-        <Errors errors={errors} fields={["email", "password1", "password2"]} />
+        <Errors
+          errors={errors}
+          fields={["email", "username", "password1", "password2"]}
+        />
         <Form
           onFinish={(values) => {
             register?.({
@@ -44,13 +47,13 @@ const Register = () => {
               { min: 2, message: t("required.min", { num: 2 }) },
             ]}
           >
-            <Input placeholder={t("translation:name")} />
+            <Input placeholder={t("translation:userName")} />
           </Form.Item>
           <Form.Item
             name="email"
             rules={[
               { required: true, message: t("required.email") },
-              { type: "email" },
+              { type: "email", message: t("required.validEmail") },
             ]}
           >
             <Input placeholder={t("translation:email")} />

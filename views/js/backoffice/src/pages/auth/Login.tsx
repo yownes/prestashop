@@ -35,8 +35,8 @@ const Login = () => {
           <Form.Item
             name="email"
             rules={[
-              { required: true, message: t("required.mail") },
-              { type: "email" },
+              { required: true, message: t("required.email") },
+              { type: "email", message: t("required.validEmail") },
             ]}
           >
             <Input placeholder={t("translation:email")} />

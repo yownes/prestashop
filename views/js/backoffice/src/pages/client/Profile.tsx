@@ -45,9 +45,9 @@ const Profile = () => {
       <Menu.Item>
         <Link to="/profile/edit">{t("edit")}</Link>
       </Menu.Item>
-      <Menu.Item>
+      {/*<Menu.Item>
         <Link to="/profile/paymentMethods">{t("changePaymentMethod")}</Link>
-      </Menu.Item>
+      </Menu.Item>*/}
       <Menu.Divider></Menu.Divider>
       {data?.me?.accountStatus === AccountAccountStatus.PAID_ACCOUNT && (
         <Menu.Item>

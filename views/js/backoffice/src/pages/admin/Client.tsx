@@ -172,6 +172,8 @@ const Client = () => {
                             update(cache, { data }) {
                               if (data?.deleteApp?.ok) {
                                 const id = cache.identify({ ...record });
+                                console.log({ id });
+                                
                                 cache.evict({
                                   id,
                                 });

@@ -24,6 +24,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       console.log(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       );
+      console.log(locations);
     });
   }
   if (networkError) {
@@ -33,7 +34,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 const uri =
   process.env.NODE_ENV === "development"
-    ? "/graphql"
+    ? "http://localhost:8000/graphql"
     : `index.php?controller=AdminYownesAjax&action=proxy&ajax=true&${
         (window as any).__TOKEN__
       }`;

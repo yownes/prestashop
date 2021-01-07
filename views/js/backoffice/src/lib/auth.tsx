@@ -38,6 +38,7 @@ interface IAuth extends AuthState {
   login: (variables: TokenAuthVariables) => Promise<void>;
   register: (variables: RegisterVariables) => Promise<void>;
   logout: () => void;
+  setNewToken: (token: string, refreshToken: string) => void;
 }
 
 interface AuthProviderProps {
@@ -183,6 +184,7 @@ function useAuthLogic(): IAuth {
           payload: { token: parseToken(data.register.token) },
         });
       } else {
+        //TODO: Error handling
         dispatch({ type: "ERROR", payload: data?.register?.errors });
       }
     });
@@ -191,6 +193,11 @@ function useAuthLogic(): IAuth {
   function logout() {
     localStorage.removeItem(TOKEN_KEY);
     dispatch({ type: "LOGOUT" });
+  }
+
+  function setNewToken(token: string, refreshToken: string) {
+    localStorage.setItem(TOKEN_KEY, refreshToken);
+    inMemoryToken = token;
   }
 
   function refreshToken() {
@@ -237,6 +244,7 @@ function useAuthLogic(): IAuth {
     login,
     logout,
     register,
+    setNewToken,
     ...state,
   };
 }

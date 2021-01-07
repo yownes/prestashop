@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { ApolloCache, FetchResult, useMutation } from "@apollo/client";
 import { Button, Input, Form, Card } from "antd";
 import { Redirect } from "react-router-dom";
@@ -10,32 +10,36 @@ import { useAuth } from "../../lib/auth";
 const NewApp = () => {
   const storeInfo: { link: string; name: string } | undefined = (window as any)
     .__YOWNES_STORE_INFO__;
-    const { t } = useTranslation("client");
-    const { user } = useAuth();
+  const { t } = useTranslation("client");
+  const { user } = useAuth();
   const [create, { data, loading }] = useMutation<
     CreateApp,
     CreateAppVariables
   >(CREATE_APP);
 
-  function update(
-    cache: ApolloCache<CreateApp>,
-    { data }: FetchResult<CreateApp, Record<string, any>, Record<string, any>>
-  ) {
-    if (data?.createApp?.ok) {
-      const me = cache.identify({ ...user });
-      const node = cache.identify({ ...data.createApp?.storeApp });
-      cache.modify({
-        id: me,
-        fields: {
-          apps(existing) {
-            return {
-              edges: [...existing.edges, { node }],
-            };
-          },
-        },
-      });
-    }
-  }
+  const update = useCallback(
+    
+    function (
+        cache: ApolloCache<CreateApp>,
+        { data }: FetchResult<CreateApp, Record<string, any>, Record<string, any>>
+      ) {
+        if (data?.createApp?.ok) {
+          const me = cache.identify({ ...user });
+          const node = cache.identify({ ...data.createApp?.storeApp });
+          cache.modify({
+            id: me,
+            fields: {
+              apps(existing) {
+                return {
+                  edges: [...existing.edges, { node }],
+                };
+              },
+            },
+          });
+        }
+      },
+      [user]
+  );
 
   useEffect(() => {
     if (storeInfo) {
@@ -49,7 +53,7 @@ const NewApp = () => {
         update,
       });
     }
-  }, [storeInfo, create]);
+  }, [storeInfo, create, update]);
   if (data?.createApp?.ok) {
     return <Redirect to={`/app/${data.createApp.storeApp?.id}`} />;
   }
@@ -70,14 +74,14 @@ const NewApp = () => {
         <Form.Item
           name="name"
           label={t("appName")}
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: t("required.app") }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           name="apiLink"
           label={t("storeLocation")}
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: t("required.store") }]}
         >
           <Input disabled={Boolean(storeInfo?.link)} type="url" />
         </Form.Item>

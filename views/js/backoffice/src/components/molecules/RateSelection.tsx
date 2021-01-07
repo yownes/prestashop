@@ -20,7 +20,7 @@ const RateSelection = ({
   title,
   plan,
 }: RateSelectionProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("translation");
   return (
     <div className={styles.container}>
       <Text>{subtitle}</Text>

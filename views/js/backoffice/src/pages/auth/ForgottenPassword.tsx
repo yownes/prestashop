@@ -25,7 +25,7 @@ const ForgottenPassword = () => {
             name="email"
             rules={[
               { required: true, message: t("required.email") },
-              { type: "email" },
+              { type: "email", message: t("required.validEmail") },
             ]}
           >
             <Input placeholder={t("translation:email")} />

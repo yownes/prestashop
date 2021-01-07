@@ -14,6 +14,8 @@ const Error = ({ message }: { message: string }) => (
 );
 
 const Errors = ({ errors, fields }: ErrorsProps) => {
+  console.log(errors, fields);
+  
   if (!errors) {
     return null;
   }

@@ -29,6 +29,7 @@ interface IBillingDetailsStripe {
   };
   email: string;
   name: string;
+  phone: string;
 }
 
 const CARDS = {

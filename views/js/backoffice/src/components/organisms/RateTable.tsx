@@ -127,7 +127,7 @@ const RateTable = () => {
           })),
         ]}
         pagination={false}
-        scroll={{ x: 1500, y: "40vh" }}
+        scroll={{ x: 1500 /*, y: "40vh"*/ }}
         dataSource={dataSource}
       />
     </>
