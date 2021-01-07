@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select, Typography } from "antd";
 import {
   CardElement,
   Elements,
@@ -22,6 +22,7 @@ enum Language {
   ca = "ca",
   de = "de",
 }
+const { Title, Text } = Typography;
 
 const stripePromise = loadStripe("pk_test_RG1KlTBaXWs8pCamCoLixIIu00FTwuG937");
 

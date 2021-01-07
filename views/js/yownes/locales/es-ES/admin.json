@@ -1,0 +1,18 @@
+{
+  "clients": "Clientes",
+  "client": "Cliente",
+  "clientID": "ID Cliente",
+  "builds": "Builds",
+  "buildID": "ID Build",
+  "date": "Fecha",
+  "warnings": {
+    "ban": "¿Estás seguro que deseas banear esta cuenta?",
+    "unban": "¿Estás seguro que deseas desbanear esta cuenta?",
+    "account": "¿Realmente deseas eliminar la cuenta?",
+    "app": "¿Realmente deseas eliminar la app?"
+  },
+  "ban": "Banear cuenta",
+  "unban": "Desbanear cuenta",
+  "unsubscribe": "Dar de baja la suscripción",
+  "actions": "Acciones"
+}

@@ -18,27 +18,26 @@ const NewApp = () => {
   >(CREATE_APP);
 
   const update = useCallback(
-    
     function (
-        cache: ApolloCache<CreateApp>,
-        { data }: FetchResult<CreateApp, Record<string, any>, Record<string, any>>
-      ) {
-        if (data?.createApp?.ok) {
-          const me = cache.identify({ ...user });
-          const node = cache.identify({ ...data.createApp?.storeApp });
-          cache.modify({
-            id: me,
-            fields: {
-              apps(existing) {
-                return {
-                  edges: [...existing.edges, { node }],
-                };
-              },
+      cache: ApolloCache<CreateApp>,
+      { data }: FetchResult<CreateApp, Record<string, any>, Record<string, any>>
+    ) {
+      if (data?.createApp?.ok) {
+        const me = cache.identify({ ...user });
+        const node = cache.identify({ ...data.createApp?.storeApp });
+        cache.modify({
+          id: me,
+          fields: {
+            apps(existing) {
+              return {
+                edges: [...existing.edges, { node }],
+              };
             },
-          });
-        }
-      },
-      [user]
+          },
+        });
+      }
+    },
+    [user]
   );
 
   useEffect(() => {

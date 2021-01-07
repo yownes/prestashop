@@ -10,7 +10,8 @@
     "card": "¿Realmente deseas eliminar la tarjeta?",
     "logo": "¿Realmente deseas eliminar el logo?",
     "app": "<1>¿Realmente deseas eliminar la App?</1><2>Será retirada de la AppStore y PlayStore</2>",
-    "action": "¿Realmente deseas realizar esta acción?"
+    "action": "¿Realmente deseas realizar esta acción?",
+    "defaultCard": "No puedes eliminar la tarjeta por defecto"
   },
   "subscribe": "Suscribirse",
   "subscribeNow": "Suscríbete para poder tener tu propia App",
