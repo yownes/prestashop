@@ -20,8 +20,7 @@ class ResolverCommonHome extends Resolver
         $meta_info = Meta::getMetaByPage('index', $this->context->language->id);
 
         $imgname = Configuration::get('BANNER_IMG', $this->context->language->id);
-        $banner_img = $this->context->link->protocol_content . Tools::getMediaServer($imgname) . '/modules/ps_banner/img/' . $imgname;
-
+        $banner_img = $this->context->link->protocol_content . Tools::getMediaServer($imgname) . __PS_BASE_URI__ . 'modules/ps_banner/img/' . $imgname;
         $slides = Module::getInstanceByName('ps_imageslider')->getWidgetVariables();
 
         return array(
