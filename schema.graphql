@@ -6,6 +6,7 @@ schema {
 scalar Upload
 
 type Cart {
+  id: String
   products: [CartProduct]
   total: String
 }

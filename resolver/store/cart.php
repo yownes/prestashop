@@ -110,6 +110,7 @@ class ResolverStoreCart extends Resolver
     public function get()
     {
         $cartData = array(
+            'id' => $this->context->cart->id,
             'products' => array(),
             'total' => Tools::displayPrice($this->context->cart->getOrderTotal())
         );
