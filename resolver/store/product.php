@@ -58,6 +58,9 @@ class ResolverStoreProduct extends Resolver
             true
         );
 
+        $this->load->model('store/wishlist');
+        $results = $this->model_store_wishlist->getWishlist();
+
         $link = str_replace($this->context->link->getPageLink(''), '', $link);
         return array(
             'id'               => $product->id,
@@ -73,6 +76,7 @@ class ResolverStoreProduct extends Resolver
             'imageLazy'        => $imageLazy,
             'stock'            => $product->quantity,
             'rating'           => (float)0,
+            'inWishlist'       => in_array($product->id,$results),
             'keyword'          => $link,
             'meta'             => array(
                 'title' => $product->meta_title,

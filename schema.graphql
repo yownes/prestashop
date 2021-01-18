@@ -212,6 +212,7 @@ type Product {
   stock: Int
   manufacturer: String
   rating: Float
+  inWishlist: Boolean
   attributes: [productAttribute]
   reviews: [ProductReview]
   options: [ProductOption]
