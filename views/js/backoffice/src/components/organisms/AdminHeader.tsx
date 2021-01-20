@@ -1,22 +1,26 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Input } from "antd";
-
-import styles from "./AdminHeader.module.css";
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu } from "antd";
+import { BuildOutlined, UserOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
 const AdminHeader = () => {
   const { t } = useTranslation("admin");
+  const location = useLocation();
+  const [current, setCurrent] = useState(location.pathname.slice(1));
   return (
-    <div className={styles.container}>
-      <div>
+    <Menu
+      onClick={(state) => setCurrent(String(state.key))}
+      selectedKeys={[current]}
+      mode="horizontal"
+    >
+      <Menu.Item key="clients" icon={<UserOutlined />}>
         <Link to="/clients">{t("clients")}</Link>
+      </Menu.Item>
+      <Menu.Item key="builds" icon={<BuildOutlined />}>
         <Link to="/builds">{t("builds")}</Link>
-      </div>
-      <div>
-        <Input.Search />
-      </div>
-    </div>
+      </Menu.Item>
+    </Menu>
   );
 };
 
