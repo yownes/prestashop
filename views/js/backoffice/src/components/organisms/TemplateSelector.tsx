@@ -19,9 +19,9 @@ interface TemplateSelectorProps {
 
 const TemplateSelector = ({ value, onChange }: TemplateSelectorProps) => {
   const { t } = useTranslation("client");
-  const {loading, data} = useQuery<Templates>(TEMPLATES);
+  const { loading, data } = useQuery<Templates>(TEMPLATES);
   if (loading) {
-    return <Loading />
+    return <Loading />;
   }
   const templates = connectionToNodes(data?.templates);
   return (

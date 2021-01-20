@@ -76,7 +76,6 @@ const initialState: AuthState = {
   isAuthenticated: false,
 };
 
-
 let inMemoryToken: string;
 
 export function getToken() {

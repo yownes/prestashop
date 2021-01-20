@@ -155,23 +155,23 @@ export const CREATE_APP = gql`
  * ACCOUNT
  */
 
- export const DELETE_ACCOUNT = gql`
+export const DELETE_ACCOUNT = gql`
   mutation DeleteAccount($password: String!) {
     deleteAccount(password: $password) {
       success
       errors
     }
   }
- `
+`;
 
- export const BAN_USER = gql`
-   mutation BanUser($ban: Boolean!, $userId: ID!) {
-     banUser(ban: $ban, userId: $userId) {
-       ok
-       error
-     }
-   }
- `;
+export const BAN_USER = gql`
+  mutation BanUser($ban: Boolean!, $userId: ID!) {
+    banUser(ban: $ban, userId: $userId) {
+      ok
+      error
+    }
+  }
+`;
 
 /**
  * PAYMENTS

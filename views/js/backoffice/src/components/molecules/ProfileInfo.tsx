@@ -10,12 +10,10 @@ interface ProfileInfoProps {
 }
 
 const ProfileInfo = ({ profile, action }: ProfileInfoProps) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   return (
     <Descriptions
-      title={
-        <Typography.Title level={2}>{t("profileInfo")}</Typography.Title>
-      }
+      title={<Typography.Title level={2}>{t("profileInfo")}</Typography.Title>}
       layout="vertical"
       size="small"
       bordered
@@ -28,10 +26,12 @@ const ProfileInfo = ({ profile, action }: ProfileInfoProps) => {
         </Descriptions.Item>
       )}
       {profile?.email && (
-        <Descriptions.Item label={t("email")}>{profile.email}</Descriptions.Item>
+        <Descriptions.Item label={t("email")}>
+          {profile.email}
+        </Descriptions.Item>
       )}
       {profile?.accountStatus && (
-        <Descriptions.Item label={t("accountStatus")}>
+        <Descriptions.Item label={t("accountStatus.title")}>
           <UserState state={profile.accountStatus} />
         </Descriptions.Item>
       )}

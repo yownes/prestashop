@@ -16,7 +16,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import { MY_PAYMENT_METHODS } from "../../api/queries";
 import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
 import Loading from "../../components/atoms/Loading";
-import Title from "antd/lib/typography/Title";
 import CreateCreditCard from "../../components/organisms/CreateCreateCard";
 import { ADD_PAYMENT_METHOD, REMOVE_PAYMENT_METHOD } from "../../api/mutations";
 import {
@@ -68,7 +67,6 @@ const PaymentMethod = () => {
   return (
     <Row gutter={[20, 20]}>
       <Col span={24}>
-        {/* <Title level={2}>{t("defaultCard")}</Title> */}
         <Radio.Group
           value={data?.me?.customer?.defaultPaymentMethod?.stripeId}
           disabled={changing}

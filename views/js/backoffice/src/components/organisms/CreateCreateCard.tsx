@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Select, Typography } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import {
   CardElement,
   Elements,
@@ -22,7 +22,6 @@ enum Language {
   ca = "ca",
   de = "de",
 }
-const { Title, Text } = Typography;
 
 const stripePromise = loadStripe("pk_test_RG1KlTBaXWs8pCamCoLixIIu00FTwuG937");
 
@@ -70,7 +69,7 @@ const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
           setCreating(false);
           return;
         }
-        /*const { error, paymentMethod } = await stripe.createPaymentMethod({
+        const { error, paymentMethod } = await stripe.createPaymentMethod({
           type: "card",
           card: cardElement,
           billing_details: {
@@ -89,8 +88,7 @@ const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
           console.log("[createPaymentMethod error]", error);
           setCreating(false);
           setErrs(error);
-        } 
-        else {
+        } else {
           const paymentMethodId = paymentMethod?.id;
           if (!paymentMethodId) {
             setCreating(false);
@@ -98,7 +96,7 @@ const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
           }
           setCreating(false);
           onCreated(paymentMethodId);
-        }*/
+        }
       }}
     >
       <Form.Item name="name" rules={[{ required: true }]} label={t("fullName")}>
