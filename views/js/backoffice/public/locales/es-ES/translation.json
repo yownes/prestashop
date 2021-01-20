@@ -38,5 +38,7 @@
     "WAITING_PAYMENT": "Pendiente de pago"
   },
   "select": "Seleccionar",
-  "priceWithTaxes": "Precio con IVA incluido"
+  "priceWithTaxes": "Precio con IVA incluido",
+  "404title": "ERROR 404",
+  "404subTitle": "Lo sentimos, la página que has visitado no existe."
 }

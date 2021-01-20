@@ -2,6 +2,7 @@ import { RoutePath } from "../components/organisms/Router";
 import Builds from "../pages/admin/Builds";
 import Clients from "../pages/admin/Clients";
 import Client from "../pages/admin/Client";
+import NotFound from "../pages/NotFound";
 
 const routes: RoutePath[] = [
   {
@@ -26,6 +27,12 @@ const routes: RoutePath[] = [
     path: "/clients/:id",
     name: "Cliente",
     component: Client,
+  },
+  {
+    exact: false,
+    path: "*",
+    name: "Error 404",
+    component: NotFound,
   },
 ];
 

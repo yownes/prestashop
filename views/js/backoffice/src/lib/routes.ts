@@ -7,6 +7,7 @@ import NewApp from "../pages/client/NewApp";
 import Pay from "../pages/client/Pay";
 import PaymentMethod from "../pages/client/PaymentMethod";
 import Profile from "../pages/client/Profile";
+import NotFound from "../pages/NotFound";
 
 const routes: RoutePath[] = [
   {
@@ -61,6 +62,12 @@ const routes: RoutePath[] = [
     path: "/activate/:token",
     name: "Activar Cuenta",
     component: Validate,
+  },
+  {
+    exact: false,
+    path: "*",
+    name: "Error 404",
+    component: NotFound,
   },
 ];
 

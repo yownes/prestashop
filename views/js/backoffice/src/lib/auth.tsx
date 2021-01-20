@@ -55,6 +55,10 @@ type AuthStateAction =
       };
     }
   | {
+      type: "TOKEN";
+      payload: Token;
+    }
+  | {
       type: "LOADING";
       payload: boolean;
     }
@@ -96,6 +100,12 @@ function reducer(state: AuthState, action: AuthStateAction): AuthState {
         loading: false,
         isAuthenticated: false,
       };
+    case "TOKEN":
+      inMemoryToken = action.payload.token;
+      return {
+        ...state,
+        token: action.payload,
+      };
     case "LOGIN":
       if (action.payload.token) {
         inMemoryToken = action.payload.token.token;
@@ -103,10 +113,10 @@ function reducer(state: AuthState, action: AuthStateAction): AuthState {
       return {
         ...state,
         isAdmin: action.payload.isAdmin || false,
-        token: action.payload.token || state.token,
         loading: false,
+        token: action.payload.token ?? state.token,
         user: action.payload.user,
-        isAuthenticated: action.payload.token ? true : !!state.token,
+        isAuthenticated: inMemoryToken ? true : !!state.token,
       };
     case "LOGOUT":
       return { ...initialState, loading: false };
@@ -213,8 +223,8 @@ function useAuthLogic(): IAuth {
           setTimeout(refreshToken, ms);
 
           dispatch({
-            type: "LOGIN",
-            payload: { token },
+            type: "TOKEN",
+            payload: token,
           });
 
           me();
