@@ -3,6 +3,7 @@ import Builds from "../pages/admin/Builds";
 import Clients from "../pages/admin/Clients";
 import Client from "../pages/admin/Client";
 import NotFound from "../pages/NotFound";
+import Profile from "../pages/admin/Profile";
 
 const routes: RoutePath[] = [
   {
@@ -27,6 +28,12 @@ const routes: RoutePath[] = [
     path: "/clients/:id",
     name: "Cliente",
     component: Client,
+  },
+  {
+    exact: true,
+    path: "/profile",
+    name: "Perfil",
+    component: Profile,
   },
   {
     exact: false,
