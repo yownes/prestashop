@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, Collapse, Form, Input } from "antd";
-import Title from "antd/lib/typography/Title";
+import { Button, Collapse, Form, Input, Typography } from "antd";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { MODIFY_APP_PAYMENT } from "../../api/mutations";
@@ -15,6 +14,8 @@ import Loading from "../atoms/Loading";
 interface AppPaymentProps {
   appId: string;
 }
+
+const { Paragraph, Title } = Typography;
 
 const AppPayment = ({ appId }: AppPaymentProps) => {
   const { t } = useTranslation("client");
@@ -35,7 +36,8 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
   }
   return (
     <>
-      <Title level={2}>{t("paymentMethod")}</Title>
+      <Title level={2}>{t("collectMethod")}</Title>
+      <Paragraph>{t("keysDescription")}</Paragraph>
       <Collapse>
         <Collapse.Panel key="stripe" header="Stripe">
           <Form
@@ -61,7 +63,9 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
             <Form.Item name="stripeProdSecret" label={t("prodPrivateKey")}>
               <Input.Password />
             </Form.Item>
-            <Button htmlType="submit">{t("updateStripeKeys")}</Button>
+            <Button htmlType="submit" type="primary">
+              {t("updateStripeKeys")}
+            </Button>
             {mutationData?.modifyPaymentMethodApp?.error && (
               <p>{mutationData.modifyPaymentMethodApp.error}</p>
             )}

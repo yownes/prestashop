@@ -1,18 +1,29 @@
 {
+  "app": "App",
+  "apps": "Apps",
+  "noApps": "Ninguna App",
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
   "clients": "Clientes",
   "client": "Cliente",
   "clientID": "ID Cliente",
   "builds": "Builds",
   "buildID": "ID Build",
+  "noBuilds": "Ninguna Build",
   "date": "Fecha",
+  "search": "Buscar {{data}}",
   "warnings": {
     "ban": "¿Estás seguro que deseas banear esta cuenta?",
     "unban": "¿Estás seguro que deseas desbanear esta cuenta?",
+    "unsubscribe": "¿Realmente deseas dar de baja la suscripción de la cuenta?",
     "account": "¿Realmente deseas eliminar la cuenta?",
     "app": "¿Realmente deseas eliminar la app?"
   },
-  "ban": "Banear cuenta",
-  "unban": "Desbanear cuenta",
-  "unsubscribe": "Dar de baja la suscripción",
+  "ban": "Banear",
+  "banAccount": "Banear cuenta",
+  "unban": "Desbanear",
+  "unbanAccount": "Desbanear cuenta",
+  "unsubscribe": "Dar de baja",
+  "unsubscribeAccount": "Dar de baja la suscripción",
   "actions": "Acciones"
 }

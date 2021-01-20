@@ -32,7 +32,7 @@ import { ProfileInfo } from "../../components/molecules";
 import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
 import { useTranslation } from "react-i18next";
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 interface ClientProps {
   id: string;
@@ -53,7 +53,7 @@ function getBuilds(apps?: Client_user_apps) {
 }
 
 const Client = () => {
-  const {t} = useTranslation("admin")
+  const { t } = useTranslation("admin");
   const { id } = useParams<ClientProps>();
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const { loading, data } = useQuery<IClient, ClientVariables>(CLIENT, {
@@ -72,9 +72,15 @@ const Client = () => {
     <Menu>
       <Menu.Item>
         <Popconfirm
+          cancelText={t("cancel")}
+          okText={
+            data?.user?.accountStatus === AccountAccountStatus.BANNED
+              ? t("unban")
+              : t("ban")
+          }
           title={
             data?.user?.accountStatus === AccountAccountStatus.BANNED
-              ? t("warings.unban")
+              ? t("warnings.unban")
               : t("warnings.ban")
           }
           onConfirm={() => {
@@ -106,23 +112,23 @@ const Client = () => {
         >
           <Text type="danger">
             {data?.user?.accountStatus === AccountAccountStatus.BANNED
-              ? "Desbanear"
-              : "Banear Cuenta"}
+              ? t("unbanAccount")
+              : t("banAccount")}
           </Text>
         </Popconfirm>
       </Menu.Item>
       <Menu.Item>
         <Popconfirm
-          title={t("warnings.account")}
+          cancelText={t("cancel")}
+          okText={t("unsubscribe")}
+          title={t("warnings.unsubscribe")}
           placement="left"
           onConfirm={() => {
             setIsOverlayVisible(false);
             unsubscribe({ variables: { userId: id } });
           }}
         >
-          <Text type="danger">
-            {t("unsubscribe")}
-          </Text>
+          <Text type="danger">{t("unsubscribeAccount")}</Text>
         </Popconfirm>
       </Menu.Item>
     </Menu>
@@ -154,6 +160,7 @@ const Client = () => {
       <Row gutter={20}>
         <Col md={12} sm={24}>
           <Card>
+            <Title>{t("apps")}</Title>
             <AppsTable
               dataSource={data?.user?.apps}
               columns={[
@@ -173,7 +180,7 @@ const Client = () => {
                               if (data?.deleteApp?.ok) {
                                 const id = cache.identify({ ...record });
                                 console.log({ id });
-                                
+
                                 cache.evict({
                                   id,
                                 });
@@ -198,6 +205,7 @@ const Client = () => {
         </Col>
         <Col md={12} sm={24}>
           <Card>
+            <Title>{t("builds")}</Title>
             <BuildsTable dataSource={getBuilds(data?.user?.apps)} />
           </Card>
         </Col>

@@ -10,7 +10,7 @@ interface BuildsTableProps {
 }
 
 const BuildsTable = ({ dataSource }: BuildsTableProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["translation", "admin"]);
   const columns: ColumnsType<Client_user_apps_edges_node_builds_edges_node> = [
     {
       title: t("date"),
@@ -29,7 +29,14 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
       },
     },
   ];
-  return <Table columns={columns} dataSource={dataSource} />;
+  return (
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      locale={{ emptyText: t("admin:noBuilds") }}
+      pagination={dataSource.length < 5 ? false : { pageSize: 5 }}
+    />
+  );
 };
 
 export default BuildsTable;

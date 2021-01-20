@@ -52,6 +52,8 @@ const Profile = () => {
       {data?.me?.accountStatus === AccountAccountStatus.PAID_ACCOUNT && (
         <Menu.Item>
           <Popconfirm
+            cancelText={t("cancel")}
+            okText={t("confirm")}
             title={
               <Trans i18nKey="warnings.subscription" ns="client">
                 <h4>¿Realmente deseas cancelar la suscripción al servicio?</h4>
@@ -92,6 +94,8 @@ const Profile = () => {
       )}
       <Menu.Item>
         <Popconfirm
+          cancelText={t("cancel")}
+          okText={t("delete")}
           title={t("warnings.account")}
           placement="left"
           onConfirm={() => {
@@ -148,7 +152,7 @@ const Profile = () => {
                   title={t("translation:apps")}
                   action={{
                     action: () => history.push("/app/new"),
-                    label: t("addNew"),
+                    label: t("addNewApp"),
                   }}
                 />
                 <AppsTable dataSource={data?.me?.apps} />

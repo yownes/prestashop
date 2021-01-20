@@ -26,6 +26,8 @@ const AppPreview = ({ id, app, hasChanged }: AppPreviewProps) => {
       <div className={styles.preview}></div>
       <div className={styles.buttons}>
         <Popconfirm
+          cancelText={t("cancel")}
+          okText={t("delete")}
           title={
             <Trans i18nKey="warnings.app" ns="client">
               <div>¿Realmente deseas eliminar la App?</div>

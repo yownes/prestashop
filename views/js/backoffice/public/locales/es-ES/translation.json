@@ -6,6 +6,8 @@
   "update": "Editar",
   "cancel": "Cancelar",
   "confirm": "Confirmar",
+  "reset": "Resetear",
+  "search": "Buscar",
   "userName": "Nombre de usuario",
   "fullName": "Nombre del titular",
   "name": "Nombre",
@@ -20,7 +22,7 @@
   "icon": "Icono",
   "urls": "URLs",
   "state": "Estado",
-  "fecha": "Fecha",
+  "date": "Fecha",
   "buildId": "ID Build",
   "month": "mes",
   "year": "año",
@@ -28,7 +30,13 @@
   "profileInfo": "Información de perfil",
   "username": "Nombre de usuario",
   "logout": "Cerrar sesión",
-  "accountStatus": "Estado de la cuenta",
+  "accountStatus": {
+    "title": "Estado de la cuenta",
+    "BANNED": "Baneado",
+    "PAID_ACCOUNT": "Cuenta de pago",
+    "REGISTERED": "Registrado",
+    "WAITING_PAYMENT": "Pendiente de pago"
+  },
   "select": "Seleccionar",
   "priceWithTaxes": "Precio con IVA incluido"
 }

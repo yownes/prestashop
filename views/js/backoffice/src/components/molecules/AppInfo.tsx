@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Typography } from "antd";
 import { getAppBuildState } from "../../lib/appBuildState";
 
@@ -18,6 +19,7 @@ interface AppInfoProps {
 }
 
 const AppInfo = ({ app, id, data, onChange }: AppInfoProps) => {
+  const { t } = useTranslation("client");
   return (
     <div className={styles.info}>
       <div className={styles.info__logo}>
@@ -48,18 +50,26 @@ const AppInfo = ({ app, id, data, onChange }: AppInfoProps) => {
             },
           }}
         >
-          {data.name ?? "(Sin nombre)"}
+          {data.name !== "" ? data.name : t("noName")}
         </Paragraph>
       </h1>
       <h2 className={styles.info__appId}>{id}</h2>
       <div className={styles.info__stores}>
-        {app?.storeLinks?.ios && (
+        {app?.storeLinks?.ios ? (
           <a className={styles.infoStores__link} href={app.storeLinks.ios}>
             iOS
           </a>
+        ) : (
+          <a href="*" className={styles.infoStores__link}>
+            iOS
+          </a>
         )}
-        {app?.storeLinks?.android && (
+        {app?.storeLinks?.android ? (
           <a className={styles.infoStores__link} href={app.storeLinks.android}>
+            Android
+          </a>
+        ) : (
+          <a href="*" className={styles.infoStores__link}>
             Android
           </a>
         )}
