@@ -62,50 +62,56 @@ const App = () => {
   if (!state || loading) return <Loading />;
   return (
     <div>
-      <Row gutter={20}>
-        <Col span={12}>
-          <Row>
+      <Row gutter={[20, 20]}>
+        <Col span={24}>
+          <Card>
             <AppInfo
               data={state}
               id={data?.app?.id}
               onChange={(app) => setState(app)}
               app={data?.app ?? undefined}
             />
-          </Row>
-          <Row>
-            <Col span={24}>
-              <Card>
-                <TitleWithAction title={t("style")} />
-                <TemplateSelector
-                  value={state.template!!}
-                  onChange={(selected) => {
-                    setState((val) => ({
-                      ...val,
-                      template: selected,
-                    }));
-                  }}
-                />
-                <ColorPicker
-                  value={state.color!!}
-                  onChange={(selected) => {
-                    setState((val) => ({
-                      ...val,
-                      color: selected,
-                    }));
-                  }}
-                />
-                <AppPayment appId={appId!!} />
-              </Card>
-            </Col>
-          </Row>
+          </Card>
         </Col>
-        <Col span={12}>
+      </Row>
+      <Row gutter={[20, 20]} justify="end">
+        <Col span={14}>
+          <Card>
+            <TitleWithAction title={t("style")} />
+            <TemplateSelector
+              value={state.template!!}
+              onChange={(selected) => {
+                setState((val) => ({
+                  ...val,
+                  template: selected,
+                }));
+              }}
+            />
+            <ColorPicker
+              value={state.color!!}
+              onChange={(selected) => {
+                setState((val) => ({
+                  ...val,
+                  color: selected,
+                }));
+              }}
+            />
+          </Card>
+        </Col>
+        <Col span={10}>
           <Card>
             <AppPreview
               id={data?.app?.id!!}
               app={state}
               hasChanged={!appsAreEqual(state, data?.app)}
             />
+          </Card>
+        </Col>
+      </Row>
+      <Row gutter={[20, 20]}>
+        <Col span={24}>
+          <Card>
+            <AppPayment appId={appId!!} />
           </Card>
         </Col>
       </Row>
