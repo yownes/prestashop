@@ -7,6 +7,7 @@ export interface RoutePath {
   redirect?: string;
   component?: () => JSX.Element;
   name?: string;
+  admin?: boolean;
 }
 
 interface RouterProps {
