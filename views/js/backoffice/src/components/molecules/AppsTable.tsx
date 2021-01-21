@@ -76,6 +76,7 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
       dataSource={data}
       locale={{ emptyText: t("admin:noApps") }}
       pagination={data.length < 5 ? false : { pageSize: 5 }}
+      rowKey={(row) => row.id}
     />
   );
 };

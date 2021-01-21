@@ -110,7 +110,11 @@ const Builds = () => {
   ];
   return (
     <div>
-      <Table columns={columns} dataSource={connectionToNodes(data?.builds)} />
+      <Table
+        columns={columns}
+        dataSource={connectionToNodes(data?.builds)}
+        rowKey={(row) => row.id}
+      />
     </div>
   );
 };

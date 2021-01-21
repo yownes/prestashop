@@ -35,6 +35,7 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
       dataSource={dataSource}
       locale={{ emptyText: t("admin:noBuilds") }}
       pagination={dataSource.length < 5 ? false : { pageSize: 5 }}
+      rowKey={(row) => row.id}
     />
   );
 };
