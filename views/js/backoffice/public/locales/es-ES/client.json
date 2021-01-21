@@ -1,9 +1,4 @@
 {
-  "accept": "Aceptar",
-  "cancel": "Cancelar",
-  "confirm": "Confirmar",
-  "delete": "Eliminar",
-  "edit": "Editar",
   "changePaymentMethod": "Cambiar método de pago",
   "warnings": {
     "subscription": "<1>¿Realmente deseas cancelar la suscripción al servicio?</1><2>Todas las apps que tengas serán eliminadas de las tiendas de aplicaciones</2>",
@@ -71,7 +66,6 @@
   "cardDetails": "Detalles de la tarjeta",
   "yourPayment": "Tu pedido",
   "subscriptionResume": "Suscripción de {{amount}}€ al {{interval}}",
-  "logo": "Logo",
   "upload": "Subir",
   "uploadLogo": "Subir logo",
   "deleteLogo": "Eliminar logo",

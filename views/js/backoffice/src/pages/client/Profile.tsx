@@ -33,7 +33,7 @@ const Profile = () => {
   const history = useHistory();
   const [confirmPassword, setConfirmPassword] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
-  const { t } = useTranslation(["client", "translation"]);
+  const { t } = useTranslation(["translation", "client"]);
   const { loading, data } = useQuery<MyAccount>(MY_ACCOUNT);
   const [unsubscribe] = useMutation<Unsubscribe, UnsubscribeVariables>(
     UNSUBSCRIBE
@@ -43,11 +43,8 @@ const Profile = () => {
   const profileMenu = (
     <Menu>
       <Menu.Item>
-        <Link to="/profile/edit">{t("edit")}</Link>
+        <Link to="/profile/edit">{t("update")}</Link>
       </Menu.Item>
-      {/*<Menu.Item>
-        <Link to="/profile/paymentMethods">{t("changePaymentMethod")}</Link>
-      </Menu.Item>*/}
       <Menu.Divider></Menu.Divider>
       {data?.me?.accountStatus === AccountAccountStatus.PAID_ACCOUNT && (
         <Menu.Item>
@@ -87,7 +84,7 @@ const Profile = () => {
             }}
           >
             <Typography.Text type="danger">
-              {t("cancelSubscription")}
+              {t("client:cancelSubscription")}
             </Typography.Text>
           </Popconfirm>
         </Menu.Item>
@@ -96,14 +93,16 @@ const Profile = () => {
         <Popconfirm
           cancelText={t("cancel")}
           okText={t("delete")}
-          title={t("warnings.account")}
+          title={t("client:warnings.account")}
           placement="left"
           onConfirm={() => {
             setConfirmPassword(true);
             setIsOverlayVisible(false);
           }}
         >
-          <Typography.Text type="danger">{t("deleteAccount")}</Typography.Text>
+          <Typography.Text type="danger">
+            {t("client:deleteAccount")}
+          </Typography.Text>
         </Popconfirm>
       </Menu.Item>
     </Menu>
@@ -125,8 +124,8 @@ const Profile = () => {
           <Col span={24}>
             <Alert
               showIcon
-              message={t("validate.message")}
-              description={t("validate.description")}
+              message={t("client:validate.message")}
+              description={t("client:validate.description")}
               type="warning"
             />
           </Col>
@@ -138,8 +137,8 @@ const Profile = () => {
             <ProfileInfo profile={data?.me} action={profieActions} />
             {data?.me?.accountStatus === AccountAccountStatus.REGISTERED && (
               <Placeholder
-                claim={t("subscribeNow")}
-                cta={{ title: t("subscribe"), link: "/pay" }}
+                claim={t("client:subscribeNow")}
+                cta={{ title: t("client:subscribe"), link: "/pay" }}
               ></Placeholder>
             )}
           </Card>
@@ -149,18 +148,18 @@ const Profile = () => {
             {(data?.me?.apps?.edges.length ?? 0) > 0 ? (
               <>
                 <TitleWithAction
-                  title={t("translation:apps")}
+                  title={t("apps")}
                   action={{
                     action: () => history.push("/app/new"),
-                    label: t("addNewApp"),
+                    label: t("client:addNewApp"),
                   }}
                 />
                 <AppsTable dataSource={data?.me?.apps} />
               </>
             ) : (
               <Placeholder
-                claim={t("addAppClaim")}
-                cta={{ title: t("addNewApp"), link: "/app/new" }}
+                claim={t("client:addAppClaim")}
+                cta={{ title: t("client:addNewApp"), link: "/app/new" }}
               ></Placeholder>
             )}
           </Card>
@@ -168,7 +167,7 @@ const Profile = () => {
       </Row>
       <Modal
         visible={confirmPassword}
-        title={t("deleteAccount")}
+        title={t("client:deleteAccount")}
         onCancel={() => {
           setConfirmPassword(false);
         }}

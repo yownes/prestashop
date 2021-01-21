@@ -53,7 +53,7 @@ function getBuilds(apps?: Client_user_apps) {
 }
 
 const Client = () => {
-  const { t } = useTranslation("admin");
+  const { t } = useTranslation(["translation", "admin"]);
   const { id } = useParams<ClientProps>();
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const { loading, data } = useQuery<IClient, ClientVariables>(CLIENT, {
@@ -75,13 +75,13 @@ const Client = () => {
           cancelText={t("cancel")}
           okText={
             data?.user?.accountStatus === AccountAccountStatus.BANNED
-              ? t("unban")
-              : t("ban")
+              ? t("admin:unban")
+              : t("admin:ban")
           }
           title={
             data?.user?.accountStatus === AccountAccountStatus.BANNED
-              ? t("warnings.unban")
-              : t("warnings.ban")
+              ? t("admin:warnings.unban")
+              : t("admin:warnings.ban")
           }
           onConfirm={() => {
             setIsOverlayVisible(false);
@@ -112,23 +112,23 @@ const Client = () => {
         >
           <Text type="danger">
             {data?.user?.accountStatus === AccountAccountStatus.BANNED
-              ? t("unbanAccount")
-              : t("banAccount")}
+              ? t("admin:unbanAccount")
+              : t("admin:banAccount")}
           </Text>
         </Popconfirm>
       </Menu.Item>
       <Menu.Item>
         <Popconfirm
           cancelText={t("cancel")}
-          okText={t("unsubscribe")}
-          title={t("warnings.unsubscribe")}
+          okText={t("admin:unsubscribe")}
+          title={t("admin:warnings.unsubscribe")}
           placement="left"
           onConfirm={() => {
             setIsOverlayVisible(false);
             unsubscribe({ variables: { userId: id } });
           }}
         >
-          <Text type="danger">{t("unsubscribeAccount")}</Text>
+          <Text type="danger">{t("admin:unsubscribeAccount")}</Text>
         </Popconfirm>
       </Menu.Item>
     </Menu>
@@ -164,17 +164,17 @@ const Client = () => {
       <Row gutter={[20, 20]}>
         <Col md={12} sm={24}>
           <Card>
-            <Title>{t("apps")}</Title>
+            <Title>{t("admin:apps")}</Title>
             <AppsTable
               dataSource={data?.user?.apps}
               columns={[
                 {
-                  title: t("actions"),
+                  title: t("admin:actions"),
                   key: "actions",
                   render: (_, record) => {
                     return (
                       <Popconfirm
-                        title={t("warnings.app")}
+                        title={t("admin:warnings.app")}
                         onConfirm={() => {
                           deleteApp({
                             variables: {
@@ -209,7 +209,7 @@ const Client = () => {
         </Col>
         <Col md={12} sm={24}>
           <Card>
-            <Title>{t("builds")}</Title>
+            <Title>{t("admin:builds")}</Title>
             <BuildsTable dataSource={getBuilds(data?.user?.apps)} />
           </Card>
         </Col>

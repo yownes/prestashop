@@ -17,7 +17,7 @@ interface AppPreviewProps {
 }
 
 const AppPreview = ({ id, app, hasChanged }: AppPreviewProps) => {
-  const { t } = useTranslation("client");
+  const { t } = useTranslation(["translation", "client"]);
   const [deleteApp] = useMutation<DeleteApp, DeleteAppVariables>(DELETE_APP);
   const [updateApp] = useMutation<UpdateApp, UpdateAppVariables>(UPDATE_APP);
   const history = useHistory();
@@ -46,7 +46,7 @@ const AppPreview = ({ id, app, hasChanged }: AppPreviewProps) => {
                     }),
                   });
                   cache.gc();
-                  message.success(t("appDeleted"));
+                  message.success(t("client:appDeleted"));
                   history.replace("/profile");
                 }
               },
@@ -54,7 +54,7 @@ const AppPreview = ({ id, app, hasChanged }: AppPreviewProps) => {
           }}
         >
           <Button type="primary" danger>
-            {t("deleteApp")}
+            {t("client:deleteApp")}
           </Button>
         </Popconfirm>
         {hasChanged && (
@@ -75,7 +75,7 @@ const AppPreview = ({ id, app, hasChanged }: AppPreviewProps) => {
               });
             }}
           >
-            {t("saveChanges")}
+            {t("client:saveChanges")}
           </Button>
         )}
         <Button type="primary">{t("publishApp")}</Button>

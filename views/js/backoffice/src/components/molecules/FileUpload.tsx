@@ -37,7 +37,7 @@ const ImageUpload = ({
   onChange,
   onDeleteClicked,
 }: ImageUploadProps) => {
-  const { t } = useTranslation("client");
+  const { t } = useTranslation(["translation", "client"]);
   const [filePreview, setFilePreview] = useState<FilePreview>({
     loading: false,
   });
@@ -131,7 +131,7 @@ const ImageUpload = ({
             />
           ) : (
             <UploadButton loading={filePreview.loading}>
-              {t("uploadLogo")}
+              {t("client:uploadLogo")}
             </UploadButton>
           )}
         </label>
@@ -139,11 +139,11 @@ const ImageUpload = ({
           <Popconfirm
             cancelText={t("cancel")}
             okText={t("delete")}
-            title={t("warnings.logo")}
+            title={t("client:warnings.logo")}
             onConfirm={onDeleteClicked}
           >
             <Button icon={<DeleteOutlined />} danger>
-              {t("deleteLogo")}
+              {t("client:deleteLogo")}
             </Button>
           </Popconfirm>
         )}

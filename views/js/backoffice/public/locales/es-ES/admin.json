@@ -2,8 +2,6 @@
   "app": "App",
   "apps": "Apps",
   "noApps": "Ninguna App",
-  "cancel": "Cancelar",
-  "confirm": "Confirmar",
   "clients": "Clientes",
   "client": "Cliente",
   "clientID": "ID Cliente",
