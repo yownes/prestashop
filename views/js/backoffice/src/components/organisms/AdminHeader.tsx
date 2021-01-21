@@ -8,14 +8,14 @@ const AdminHeader = () => {
   const { t } = useTranslation("admin");
   const location = useLocation();
   return (
-    <Menu selectedKeys={[location.pathname.slice(1)]} mode="horizontal">
-      <Menu.Item key="clients" icon={<UserOutlined />}>
+    <Menu selectedKeys={[location.pathname.slice(1, 7)]} mode="horizontal">
+      <Menu.Item key="client" icon={<UserOutlined />}>
         <Link to="/clients">{t("clients")}</Link>
       </Menu.Item>
       <Menu.Item key="builds" icon={<BuildOutlined />}>
         <Link to="/builds">{t("builds")}</Link>
       </Menu.Item>
-      <Menu.Item key="profile" icon={<IdcardOutlined />}>
+      <Menu.Item key="profil" icon={<IdcardOutlined />}>
         <Link to="/profile">{t("profile")}</Link>
       </Menu.Item>
     </Menu>
