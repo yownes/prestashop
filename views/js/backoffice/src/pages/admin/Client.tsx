@@ -146,18 +146,22 @@ const Client = () => {
 
   return (
     <>
-      <Row style={{ marginBottom: 20 }}>
-        <Col sm={12} xs={24}>
+      <Row gutter={[20, 20]}>
+        <Col span={24}>
           <Card>
             <Row gutter={10}>
               <Col span={24}>
-                <ProfileInfo profile={data?.user} action={profieActions} />
+                <ProfileInfo
+                  profile={data?.user}
+                  action={profieActions}
+                  verified
+                />
               </Col>
             </Row>
           </Card>
         </Col>
       </Row>
-      <Row gutter={20}>
+      <Row gutter={[20, 20]}>
         <Col md={12} sm={24}>
           <Card>
             <Title>{t("apps")}</Title>

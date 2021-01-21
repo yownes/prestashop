@@ -20,11 +20,25 @@ import {
   getColumnSearchProps,
 } from "../../lib/filterColumns";
 import { useTranslation } from "react-i18next";
+import VerifiedState from "../../components/molecules/VerifiedState";
 
-function getClientStatusFilters() {
+function getAccountStatusFilters() {
   let filters: Filter[] = [];
   forIn(AccountAccountStatus, (value) => {
     filters.push({ text: <UserState state={value}></UserState>, value: value });
+  });
+  return filters;
+}
+
+function getVerifiedStatusFilters() {
+  let filters: Filter[] = [];
+  filters.push({
+    text: <VerifiedState verified={true} />,
+    value: true,
+  });
+  filters.push({
+    text: <VerifiedState verified={false} />,
+    value: false,
   });
   return filters;
 }
@@ -82,9 +96,20 @@ const Clients = () => {
       render: (state: AccountAccountStatus) => <UserState state={state} />,
       ...getColumnFilterProps<Clients_users_edges_node>(
         ["accountStatus"],
-        getClientStatusFilters()
+        getAccountStatusFilters()
       ),
       sorter: (a, b) => a.accountStatus.localeCompare(b.accountStatus),
+    },
+    {
+      title: t("verifiedStatus"),
+      dataIndex: "verified",
+      key: "verified",
+      render: (verified: boolean) => <VerifiedState verified={verified} />,
+      ...getColumnFilterProps<Clients_users_edges_node>(
+        ["verified"],
+        getVerifiedStatusFilters()
+      ),
+      sorter: (a, b) => Number(a.verified) - Number(b.verified),
     },
   ];
   const dataSource = connectionToNodes(data?.users);
@@ -93,7 +118,7 @@ const Clients = () => {
       <Table
         columns={columns}
         dataSource={dataSource}
-        onRow={(record, rowIndex) => {
+        onRow={(record) => {
           return { onClick: () => history.push(`/clients/${record.id}`) };
         }}
         pagination={dataSource.length < 5 ? false : { pageSize: 5 }}

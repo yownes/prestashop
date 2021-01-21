@@ -12,7 +12,7 @@ interface FilterDropdownProps {
 
 export interface Filter {
   text: React.ReactNode;
-  value: string;
+  value: string | boolean;
 }
 
 export function getColumnSearchProps<T>(

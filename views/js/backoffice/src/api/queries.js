@@ -187,6 +187,7 @@ export const CLIENTS = gql`
             }
           }
           accountStatus
+          verified
         }
       }
     }

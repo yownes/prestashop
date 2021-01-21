@@ -37,6 +37,7 @@
     "REGISTERED": "Registrado",
     "WAITING_PAYMENT": "Pendiente de pago"
   },
+  "verifiedStatus": "Verificado",
   "select": "Seleccionar",
   "priceWithTaxes": "Precio con IVA incluido",
   "404title": "ERROR 404",
