@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Popconfirm, Typography } from "antd";
+import { Button, Popconfirm, Typography } from "antd";
 
 import styles from "./TitleWithAction.module.css";
 import { useTranslation } from "react-i18next";
@@ -28,12 +28,12 @@ const TitleWithAction = ({ title, action }: TitleWithActionProps) => {
             title={action.confirmationTitle || t("warnings.action")}
             onConfirm={action.action}
           >
-            <button className={styles.action}>{action.label}</button>
+            <Button type="primary">{action.label}</Button>
           </Popconfirm>
         ) : (
-          <button className={styles.action} onClick={action.action}>
+          <Button onClick={action.action} type="primary">
             {action.label}
-          </button>
+          </Button>
         ))}
     </div>
   );
