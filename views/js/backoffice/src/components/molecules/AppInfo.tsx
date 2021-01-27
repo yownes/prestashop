@@ -148,6 +148,33 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
                         id: id!!,
                         data: dataApp,
                       },
+                      update(cache, { data }) {
+                        if (data?.updateApp?.ok) {
+                          cache.modify({
+                            id: cache.identify({ ...app }),
+                            fields: {
+                              name() {
+                                return dataApp.name;
+                              },
+                              apiLink() {
+                                return dataApp.apiLink;
+                              },
+                              color(old) {
+                                return { ...old, ...dataApp.color };
+                              },
+                              logo() {
+                                return dataApp.logo;
+                              },
+                              template(old, { toReference }) {
+                                return toReference({
+                                  __typename: "TemplateType",
+                                  id: dataApp.template,
+                                });
+                              },
+                            },
+                          });
+                        }
+                      },
                     });
                   }}
                 >

@@ -24,13 +24,18 @@ const NewApp = () => {
     ) {
       if (data?.createApp?.ok) {
         const me = cache.identify({ ...user });
-        const node = cache.identify({ ...data.createApp?.storeApp });
         cache.modify({
           id: me,
           fields: {
-            apps(existing) {
+            apps(existing, { toReference }) {
               return {
-                edges: [...existing.edges, { node }],
+                edges: [
+                  ...existing.edges,
+                  {
+                    __typename: "StoreAppTypeEdge",
+                    node: toReference({ ...data.createApp?.storeApp }),
+                  },
+                ],
               };
             },
           },
