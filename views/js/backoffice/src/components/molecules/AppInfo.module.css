@@ -22,6 +22,11 @@
   grid-column: 2;
   margin: 0;
 }
+.info__appiLink {
+  grid-row: 3;
+  grid-column: 2;
+  margin: 0;
+}
 .info__stores {
   grid-row: 1;
   grid-column: 3;
@@ -34,4 +39,12 @@
 .infoStores__link {
   padding: 1rem;
 }
-
+.info__buttons {
+  grid-row: 1 / 4;
+  grid-column: 4;
+  padding: 1rem;
+}
+.info__button {
+  display: block;
+  width: 100%;
+}

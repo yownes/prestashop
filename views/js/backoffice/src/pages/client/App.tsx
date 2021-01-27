@@ -1,16 +1,19 @@
-import { Card, Col, Row } from "antd";
+import { Button, Card, Col, message, Popconfirm, Row, Typography } from "antd";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useLazyQuery } from "@apollo/client";
+import { useParams, useHistory } from "react-router-dom";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { DELETE_APP } from "../../api/mutations";
+import { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
 import { APP } from "../../api/queries";
 import { App as IApp, AppVariables, App_app } from "../../api/types/App";
 import Loading from "../../components/atoms/Loading";
-import { TitleWithAction, AppInfo } from "../../components/molecules";
+import { AppInfo } from "../../components/molecules";
 import { TemplateSelector, ColorPicker } from "../../components/organisms";
 import AppPreview from "../../components/organisms/AppPreview";
 import { StoreAppInput } from "../../api/types/globalTypes";
 import AppPayment from "../../components/organisms/AppPayment";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
+import styles from "./App.module.css";
 
 interface AppParamTypes {
   appId?: string;
@@ -21,6 +24,7 @@ function appsAreEqual(state: StoreAppInput, app?: App_app | null): boolean {
     return false;
   }
   return (
+    app.apiLink === state.apiLink &&
     app.color?.color === state.color?.color &&
     app.color?.text === state.color?.text &&
     app.name === state.name &&
@@ -30,20 +34,29 @@ function appsAreEqual(state: StoreAppInput, app?: App_app | null): boolean {
 }
 
 const baseApp: StoreAppInput = {
+  apiLink: "",
   template: "VGVtcGxhdGVUeXBlOjE=",
   name: "(no name)",
   color: { color: "#0099cc", text: "white" },
   logo: null,
 };
 
+const { Title } = Typography;
+
 const App = () => {
   const { appId } = useParams<AppParamTypes>();
   const [state, setState] = useState<StoreAppInput>(baseApp);
-  const { t } = useTranslation("client");
+  const { t } = useTranslation(["translation", "client"]);
+  const history = useHistory();
   const [getAppById, { loading, data }] = useLazyQuery<IApp, AppVariables>(APP);
+  const [deleteApp, { loading: loadingDelete }] = useMutation<
+    DeleteApp,
+    DeleteAppVariables
+  >(DELETE_APP);
   useEffect(() => {
     if (data?.app) {
       setState({
+        apiLink: data.app.apiLink,
         template: data.app.template?.id,
         name: data.app.name,
         color: {
@@ -61,7 +74,7 @@ const App = () => {
   }, [appId, getAppById]);
   if (!state || loading) return <Loading />;
   return (
-    <div>
+    <>
       <Row gutter={[20, 20]}>
         <Col span={24}>
           <Card>
@@ -70,14 +83,15 @@ const App = () => {
               id={data?.app?.id}
               onChange={(app) => setState(app)}
               app={data?.app ?? undefined}
+              hasChanged={!appsAreEqual(state, data?.app)}
             />
           </Card>
         </Col>
       </Row>
-      <Row gutter={[20, 20]} justify="end">
+      <Row gutter={[20, 20]}>
         <Col span={14}>
-          <Card>
-            <TitleWithAction title={t("style")} />
+          <Card className={styles.card}>
+            <Title level={2}>{t("client:style")}</Title>
             <TemplateSelector
               value={state.template!!}
               onChange={(selected) => {
@@ -99,12 +113,8 @@ const App = () => {
           </Card>
         </Col>
         <Col span={10}>
-          <Card>
-            <AppPreview
-              id={data?.app?.id!!}
-              app={state}
-              hasChanged={!appsAreEqual(state, data?.app)}
-            />
+          <Card className={styles.card}>
+            <AppPreview id={data?.app?.id!!} app={state} />
           </Card>
         </Col>
       </Row>
@@ -115,7 +125,48 @@ const App = () => {
           </Card>
         </Col>
       </Row>
-    </div>
+      <Row gutter={[20, 20]}>
+        <Col span={24}>
+          <Popconfirm
+            cancelText={t("cancel")}
+            okText={t("delete")}
+            title={
+              <Trans i18nKey="warnings.app" ns="client">
+                <div>¿Realmente deseas eliminar la App?</div>
+                <div>Será retirada de la AppStore y PlayStore</div>
+              </Trans>
+            }
+            onConfirm={() => {
+              deleteApp({
+                variables: { id: appId!! },
+                update(cache, { data }) {
+                  if (data?.deleteApp?.ok) {
+                    cache.evict({
+                      id: cache.identify({
+                        __typename: "StoreAppType",
+                        id: appId,
+                      }),
+                    });
+                    cache.gc();
+                    message.success(t("client:appDeleted"), 4);
+                    history.replace("/profile");
+                  }
+                },
+              });
+            }}
+          >
+            <Button
+              disabled={loadingDelete}
+              loading={loadingDelete}
+              type="primary"
+              danger
+            >
+              {t("client:deleteApp")}
+            </Button>
+          </Popconfirm>
+        </Col>
+      </Row>
+    </>
   );
 };
 
