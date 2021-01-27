@@ -16,13 +16,14 @@
   "deleteApp": "Eliminar App",
   "publishApp": "Publicar App",
   "saveChanges": "Guardar cambios",
+  "saveChangesSuccessful": "Cambios guardados con éxito",
   "validate": {
     "message": "Tu cuenta no está validada todavía",
     "description": "Comprueba tu correo electrónico en busca del link de validación"
   },
   "addNew": "Añadir nueva",
   "addNewApp": "Añadir app",
-  "appDeleted": "La App ha sido eliminada correctamente",
+  "appDeleted": "App eliminada con éxito",
   "addAppClaim": "Crea tu primera App y empieza a vender",
   "defaultCard": "Tarjeta por defecto",
   "addCard": "Añadir nueva tarjeta",
@@ -61,7 +62,7 @@
   "addPaymentMethod": "Añadir método de pago",
   "addPaymentMethodSuccessful": "Método de pago añadido con éxito",
   "createPaymentMethod": "Crear método de pago",
-  "updatePaymentMethodSuccessful": "Método de pago editado con éxito",
+  "updatePaymentMethodSuccessful": "Método de pago actualizado con éxito",
   "style": "Estilo",
   "cardDetails": "Detalles de la tarjeta",
   "yourPayment": "Tu pedido",
@@ -90,5 +91,6 @@
   "confirmPasswordToDelete": "Confirmar contraseña para eliminar la cuenta",
   "confirmDeleteAccount": "Confirmar eliminación de cuenta",
   "monthlyPayment": "Cargo mensual:",
-  "template": "Plantilla"
+  "template": "Plantilla",
+  "preview": "Vista previa"
 }
