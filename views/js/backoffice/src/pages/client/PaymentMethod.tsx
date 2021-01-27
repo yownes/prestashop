@@ -53,7 +53,7 @@ const PaymentMethod = () => {
   });
   if (paymentData?.addPaymentMethod?.ok) {
     form.resetFields();
-    message.success(t("client:changePasswordSuccessful"), 4);
+    message.success(t("client:updatePaymentMethodSuccessful"), 4);
   }
 
   if (loading) {

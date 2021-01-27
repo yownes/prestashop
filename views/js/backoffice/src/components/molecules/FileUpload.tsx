@@ -142,9 +142,7 @@ const ImageUpload = ({
             title={t("client:warnings.logo")}
             onConfirm={onDeleteClicked}
           >
-            <Button icon={<DeleteOutlined />} danger>
-              {t("client:deleteLogo")}
-            </Button>
+            <Button icon={<DeleteOutlined />} danger />
           </Popconfirm>
         )}
       </div>
