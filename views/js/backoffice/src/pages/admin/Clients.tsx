@@ -121,7 +121,7 @@ const Clients = () => {
         onRow={(record) => {
           return { onClick: () => history.push(`/clients/${record.id}`) };
         }}
-        pagination={dataSource.length < 5 ? false : { pageSize: 5 }}
+        pagination={dataSource.length > 5 ? { pageSize: 5 } : false}
         rowKey={(row) => row.id}
       />
     </div>
