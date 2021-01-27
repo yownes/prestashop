@@ -1,7 +1,7 @@
 import Table, { ColumnsType } from "antd/lib/table";
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   MyAccount_me_apps,
   MyAccount_me_apps_edges_node,
@@ -9,6 +9,7 @@ import {
 import { getAppBuildState } from "../../lib/appBuildState";
 import connectionToNodes from "../../lib/connectionToNodes";
 import BuildState from "./BuildState";
+import styles from "./AppTable.module.css";
 
 interface AppsTableProps {
   dataSource?: MyAccount_me_apps;
@@ -17,6 +18,7 @@ interface AppsTableProps {
 
 const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
   const { t } = useTranslation(["translation", "admin"]);
+  const history = useHistory();
   const allCols = useMemo(() => {
     const cols: ColumnsType<MyAccount_me_apps_edges_node> = [
       {
@@ -75,7 +77,13 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
       columns={allCols}
       dataSource={data}
       locale={{ emptyText: t("admin:noApps") }}
-      pagination={data.length < 5 ? false : { pageSize: 5 }}
+      pagination={data.length > 5 ? { pageSize: 5 } : false}
+      onRow={(record) => {
+        return {
+          onClick: () => history.push(`/app/${record.id}`),
+        };
+      }}
+      rowClassName={styles.row}
       rowKey={(row) => row.id}
     />
   );
