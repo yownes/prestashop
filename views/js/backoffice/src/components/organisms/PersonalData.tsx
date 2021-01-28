@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Card, Col, Form, Input, Row, Typography } from "antd";
+import { Alert, Button, Card, Col, Form, Input, Row, Typography } from "antd";
 import Loading from "../../components/atoms/Loading";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
@@ -26,6 +26,18 @@ const PersonalData = () => {
       }}
       validateMessages={{ required: t("client:requiredInput") }}
     >
+      {!data?.me?.verified && (
+        <Row gutter={[20, 20]}>
+          <Col span={24}>
+            <Alert
+              showIcon
+              message={t("client:validate.message")}
+              description={t("client:validate.description")}
+              type="warning"
+            />
+          </Col>
+        </Row>
+      )}
       <Row gutter={20}>
         <Col span={24}>
           <Card>

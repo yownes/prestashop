@@ -1,7 +1,5 @@
 .container {
-  display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 1rem;
 }
 
@@ -15,4 +13,16 @@
   display: flex;
   justify-content: space-around;
   gap: 1rem;
+}
+
+.title {
+  align-items: flex-start;
+  display: flex;
+  flex: 1;
+}
+
+.previewContainer {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }

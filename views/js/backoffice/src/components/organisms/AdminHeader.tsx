@@ -1,22 +1,24 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Input } from "antd";
-
-import styles from "./AdminHeader.module.css";
+import { Link, useLocation } from "react-router-dom";
+import { Menu } from "antd";
+import { BuildOutlined, IdcardOutlined, UserOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
 const AdminHeader = () => {
   const { t } = useTranslation("admin");
+  const location = useLocation();
   return (
-    <div className={styles.container}>
-      <div>
+    <Menu selectedKeys={[location.pathname.slice(1, 7)]} mode="horizontal">
+      <Menu.Item key="client" icon={<UserOutlined />}>
         <Link to="/clients">{t("clients")}</Link>
+      </Menu.Item>
+      <Menu.Item key="builds" icon={<BuildOutlined />}>
         <Link to="/builds">{t("builds")}</Link>
-      </div>
-      <div>
-        <Input.Search />
-      </div>
-    </div>
+      </Menu.Item>
+      <Menu.Item key="profil" icon={<IdcardOutlined />}>
+        <Link to="/profile">{t("profile")}</Link>
+      </Menu.Item>
+    </Menu>
   );
 };
 

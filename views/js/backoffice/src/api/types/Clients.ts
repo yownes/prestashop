@@ -45,6 +45,7 @@ export interface Clients_users_edges_node {
   username: string;
   apps: Clients_users_edges_node_apps;
   accountStatus: AccountAccountStatus;
+  verified: boolean | null;
 }
 
 export interface Clients_users_edges {

@@ -1,12 +1,12 @@
 import React from "react";
 import { Tag } from "antd";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
+import { useTranslation } from "react-i18next";
 
 interface UserStateProps {
   state?: AccountAccountStatus;
 }
 
-// TODO: state -> COLORS
 const COLORS = {
   REGISTERED: "default",
   WAITING_PAYMENT: "orange",
@@ -15,9 +15,11 @@ const COLORS = {
 };
 
 const UserState = ({ state }: UserStateProps) => {
+  const { t } = useTranslation();
   const selector = state || AccountAccountStatus.REGISTERED;
   const color = COLORS[selector];
-  return <Tag color={color}>{state}</Tag>;
+  const status = `accountStatus.${selector}`;
+  return <Tag color={color}>{t(status)}</Tag>;
 };
 
 export default UserState;

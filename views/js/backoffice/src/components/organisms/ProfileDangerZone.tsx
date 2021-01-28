@@ -20,7 +20,7 @@ const ProfileDangerZone = ({ id, confirmPassword }: ProfileDangerZoneProps) => {
   const [deleteAccount] = useMutation<DeleteAccount, DeleteAccountVariables>(
     DELETE_ACCOUNT
   );
-  const {t} = useTranslation("client");
+  const { t } = useTranslation("client");
   const { logout } = useAuth();
   if (!confirmPassword) {
     return null;
@@ -41,10 +41,7 @@ const ProfileDangerZone = ({ id, confirmPassword }: ProfileDangerZoneProps) => {
           );
         }}
       >
-        <Form.Item
-          name="password"
-          label={t("confirmPasswordDelete")}
-        >
+        <Form.Item name="password" label={t("confirmPasswordDelete")}>
           <Input.Password />
         </Form.Item>
         <Button htmlType="submit" type="primary" danger>

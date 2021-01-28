@@ -3,7 +3,7 @@ import { Button, Popconfirm } from "antd";
 import {
   DeleteOutlined,
   LoadingOutlined,
-  PlusOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 
 import styles from "./FileUpload.module.css";
@@ -27,7 +27,7 @@ type FilePreview = {
 
 const UploadButton = ({ loading, children }: UploadButtonProps) => (
   <>
-    {loading ? <LoadingOutlined /> : <PlusOutlined />}
+    {loading ? <LoadingOutlined /> : <UploadOutlined />}
     <div className="ant-upload-text">{children}</div>
   </>
 );
@@ -37,7 +37,7 @@ const ImageUpload = ({
   onChange,
   onDeleteClicked,
 }: ImageUploadProps) => {
-  const {t} = useTranslation("client");
+  const { t } = useTranslation(["translation", "client"]);
   const [filePreview, setFilePreview] = useState<FilePreview>({
     loading: false,
   });
@@ -122,7 +122,7 @@ const ImageUpload = ({
           {file ? (
             <img
               src={filePreview.file as string}
-              alt="preview upload"
+              alt={t("logo")}
               style={{
                 width: "100%",
                 height: "100%",
@@ -130,17 +130,19 @@ const ImageUpload = ({
               }}
             />
           ) : (
-          <UploadButton loading={filePreview.loading}>{t("upload")}</UploadButton>
+            <UploadButton loading={filePreview.loading}>
+              {t("client:uploadLogo")}
+            </UploadButton>
           )}
         </label>
         {file && (
           <Popconfirm
-            title={t("warnings.logo")}
+            cancelText={t("cancel")}
+            okText={t("delete")}
+            title={t("client:warnings.logo")}
             onConfirm={onDeleteClicked}
           >
-            <Button icon={<DeleteOutlined />} danger onClick={onDeleteClicked}>
-              {t("deleteLogo")}
-            </Button>
+            <Button icon={<DeleteOutlined />} danger />
           </Popconfirm>
         )}
       </div>

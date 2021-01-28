@@ -18,7 +18,9 @@ const routes = [...clientRoutes, ...adminoutes];
 const Header = () => {
   const { data } = useQuery<Me>(ME);
   const location = useLocation();
-  let route = routes.find((r) => r.path === location.pathname);
+  let route = routes.find(
+    (r) => r.path === location.pathname && r.admin === data?.me?.isStaff
+  );
   if (!route) {
     route = routes
       .filter((r) => /:\w+/.exec(r.path))
@@ -38,7 +40,12 @@ const Header = () => {
         <Logo />
       </Link>
       <Typography.Title level={2} className={styles.title}>
-        <RightOutlined className={styles.titleIcon} /> {route?.name}
+        {route?.name && data?.me?.isStaff === route.admin && (
+          <>
+            <RightOutlined className={styles.titleIcon} />
+            {route?.name}
+          </>
+        )}
       </Typography.Title>
       {data?.me?.email && (
         <HeaderSessionInfo email={data.me.email} name={data.me.username} />

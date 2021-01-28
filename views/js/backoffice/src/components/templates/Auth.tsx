@@ -13,8 +13,7 @@ const Auth = ({ image, children }: AuthProps) => {
     <main className={styles.container}>
       <div className={styles.content}>
         <div className={styles.logo}>
-
-        <Logo width={300} height={104} />
+          <Logo width={300} height={104} />
         </div>
         {children}
       </div>

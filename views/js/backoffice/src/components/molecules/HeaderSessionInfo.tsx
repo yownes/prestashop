@@ -38,11 +38,11 @@ const HeaderSessionInfo = ({ name, email }: HeaderSessionInfoProps) => {
     <div className={styles.container}>
       {screens.md && (
         <div className={styles.info}>
-            <span className={styles.title}>
-              <Link to="/profile">{name}</Link>
-            </span>
-            <span className={styles.subtitle}>{email}</span>
-          </div>
+          <span className={styles.title}>
+            <Link to="/profile">{name}</Link>
+          </span>
+          <span className={styles.subtitle}>{email}</span>
+        </div>
       )}
       <Dropdown overlay={menu} trigger={["click"]}>
         <Button icon={<EllipsisOutlined />} shape="circle" />

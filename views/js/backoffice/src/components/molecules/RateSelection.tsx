@@ -15,11 +15,7 @@ interface RateSelectionProps {
   plan: CheckoutLocationState;
 }
 
-const RateSelection = ({
-  subtitle,
-  title,
-  plan,
-}: RateSelectionProps) => {
+const RateSelection = ({ subtitle, title, plan }: RateSelectionProps) => {
   const { t } = useTranslation("translation");
   return (
     <div className={styles.container}>

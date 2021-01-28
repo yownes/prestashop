@@ -10,7 +10,7 @@ import Errors from "../molecules/Errors";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../lib/auth";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const ChangePassword = () => {
   const [form] = Form.useForm();
@@ -27,7 +27,7 @@ const ChangePassword = () => {
     form.resetFields();
     message.success(t("changePasswordSuccessful"), 4);
   }
-  
+
   return (
     <>
       <Title level={2}>{t("changePassword")}</Title>

@@ -5,7 +5,6 @@ import { useAuth } from "../lib/auth";
 import AdminDashboard from "./admin";
 import ClientDashboard from "./client";
 
-
 const Dashboard = () => {
   const { isAdmin } = useAuth();
   return (

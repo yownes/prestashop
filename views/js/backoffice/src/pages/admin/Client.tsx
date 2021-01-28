@@ -32,7 +32,7 @@ import { ProfileInfo } from "../../components/molecules";
 import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
 import { useTranslation } from "react-i18next";
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 interface ClientProps {
   id: string;
@@ -53,7 +53,7 @@ function getBuilds(apps?: Client_user_apps) {
 }
 
 const Client = () => {
-  const {t} = useTranslation("admin")
+  const { t } = useTranslation(["translation", "admin"]);
   const { id } = useParams<ClientProps>();
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const { loading, data } = useQuery<IClient, ClientVariables>(CLIENT, {
@@ -72,10 +72,16 @@ const Client = () => {
     <Menu>
       <Menu.Item>
         <Popconfirm
+          cancelText={t("cancel")}
+          okText={
+            data?.user?.accountStatus === AccountAccountStatus.BANNED
+              ? t("admin:unban")
+              : t("admin:ban")
+          }
           title={
             data?.user?.accountStatus === AccountAccountStatus.BANNED
-              ? t("warings.unban")
-              : t("warnings.ban")
+              ? t("admin:warnings.unban")
+              : t("admin:warnings.ban")
           }
           onConfirm={() => {
             setIsOverlayVisible(false);
@@ -106,23 +112,23 @@ const Client = () => {
         >
           <Text type="danger">
             {data?.user?.accountStatus === AccountAccountStatus.BANNED
-              ? "Desbanear"
-              : "Banear Cuenta"}
+              ? t("admin:unbanAccount")
+              : t("admin:banAccount")}
           </Text>
         </Popconfirm>
       </Menu.Item>
       <Menu.Item>
         <Popconfirm
-          title={t("warnings.account")}
+          cancelText={t("cancel")}
+          okText={t("admin:unsubscribe")}
+          title={t("admin:warnings.unsubscribe")}
           placement="left"
           onConfirm={() => {
             setIsOverlayVisible(false);
             unsubscribe({ variables: { userId: id } });
           }}
         >
-          <Text type="danger">
-            {t("unsubscribe")}
-          </Text>
+          <Text type="danger">{t("admin:unsubscribeAccount")}</Text>
         </Popconfirm>
       </Menu.Item>
     </Menu>
@@ -140,30 +146,35 @@ const Client = () => {
 
   return (
     <>
-      <Row style={{ marginBottom: 20 }}>
-        <Col sm={12} xs={24}>
+      <Row gutter={[20, 20]}>
+        <Col span={24}>
           <Card>
             <Row gutter={10}>
               <Col span={24}>
-                <ProfileInfo profile={data?.user} action={profieActions} />
+                <ProfileInfo
+                  profile={data?.user}
+                  action={profieActions}
+                  verified
+                />
               </Col>
             </Row>
           </Card>
         </Col>
       </Row>
-      <Row gutter={20}>
+      <Row gutter={[20, 20]}>
         <Col md={12} sm={24}>
           <Card>
+            <Title>{t("admin:apps")}</Title>
             <AppsTable
               dataSource={data?.user?.apps}
               columns={[
                 {
-                  title: t("actions"),
+                  title: t("admin:actions"),
                   key: "actions",
                   render: (_, record) => {
                     return (
                       <Popconfirm
-                        title={t("warnings.app")}
+                        title={t("admin:warnings.app")}
                         onConfirm={() => {
                           deleteApp({
                             variables: {
@@ -173,7 +184,7 @@ const Client = () => {
                               if (data?.deleteApp?.ok) {
                                 const id = cache.identify({ ...record });
                                 console.log({ id });
-                                
+
                                 cache.evict({
                                   id,
                                 });
@@ -198,6 +209,7 @@ const Client = () => {
         </Col>
         <Col md={12} sm={24}>
           <Card>
+            <Title>{t("admin:builds")}</Title>
             <BuildsTable dataSource={getBuilds(data?.user?.apps)} />
           </Card>
         </Col>

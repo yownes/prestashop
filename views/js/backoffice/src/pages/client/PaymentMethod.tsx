@@ -16,7 +16,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import { MY_PAYMENT_METHODS } from "../../api/queries";
 import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
 import Loading from "../../components/atoms/Loading";
-import Title from "antd/lib/typography/Title";
 import CreateCreditCard from "../../components/organisms/CreateCreateCard";
 import { ADD_PAYMENT_METHOD, REMOVE_PAYMENT_METHOD } from "../../api/mutations";
 import {
@@ -33,7 +32,7 @@ import { useTranslation } from "react-i18next";
 const { Text } = Typography;
 
 const PaymentMethod = () => {
-  const { t } = useTranslation(["client", "translation"]);
+  const { t } = useTranslation(["translation", "client"]);
   const { data, loading } = useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
   const [addPayment, { loading: changing, data: paymentData }] = useMutation<
     AddPaymentMethod,
@@ -54,7 +53,7 @@ const PaymentMethod = () => {
   });
   if (paymentData?.addPaymentMethod?.ok) {
     form.resetFields();
-    message.success(t("changePasswordSuccessful"), 4);
+    message.success(t("client:updatePaymentMethodSuccessful"), 4);
   }
 
   if (loading) {
@@ -68,7 +67,6 @@ const PaymentMethod = () => {
   return (
     <Row gutter={[20, 20]}>
       <Col span={24}>
-        {/* <Title level={2}>{t("defaultCard")}</Title> */}
         <Radio.Group
           value={data?.me?.customer?.defaultPaymentMethod?.stripeId}
           disabled={changing}
@@ -106,13 +104,13 @@ const PaymentMethod = () => {
               >
                 <CreditCard data={node.card} billing={node.billingDetails} />
                 <Space>
-                  <Button>{t("translation:update")}</Button>
+                  <Button>{t("update")}</Button>
                   {node.stripeId !==
                   data?.me?.customer?.defaultPaymentMethod?.stripeId ? (
                     <Popconfirm
                       cancelText={t("cancel")}
                       okText={t("delete")}
-                      title={t("warnings.card")}
+                      title={t("client:warnings.card")}
                       placement="topLeft"
                       onConfirm={() => {
                         if (node.stripeId) {
@@ -122,10 +120,10 @@ const PaymentMethod = () => {
                         }
                       }}
                     >
-                      <Button danger>{t("translation:delete")}</Button>
+                      <Button danger>{t("delete")}</Button>
                     </Popconfirm>
                   ) : (
-                    <Text>({t("defaultCard")})</Text>
+                    <Text>({t("client:defaultCard")})</Text>
                   )}
                 </Space>
               </Radio.Button>
@@ -135,14 +133,14 @@ const PaymentMethod = () => {
       </Col>
       <Col span={24}>
         <Button onClick={() => setIsModalOpen(true)} type="primary">
-          {t("addPaymentMethod")}
+          {t("client:addPaymentMethod")}
         </Button>
       </Col>
       <Modal
         centered
         footer={null}
         onCancel={handleCancel}
-        title={t("addPaymentMethod")}
+        title={t("client:addPaymentMethod")}
         visible={isModalOpen}
       >
         <CreateCreditCard
