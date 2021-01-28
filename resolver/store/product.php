@@ -147,16 +147,24 @@ class ResolverStoreProduct extends Resolver
         if (!empty($args['search'])) {
             $filter_data['filter_search'] = $args['search'];
         }
+        
+        if (!empty($args['filter'])) {
+            $filter_data['filter_facets'] = $args['filter'];
+        }
 
-        $results = $this->model_store_product->getProducts($filter_data);
-        $product_total = $this->model_store_product->getTotalProducts($filter_data);
+        $results = $this->model_store_product->getProductsAndCount($filter_data);
+        
+        $product_total = $results['count'];
         $products = [];
-        foreach ($results as $product) {
+        $facets = $results['facets'];
+
+        foreach ($results['products'] as $product) {
             $products[] = $this->get(array( 'id' => $product['id_product'] ));
         }
 
         return array(
             'content'          => $products,
+            'facets'           => $facets,
             'first'            => $args['page'] === 1,
             'last'             => $args['page'] === ceil($product_total / $args['size']),
             'number'           => (int) $args['page'],

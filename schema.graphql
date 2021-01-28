@@ -239,8 +239,23 @@ type ProductOption {
   values: [OptionValue]
 }
 
+type FacetFilter {
+  label: String
+  type: String
+  value: String
+}
+
+type Facet {
+  label: String
+  type: String
+  multipleSelectionAllowed: Boolean
+  widgetType: String
+  filters: [FacetFilter]
+}
+
 type ProductResult {
   content: [Product]
+  facets: [Facet]
   first: Boolean
   last: Boolean
   number: Int
@@ -552,7 +567,7 @@ type RootQueryType {
     ids: [Int] = []
     category_id: String = ""
     sort: String = "sort_order"
-    order: String = "ASC"
+    order: String
   ): ProductResult
   bestSells: [Product]
   product(id: String): Product
