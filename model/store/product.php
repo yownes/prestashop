@@ -18,6 +18,8 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 
+require_once dirname(__FILE__) . '/../../classes/ProductSearch.php';
+
 class ModelStoreProduct extends Model
 {
     //prestashop doesn't have related products, so we pull 4 related products from the same category
@@ -42,6 +44,43 @@ class ModelStoreProduct extends Model
         $images = Db::getInstance()->ExecuteS(
             'SELECT `id_image` FROM `' . _DB_PREFIX_ . 'image` WHERE `id_product` = ' . (int)($product_id)
         );
+
+        
+        $prod['id_product'] = (int)$product_id;
+
+        $groups = Tools::getValue('group');
+        $idpa = Tools::getValue('id_product_attribute');
+        if (empty($groups)) {
+            $groups = false;
+        }
+
+        error_log($product_id);
+        error_log($groups);
+        error_log($idpa);
+
+
+        // $id_product_attribute =  Product::getIdProductAttributeByIdAttributes(
+        //     $product_id,
+        //     $groups,
+        //     true
+        // );
+
+        // $id_product_attribute = 2;
+
+
+
+        $prod['id_product_attribute'] = Product::getDefaultAttribute($this->product->id);//$id_product_attribute;
+
+        $combinations = $product->getAttributesResume($this->context->language->id);
+
+        error_log(json_encode($combinations));
+        $product_full = Product::getProductProperties($this->context->language->id, $prod, $this->context);
+
+        error_log(json_encode($product_full));
+        // $product_full = $this->addProductCustomizationData($product_full);
+
+
+
         foreach ($images as $key => $image_id) {
             $images[$key]['image'] = $this->context->link->getImageLink(
                 $product->link_rewrite,
@@ -106,106 +145,59 @@ class ModelStoreProduct extends Model
         return $product;
     }
 
-    public function getProducts($data = array())
+    public function getProductsAndCount($data = array())
     {
-        $sort = 'p.`id_product`';
-        if ($data['sort'] == 'sort_order') {
-            $sort = 'p.`id_product`';
-        }
+        $sort = 'position';
 
         if ($data['sort'] == 'model') {
-            $sort = 'p.`reference`';
+            $sort = 'reference';
         }
-
-        if ($data['sort'] == 'quantity') {
+        else if ($data['sort'] == 'quantity') {
             $sort = 'p.`quantity`';
         }
-
-        if ($data['sort'] == 'date_added') {
-            $sort = 'p.`date_add`';
+        else if ($data['sort'] == 'date_added') {
+            $sort = 'date_add';
+        }
+        else if ($data['sort'] == 'name') {
+            $sort = 'name';
         }
 
-        if ($data['sort'] == 'name') {
-            $sort = 'pl.`name`';
+        $order = 'product.' . $sort . '.' . $data['order'];
+        
+        $productSearch = new ProductSearch($this->context);
+        $productSearch->setLimit($data['limit']);
+        $productSearch->setOrder($order);
+        $productSearch->setPage($data['start']);
+
+        if ($data['filter_search'])
+        {
+            $productSearch->setSearchString($data['filter_search']);
+        } else {
+            if (!$data['filter_category_id']) {
+                $defaultCategory = Configuration::get('PS_HOME_CATEGORY');
+                $_GET['id_category'] = $defaultCategory;
+                $productSearch->setCategoryId($defaultCategory);
+            }
+        }
+        
+        if ($data['filter_category_id'])
+        {
+            // So facetedSearch can get it from Toos::getValue('id_category')
+            $_GET['id_category'] = $data['filter_category_id'];
+            $productSearch->setCategoryId($data['filter_category_id']);
+        }
+        if ($data['filter_facets'])
+        {
+            $productSearch->setFacets($data['filter_facets']);
         }
 
-        $sql = new DbQuery();
-        $sql->select('*');
-        $sql->from('product', 'p');
-        $sql->leftJoin('product_shop', 'ps', 'ps.`id_product` = p.`id_product`');
-        $sql->leftJoin('product_lang', 'pl', 'pl.`id_product` = p.`id_product`');
-        $sql->where('p.`active` = 1');
-        $sql->where('pl.`id_lang` = ' . (int)$this->context->language->id);
+        $productSearchResult = $productSearch->getProductsSearch();
 
-        if (!empty($data['filter_category_id']) && $data['filter_category_id'] > 0) {
-            $sql->leftJoin('category_product', 'c', 'c.`id_product` = p.`id_product`');
-            $sql->where('c.`id_category` = ' . (int)$data['filter_category_id']);
-        }
-
-        if (!empty($data['filter_ids'])) {
-            $sql->where('p.`id_product` IN ' . "('" . implode("','", $data['filter_ids']) . "')");
-        }
-
-        if (!empty($data['filter_special'])) {
-            $sql->where('p.`on_sale` = 1');
-        }
-
-        if (!empty($data['filter_search'])) {
-            $sql->where("pl.`name` LIKE '%" .
-                pSQL($data['filter_search']) . "%' OR pl.description LIKE '%" .
-                pSQL($data['filter_search']) . "%' OR pl.description_short LIKE '%" .
-                pSQL($data['filter_search']) . "%'");
-        }
-
-        $sql->orderBy($sort . ' ' . $data['order']);
-        if (!empty($data['limit']) && $data['limit'] != -1) {
-            $sql->limit($data['limit'], $data['start']);
-        }
-
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-
-        if ($data['sort'] == 'price') {
-            Tools::orderbyPrice($result,$data['order']);
-        }
-
-        return $result;
-    }
-
-    public function getTotalProducts($data = array())
-    {
-        $sql = new DbQuery();
-        $sql->select('count(*)');
-        $sql->from('product', 'p');
-        $sql->leftJoin('product_shop', 'ps', 'ps.`id_product` = p.`id_product`');
-        $sql->leftJoin('product_lang', 'pl', 'pl.`id_product` = p.`id_product`');
-        $sql->where('p.`active` = 1');
-        $sql->where('pl.`id_lang` = ' . (int)$this->context->language->id);
-
-        if (!empty($data['filter_category_id']) && $data['filter_category_id'] > 0) {
-          $sql->leftJoin('category_product', 'c', 'c.`id_product` = p.`id_product`');
-          $sql->where('c.`id_category` = ' . (int)$data['filter_category_id']);
-        }
-        if (!empty($data['filter_product_ids'])) {
-            $sql->where('p.`id_product` IN ' . "('" . implode("','", $data['filter_product_ids']) . "')");
-        }
-
-        if (!empty($data['filter_special'])) {
-            $sql->where('p.`on_sale` = 1');
-        }
-
-        if (!empty($data['filter_name'])) {
-            $sql->where("pl.`name` = '%" . pSQL($data['filter_name']) . "%'");
-        }
-
-        if (!empty($data['filter_search'])) {
-            $sql->where("pl.`name` LIKE '%" .
-                pSQL($data['filter_search']) . "%' OR pl.description LIKE '%" .
-                pSQL($data['filter_search']) . "%' OR pl.description_short LIKE '%" .
-                pSQL($data['filter_search']) . "%'");
-        }
-
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-        return $result['count(*)'];
+        return array(
+            'products' => $productSearchResult->getProducts(),
+            'count' => $productSearchResult->getTotalProductsCount(),
+            'facets' => $this->prepareFacets($productSearchResult)
+        );
     }
 
     public function getBestSalesProducts()
@@ -233,5 +225,42 @@ class ModelStoreProduct extends Model
         );
 
         return $result->getProducts();
+    }
+
+    private function prepareFacets($result)
+    {
+        $facetCollection = $result->getFacetCollection();
+        // not all search providers generate menus
+        if (empty($facetCollection)) {
+            return null;
+        }
+
+        $facetsVar = array_map(
+            [$this, 'prepareFacet'],
+            $facetCollection->getFacets()
+        );
+
+        $activeFilters = [];
+        foreach ($facetsVar as $facet) {
+            if ($facet['displayed']) {
+                $activeFilters[] = $facet;
+            }
+        }
+
+        return $activeFilters;
+    }
+
+    private function prepareFacet($facet)
+    {
+        $facetsArray = $facet->toArray();
+        foreach ($facetsArray['filters'] as &$filter) {
+            $filter['facetLabel'] = $facet->getLabel();
+            if ($filter['nextEncodedFacets']) {
+                $filter['value'] = $filter['nextEncodedFacets'];
+            }
+        }
+        unset($filter);
+
+        return $facetsArray;
     }
 }
