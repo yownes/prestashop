@@ -567,7 +567,7 @@ type RootQueryType {
     ids: [Int] = []
     category_id: String = ""
     sort: String = "sort_order"
-    order: String
+    order: String = "ASC"
   ): ProductResult
   bestSells: [Product]
   product(id: String): Product
