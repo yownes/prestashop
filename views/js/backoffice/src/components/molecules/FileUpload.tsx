@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, ReactNode } from "react";
-import { Button, Popconfirm } from "antd";
+import { Button, Popconfirm, Tooltip } from "antd";
 import {
   DeleteOutlined,
   LoadingOutlined,
@@ -142,7 +142,9 @@ const ImageUpload = ({
             title={t("client:warnings.logo")}
             onConfirm={onDeleteClicked}
           >
-            <Button icon={<DeleteOutlined />} danger />
+            <Tooltip title="Eliminar logo">
+              <Button icon={<DeleteOutlined />} danger />
+            </Tooltip>
           </Popconfirm>
         )}
       </div>

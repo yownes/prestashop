@@ -17,6 +17,7 @@
   "publishApp": "Publicar App",
   "saveChanges": "Guardar cambios",
   "saveChangesSuccessful": "Cambios guardados con éxito",
+  "saveChangesError": "Error al intentar guardar los cambios",
   "validate": {
     "message": "Tu cuenta no está validada todavía",
     "description": "Comprueba tu correo electrónico en busca del link de validación"
@@ -30,6 +31,7 @@
   "addCardTitle": "Añadir tarjeta",
   "appName": "Nombre de la app",
   "noName": "(Sin nombre)",
+  "noLink": "(Sin URL)",
   "appStatus": {
     "GENERATING": "Generando",
     "PUBLISHED": "Publicada",

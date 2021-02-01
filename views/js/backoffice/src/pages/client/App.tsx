@@ -34,7 +34,7 @@ function appsAreEqual(state: StoreAppInput, app?: App_app | null): boolean {
 }
 
 const baseApp: StoreAppInput = {
-  apiLink: "",
+  apiLink: "(no link)",
   template: "VGVtcGxhdGVUeXBlOjE=",
   name: "(no name)",
   color: { color: "#0099cc", text: "white" },

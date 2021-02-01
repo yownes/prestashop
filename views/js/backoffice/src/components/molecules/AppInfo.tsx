@@ -39,7 +39,7 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
   return (
     <>
       <Row align="middle" justify="start">
-        <Col>
+        <Col lg={{ span: 4 }} md={{ span: 8 }} xs={{ span: 8 }}>
           <ImageUpload
             value={data.logo}
             onDeleteClicked={() => {
@@ -55,44 +55,46 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
               });
             }}
           />
+          <Typography.Text className={styles.info__appId}>
+            ID: {id}
+          </Typography.Text>
         </Col>
-        <Col offset="1" span="10">
-          <h1 className={styles.info__appName}>
+        <Col lg={{ span: 10 }} md={{ span: 16 }} xs={{ span: 16 }}>
+          <Typography.Title className={styles.info__appName} level={2}>
             <Paragraph
               editable={{
                 onChange(value) {
                   onChange({
                     ...data,
-                    name: value,
+                    name: value === "" || value === t("noName") ? "" : value,
                   });
                 },
               }}
+              type={data.name ? undefined : "danger"}
             >
               {data.name !== "" ? data.name : t("noName")}
             </Paragraph>
-          </h1>
-          <h2 className={styles.info__appId}>{id}</h2>
-          <h3 className={styles.info__appiLink}>
+          </Typography.Title>
+          <Typography.Title level={5} className={styles.info__appiLink}>
             <Paragraph
+              code
               editable={{
                 onChange(value) {
-                  console.log("value", value);
                   onChange({
                     ...data,
-                    apiLink: value,
+                    apiLink: value === "" || value === t("noLink") ? "" : value,
                   });
                 },
               }}
+              type={data.apiLink ? undefined : "danger"}
             >
-              {data.apiLink}
+              {data.apiLink !== "" ? data.apiLink : t("noLink")}
             </Paragraph>
-          </h3>
+          </Typography.Title>
         </Col>
-        <Col span="5">
+        <Col lg={{ span: 5 }} md={{ span: 8 }} xs={{ span: 8 }}>
           <Row justify="center">
-            <Col>
-              <BuildState state={getAppBuildState(app)} />
-            </Col>
+            <BuildState state={getAppBuildState(app)} />
           </Row>
           <Row justify="center">
             <Col>
@@ -108,7 +110,11 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
                   iOS
                 </a>
               )}
-              -
+            </Col>
+            <Col>
+              <Typography.Text>-</Typography.Text>
+            </Col>
+            <Col>
               {app?.storeLinks?.android ? (
                 <a
                   className={styles.infoStores__link}
@@ -124,19 +130,21 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
             </Col>
           </Row>
         </Col>
-        <Col span="5">
-          <Row justify="end">
+        <Col lg={{ span: 5 }} md={{ span: 16 }} xs={{ span: 16 }}>
+          <Row justify="center">
             <Space direction="vertical">
               <Button className={styles.info__button} type="primary">
                 {t("client:publishApp")}
               </Button>
-              {hasChanged && (
-                <Button
-                  className={styles.info__button}
-                  disabled={loadingUpdate}
-                  loading={loadingUpdate}
-                  type="ghost"
-                  onClick={() => {
+              <Button
+                className={styles.info__button}
+                disabled={!hasChanged || loadingUpdate}
+                loading={loadingUpdate}
+                type="ghost"
+                onClick={() => {
+                  if (data.apiLink === "" || data.name === "") {
+                    message.error(t("client:saveChangesError"), 4);
+                  } else {
                     const dataApp = { ...data };
                     // Don't send the image if it's not a Blob
                     // If string, means the logo is the server URL
@@ -176,11 +184,11 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
                         }
                       },
                     });
-                  }}
-                >
-                  {t("client:saveChanges")}
-                </Button>
-              )}
+                  }
+                }}
+              >
+                {t("client:saveChanges")}
+              </Button>
             </Space>
           </Row>
         </Col>
