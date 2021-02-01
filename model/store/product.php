@@ -148,25 +148,23 @@ class ModelStoreProduct extends Model
     public function getProductsAndCount($data = array())
     {
         $sort = 'position';
+        $order = 'desc';
 
-        if ($data['sort'] == 'model') {
-            $sort = 'reference';
-        }
-        else if ($data['sort'] == 'quantity') {
-            $sort = 'p.`quantity`';
-        }
-        else if ($data['sort'] == 'date_added') {
-            $sort = 'date_add';
-        }
-        else if ($data['sort'] == 'name') {
-            $sort = 'name';
+        if ($data['sort'])
+        {
+            $sort = $data['sort'];
         }
 
-        $order = 'product.' . $sort . '.' . $data['order'];
+        if ($data['order'])
+        {
+            $order = $data['order'];
+        }
+
+        $searchOrder = 'product.' . $sort . '.' . $order;
         
         $productSearch = new ProductSearch($this->context);
         $productSearch->setLimit($data['limit']);
-        $productSearch->setOrder($order);
+        $productSearch->setOrder($searchOrder);
         $productSearch->setPage($data['start']);
 
         if ($data['filter_search'])
@@ -196,7 +194,8 @@ class ModelStoreProduct extends Model
         return array(
             'products' => $productSearchResult->getProducts(),
             'count' => $productSearchResult->getTotalProductsCount(),
-            'facets' => $this->prepareFacets($productSearchResult)
+            'facets' => $this->prepareFacets($productSearchResult),
+            'sortOrders' => $this->prepareOrders($productSearchResult->getAvailableSortOrders())
         );
     }
 
@@ -240,14 +239,14 @@ class ModelStoreProduct extends Model
             $facetCollection->getFacets()
         );
 
-        $activeFilters = [];
+        $displayedFilters = [];
         foreach ($facetsVar as $facet) {
             if ($facet['displayed']) {
-                $activeFilters[] = $facet;
+                $displayedFilters[] = $facet;
             }
         }
 
-        return $activeFilters;
+        return $displayedFilters;
     }
 
     private function prepareFacet($facet)
@@ -255,12 +254,23 @@ class ModelStoreProduct extends Model
         $facetsArray = $facet->toArray();
         foreach ($facetsArray['filters'] as &$filter) {
             $filter['facetLabel'] = $facet->getLabel();
-            if ($filter['nextEncodedFacets']) {
-                $filter['value'] = $filter['nextEncodedFacets'];
-            }
+            $filter['value'] = $filter['nextEncodedFacets'];
         }
         unset($filter);
 
         return $facetsArray;
+    }
+
+    private function prepareOrder($order)
+    {
+        return $order->toArray();
+    }
+
+    private function prepareOrders($orders)
+    {
+        return array_map(
+            [$this, 'prepareOrder'],
+            $orders
+        );
     }
 }
