@@ -243,6 +243,7 @@ type FacetFilter {
   label: String
   type: String
   value: String
+  active: Boolean
 }
 
 type Facet {
@@ -253,9 +254,17 @@ type Facet {
   filters: [FacetFilter]
 }
 
+type SortOrder {
+  entity: String
+  field: String
+  direction: String
+  label: String
+}
+
 type ProductResult {
   content: [Product]
   facets: [Facet]
+  sortOrders: [SortOrder]
   first: Boolean
   last: Boolean
   number: Int
@@ -566,8 +575,8 @@ type RootQueryType {
     search: String = ""
     ids: [Int] = []
     category_id: String = ""
-    sort: String = "sort_order"
-    order: String
+    sort: String = "position"
+    order: String = "ASC"
   ): ProductResult
   bestSells: [Product]
   product(id: String): Product

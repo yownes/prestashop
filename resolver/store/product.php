@@ -157,6 +157,7 @@ class ResolverStoreProduct extends Resolver
         $product_total = $results['count'];
         $products = [];
         $facets = $results['facets'];
+        $sortOrders = $results['sortOrders'];
 
         foreach ($results['products'] as $product) {
             $products[] = $this->get(array( 'id' => $product['id_product'] ));
@@ -165,6 +166,7 @@ class ResolverStoreProduct extends Resolver
         return array(
             'content'          => $products,
             'facets'           => $facets,
+            'sortOrders'       => $sortOrders,
             'first'            => $args['page'] === 1,
             'last'             => $args['page'] === ceil($product_total / $args['size']),
             'number'           => (int) $args['page'],
