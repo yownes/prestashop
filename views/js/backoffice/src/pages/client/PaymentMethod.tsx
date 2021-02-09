@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Col,
@@ -38,23 +38,45 @@ const PaymentMethod = () => {
     AddPaymentMethod,
     AddPaymentMethodVariables
   >(ADD_PAYMENT_METHOD);
-  const [removePaymentMethod] = useMutation<
+  const [removePaymentMethod, { data: removeData }] = useMutation<
     RemovePaymentMethod,
     RemovePaymentMethodVariables
   >(REMOVE_PAYMENT_METHOD);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [form] = Form.useForm();
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setTimeout(() => form.resetFields(), 300);
+  const [isModalCreateOpen, setisModalCreateOpen] = useState(false);
+  const [isModalUpdateOpen, setisModalUpdateOpen] = useState(false);
+  const [isUpdated, setisUpdated] = useState(false);
+  const [formCreate] = Form.useForm();
+  const [formUpdate] = Form.useForm();
+  const handleCancelCreate = () => {
+    setisModalCreateOpen(false);
+    setTimeout(() => formCreate.resetFields(), 300);
+  };
+  const handleCancelUpdate = () => {
+    setisModalUpdateOpen(false);
+    setTimeout(() => formUpdate.resetFields(), 300);
   };
   message.config({
     maxCount: 1,
   });
-  if (paymentData?.addPaymentMethod?.ok) {
-    form.resetFields();
-    message.success(t("client:updatePaymentMethodSuccessful"), 4);
-  }
+  useEffect(() => {
+    if (paymentData?.addPaymentMethod?.ok) {
+      if (isUpdated) {
+        setisModalUpdateOpen(false);
+        formUpdate.resetFields();
+        message.success(t("client:updatePaymentMethodSuccessful"), 4);
+        setisUpdated(false);
+      } else {
+        setisModalCreateOpen(false);
+        formCreate.resetFields();
+        message.success(t("client:addPaymentMethodSuccessful"), 4);
+      }
+    }
+  }, [formCreate, formUpdate, isUpdated, paymentData, t]);
+  useEffect(() => {
+    if (removeData?.detachPaymentMethod?.ok) {
+      message.success(t("client:removePaymentMethodSuccessful"), 4);
+    }
+  }, [removeData, t]);
 
   if (loading) {
     return <Loading />;
@@ -86,6 +108,7 @@ const PaymentMethod = () => {
                       },
                     },
                   });
+                  setisUpdated(true);
                 }
               },
             });
@@ -104,7 +127,9 @@ const PaymentMethod = () => {
               >
                 <CreditCard data={node.card} billing={node.billingDetails} />
                 <Space>
-                  <Button>{t("update")}</Button>
+                  <Button onClick={() => setisModalUpdateOpen(true)}>
+                    {t("update")}
+                  </Button>
                   {node.stripeId !==
                   data?.me?.customer?.defaultPaymentMethod?.stripeId ? (
                     <Popconfirm
@@ -132,19 +157,37 @@ const PaymentMethod = () => {
         </Radio.Group>
       </Col>
       <Col span={24}>
-        <Button onClick={() => setIsModalOpen(true)} type="primary">
+        <Button onClick={() => setisModalCreateOpen(true)} type="primary">
           {t("client:addPaymentMethod")}
         </Button>
       </Col>
       <Modal
         centered
         footer={null}
-        onCancel={handleCancel}
+        onCancel={handleCancelCreate}
         title={t("client:addPaymentMethod")}
-        visible={isModalOpen}
+        visible={isModalCreateOpen}
       >
         <CreateCreditCard
-          form={form}
+          form={formCreate}
+          onCreated={(paymentMethodId) => {
+            addPayment({
+              variables: {
+                paymentMethodId,
+              },
+            });
+          }}
+        />
+      </Modal>
+      <Modal
+        centered
+        footer={null}
+        onCancel={handleCancelUpdate}
+        title={t("client:editPaymentMethod")}
+        visible={isModalUpdateOpen}
+      >
+        <CreateCreditCard
+          form={formUpdate}
           onCreated={(paymentMethodId) => {
             addPayment({
               variables: {

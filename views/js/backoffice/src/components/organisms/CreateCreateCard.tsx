@@ -43,7 +43,6 @@ const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
   const [errs, setErrs] = useState<StripeError>();
   const stripe = useStripe();
   const elements = useElements();
-  // const [form] = Form.useForm();
   const { t, i18n } = useTranslation(["translation", "client"]);
   const country = i18n.language.split("-")[0] as Language;
   const language = Language[country] ?? "es";
