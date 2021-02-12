@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
+  Card,
   Col,
   Form,
   Modal,
   Popconfirm,
-  Radio,
   Row,
   Space,
   Typography,
   message,
 } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import CreditCard from "../../components/molecules/CreditCard";
 import { useMutation, useQuery } from "@apollo/client";
 import { MY_PAYMENT_METHODS } from "../../api/queries";
 import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
 import Loading from "../../components/atoms/Loading";
-import CreateCreditCard from "../../components/organisms/CreateCreateCard";
+import LoadingFullScreen from "../../components/atoms/LoadingFullScreen";
+import CreateCreditCard from "../../components/organisms/CreateCreditCard";
+import EditCreditCard from "../../components/organisms/EditCreditCard";
 import { ADD_PAYMENT_METHOD, REMOVE_PAYMENT_METHOD } from "../../api/mutations";
 import {
   AddPaymentMethod,
@@ -38,13 +41,18 @@ const PaymentMethod = () => {
     AddPaymentMethod,
     AddPaymentMethodVariables
   >(ADD_PAYMENT_METHOD);
-  const [removePaymentMethod, { data: removeData }] = useMutation<
-    RemovePaymentMethod,
-    RemovePaymentMethodVariables
-  >(REMOVE_PAYMENT_METHOD);
+  const [
+    removePaymentMethod,
+    { loading: removing, data: removeData },
+  ] = useMutation<RemovePaymentMethod, RemovePaymentMethodVariables>(
+    REMOVE_PAYMENT_METHOD
+  );
   const [isModalCreateOpen, setisModalCreateOpen] = useState(false);
   const [isModalUpdateOpen, setisModalUpdateOpen] = useState(false);
+  const [isAdded, setisAdded] = useState(false);
   const [isUpdated, setisUpdated] = useState(false);
+  const [card, setCard] = useState("");
+  const [cardId, setCardId] = useState<string | null>(null);
   const [formCreate] = Form.useForm();
   const [formUpdate] = Form.useForm();
   const handleCancelCreate = () => {
@@ -60,78 +68,54 @@ const PaymentMethod = () => {
   });
   useEffect(() => {
     if (paymentData?.addPaymentMethod?.ok) {
+      if (isAdded) {
+        console.log("AÑADIDO");
+        formCreate.resetFields();
+        message.success(t("client:addPaymentMethodSuccessful"), 4);
+        setisAdded(false);
+      }
       if (isUpdated) {
+        console.log("EDITADO");
         setisModalUpdateOpen(false);
         formUpdate.resetFields();
         message.success(t("client:updatePaymentMethodSuccessful"), 4);
         setisUpdated(false);
-      } else {
-        setisModalCreateOpen(false);
-        formCreate.resetFields();
-        message.success(t("client:addPaymentMethodSuccessful"), 4);
       }
     }
-  }, [formCreate, formUpdate, isUpdated, paymentData, t]);
+  }, [formCreate, formUpdate, isAdded, isUpdated, paymentData, t]);
   useEffect(() => {
     if (removeData?.detachPaymentMethod?.ok) {
       message.success(t("client:removePaymentMethodSuccessful"), 4);
     }
   }, [removeData, t]);
 
-  if (loading) {
-    return <Loading />;
-  }
-  console.log(
-    "[Default payment method]",
-    data?.me?.customer?.defaultPaymentMethod?.stripeId,
-    loading
-  );
+  if (loading) return <Loading />;
+
   return (
     <Row gutter={[20, 20]}>
       <Col span={24}>
-        <Radio.Group
-          value={data?.me?.customer?.defaultPaymentMethod?.stripeId}
-          disabled={changing}
-          onChange={(e) => {
-            addPayment({
-              variables: { paymentMethodId: e.target.value },
-              update(cache, { data: newData }) {
-                if (newData?.addPaymentMethod?.ok && data?.me?.customer) {
-                  cache.modify({
-                    id: cache.identify({ ...data.me.customer }),
-                    fields: {
-                      defaultPaymentMethod(prevValue, { toReference }) {
-                        const node = connectionToNodes(
-                          data?.me?.customer?.paymentMethods
-                        ).find((node) => node?.stripeId === e.target.value);
-                        return toReference({ ...node });
-                      },
-                    },
-                  });
-                  setisUpdated(true);
-                }
-              },
-            });
-          }}
-        >
+        <Space size="large" wrap>
           {connectionToNodes(data?.me?.customer?.paymentMethods).map((node) => (
-            <Space>
-              <Radio.Button
-                style={{
-                  //backgroundColor: "transparent",
-                  borderColor: "transparent",
-                  borderWidth: 0,
-                }}
-                key={node.id}
-                value={node.stripeId}
-              >
-                <CreditCard data={node.card} billing={node.billingDetails} />
-                <Space>
-                  <Button onClick={() => setisModalUpdateOpen(true)}>
-                    {t("update")}
-                  </Button>
-                  {node.stripeId !==
-                  data?.me?.customer?.defaultPaymentMethod?.stripeId ? (
+            <Card
+              bodyStyle={{
+                padding: 0,
+              }}
+              bordered={false}
+              key={node.stripeId}
+            >
+              <CreditCard data={node.card} billing={node.billingDetails} />
+              <Space size="middle">
+                {node.stripeId !==
+                data?.me?.customer?.defaultPaymentMethod?.stripeId ? (
+                  <>
+                    <Button
+                      icon={<EditOutlined />}
+                      onClick={() => {
+                        setCard(node.card);
+                        setCardId(node.stripeId);
+                        setisModalUpdateOpen(true);
+                      }}
+                    />
                     <Popconfirm
                       cancelText={t("cancel")}
                       okText={t("delete")}
@@ -145,16 +129,60 @@ const PaymentMethod = () => {
                         }
                       }}
                     >
-                      <Button danger>{t("delete")}</Button>
+                      <Button danger icon={<DeleteOutlined />} />
                     </Popconfirm>
-                  ) : (
-                    <Text>({t("client:defaultCard")})</Text>
-                  )}
-                </Space>
-              </Radio.Button>
-            </Space>
+                    <Popconfirm
+                      onConfirm={(e) => {
+                        console.log(e);
+                        addPayment({
+                          variables: { paymentMethodId: cardId!! },
+                          update(cache, { data: newData }) {
+                            if (
+                              newData?.addPaymentMethod?.ok &&
+                              data?.me?.customer
+                            ) {
+                              cache.modify({
+                                id: cache.identify({ ...data.me.customer }),
+                                fields: {
+                                  defaultPaymentMethod(
+                                    prevValue,
+                                    { toReference }
+                                  ) {
+                                    const node = connectionToNodes(
+                                      data?.me?.customer?.paymentMethods
+                                    ).find((node) => node?.stripeId === cardId);
+                                    return toReference({ ...node });
+                                  },
+                                },
+                              });
+                            }
+                          },
+                        });
+                      }}
+                      title={t("client:warnings.cardDefault")}
+                    >
+                      <Button onClick={() => setCardId(node.stripeId)}>
+                        {t("client:asDefault")}
+                      </Button>
+                    </Popconfirm>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      icon={<EditOutlined />}
+                      onClick={() => {
+                        setCard(node.card);
+                        setCardId(node.stripeId);
+                        setisModalUpdateOpen(true);
+                      }}
+                    />
+                    <Text strong>({t("client:defaultCard")})</Text>
+                  </>
+                )}
+              </Space>
+            </Card>
           ))}
-        </Radio.Group>
+        </Space>
       </Col>
       <Col span={24}>
         <Button onClick={() => setisModalCreateOpen(true)} type="primary">
@@ -176,6 +204,8 @@ const PaymentMethod = () => {
                 paymentMethodId,
               },
             });
+            setisAdded(true);
+            setisModalCreateOpen(false);
           }}
         />
       </Modal>
@@ -186,17 +216,35 @@ const PaymentMethod = () => {
         title={t("client:editPaymentMethod")}
         visible={isModalUpdateOpen}
       >
-        <CreateCreditCard
-          form={formUpdate}
-          onCreated={(paymentMethodId) => {
-            addPayment({
-              variables: {
-                paymentMethodId,
-              },
-            });
-          }}
-        />
+        {isModalUpdateOpen && (
+          <EditCreditCard
+            card={card}
+            cardId={cardId!!}
+            form={formUpdate}
+            onEdited={(paymentMethodId) => {
+              addPayment({
+                variables: {
+                  paymentMethodId,
+                },
+              });
+              setisUpdated(true);
+              setisModalUpdateOpen(false);
+            }}
+          />
+        )}
       </Modal>
+      {changing && (
+        <LoadingFullScreen
+          tip={
+            isAdded
+              ? t("client:addingPaymentMethod")
+              : t("client:updatingPaymentMethod")
+          }
+        />
+      )}
+      {removing && (
+        <LoadingFullScreen tip={t("client:removingPaymentMethod")} />
+      )}
     </Row>
   );
 };
