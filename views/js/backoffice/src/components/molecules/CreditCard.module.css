@@ -1,5 +1,6 @@
 .creditcard {
-   width: 400px;
+   margin: 5px;
+   width: 350px;
 }
 
 .creditcard svg#cardfront,

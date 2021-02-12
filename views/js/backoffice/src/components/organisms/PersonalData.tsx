@@ -12,7 +12,13 @@ const PersonalData = () => {
   const { t } = useTranslation(["translation", "client"]);
   const { loading, data } = useQuery<MyAccount>(MY_ACCOUNT);
 
-  if (loading) return <Loading />;
+  if (loading)
+    return (
+      <Card>
+        <Title level={2}>{t("client:personalData")}</Title>
+        <Loading />
+      </Card>
+    );
   console.log("[MY_ACCOUNT data]", data);
   return (
     <Form

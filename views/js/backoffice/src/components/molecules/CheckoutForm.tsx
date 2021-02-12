@@ -7,7 +7,7 @@ import { SUBSCRIBE } from "../../api/mutations";
 import { Subscribe, SubscribeVariables } from "../../api/types/Subscribe";
 import Errors from "./Errors";
 import { CheckoutLocationState } from "../../pages/client/Checkout";
-import CreateCreditCard from "../organisms/CreateCreateCard";
+import CreateCreditCard from "../organisms/CreateCreditCard";
 import { useTranslation } from "react-i18next";
 
 const { Title, Text } = Typography;
