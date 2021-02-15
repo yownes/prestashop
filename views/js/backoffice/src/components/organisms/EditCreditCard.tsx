@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@apollo/client";
 import { Button, Divider, Form, Input, Select, Space, Typography } from "antd";
-import {
-  CardElement,
-  Elements,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
 import Errors from "../molecules/Errors";
+import SmallCreditCard from "../molecules/SmallCreditCard";
+import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { loadStripe, StripeError } from "@stripe/stripe-js";
-import { MY_PAYMENT_METHODS } from "../../api/queries";
-import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
-import Loading from "../../components/atoms/Loading";
+import { MyPaymentMethods_me_customer_paymentMethods_edges_node } from "../../api/types/MyPaymentMethods";
 import { useTranslation } from "react-i18next";
 import * as Countries from "../../data/countries.json";
 import { FormInstance } from "antd/lib/form";
@@ -41,6 +34,10 @@ interface IBillingDetails {
   phone: string;
 }
 
+interface IMetadata {
+  document_id?: string;
+}
+
 const { Option } = Select;
 
 enum Language {
@@ -51,11 +48,13 @@ enum Language {
   de = "de",
 }
 
+/*const stripe = new Stripe("pk_test_RG1KlTBaXWs8pCamCoLixIIu00FTwuG937", {
+  apiVersion: "2020-08-27",
+});*/
 const stripePromise = loadStripe("pk_test_RG1KlTBaXWs8pCamCoLixIIu00FTwuG937");
 
 interface EditCreditCardProps {
-  card: string;
-  cardId: string | null;
+  payment: MyPaymentMethods_me_customer_paymentMethods_edges_node;
   onEdited: (paymentMethodId: string) => void;
   form?: FormInstance;
 }
@@ -68,36 +67,33 @@ const EditCreditCardContainer = (props: EditCreditCardProps) => {
   );
 };
 
-const EditCreditCard = ({
-  card,
-  cardId,
-  onEdited,
-  form,
-}: EditCreditCardProps) => {
+const EditCreditCard = ({ payment, onEdited, form }: EditCreditCardProps) => {
   const [editing, setEditing] = useState(false);
   const [errs, setErrs] = useState<StripeError>();
   const stripe = useStripe();
-  const elements = useElements();
   const { t, i18n } = useTranslation(["translation", "client"]);
   const country = i18n.language.split("-")[0] as Language;
   const language = Language[country] ?? "es";
-  const { loading, data } = useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
-  const currentCard = card
+  const normalizedCard = payment.card
     .replace(/None/g, "null")
     .replace(/True/g, "true")
     .replace(/False/g, "false")
     .replace(/'/g, '"');
-  const cardData: ICreditCard = JSON.parse(currentCard);
-  const currentBilling = data?.me?.customer?.paymentMethods?.edges?.filter(
-    (node) => node?.node?.stripeId === cardId
-  );
-  const currentBillingDetails = currentBilling?.[0]?.node?.billingDetails;
-  const normalizedBilling = currentBillingDetails
+  const cardData: ICreditCard = JSON.parse(normalizedCard);
+  const normalizedBilling = payment.billingDetails
     ?.replace(/None/g, "null")
     .replace(/True/g, "true")
     .replace(/False/g, "false")
     .replace(/'/g, '"');
   const billingData: IBillingDetails = JSON.parse(normalizedBilling ?? "{}");
+  const normalizedMetadata = payment.metadata
+    ? payment.metadata
+        .replace(/None/g, "null")
+        .replace(/True/g, "true")
+        .replace(/False/g, "false")
+        .replace(/'/g, '"')
+    : "{}";
+  const metadataData: IMetadata = JSON.parse(normalizedMetadata ?? "{}");
   useEffect(() => {
     form?.setFieldsValue({
       name: billingData?.name,
@@ -107,10 +103,9 @@ const EditCreditCard = ({
       province: billingData?.address?.state,
       city: billingData?.address?.city,
       phone: billingData?.phone,
+      documentId: metadataData.document_id,
     });
-  }, [billingData, form]);
-  console.log("[[billingData]]", billingData);
-  if (loading) return <Loading />;
+  }, [billingData, form, metadataData.document_id]);
 
   return (
     <Form
@@ -123,34 +118,34 @@ const EditCreditCard = ({
         state: billingData?.address?.state,
         city: billingData?.address?.city,
         phone: billingData?.phone,
+        documentId: metadataData.document_id,
       }}
       validateMessages={{ required: t("client:requiredInput") }} // eslint-disable-line no-template-curly-in-string
       onFinish={async (values) => {
+        console.log("[[EditCreditCard > onFinish values]]", values);
         setEditing(true);
-        if (!stripe || !elements) {
+        if (!stripe) {
+          console.log("!stripe || !elements");
           setEditing(false);
           return;
         }
-        const cardElement = elements.getElement(CardElement);
-        if (!cardElement) {
-          setEditing(false);
-          return;
-        }
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
-          type: "card",
-          card: cardElement,
-          billing_details: {
-            address: {
-              city: values.city,
-              country: values.country,
-              line1: values.direction,
-              state: values.state,
+        /*const { error, paymentMethod } = await stripe.createPaymentMethod(
+          payment.stripeId,
+          {
+            billing_details: {
+              address: {
+                city: values.city,
+                country: values.country,
+                line1: values.direction,
+                state: values.state,
+              },
+              email: values.email,
+              name: values.name,
+              phone: values.phone ?? null,
             },
-            email: values.email,
-            name: values.name,
-            phone: values.phone ?? null,
-          },
-        });
+            metadata: { document_id: values.documentId },
+          }
+        );
         if (error) {
           setEditing(false);
           setErrs(error);
@@ -162,13 +157,10 @@ const EditCreditCard = ({
           }
           setEditing(false);
           onEdited(paymentMethodId);
-        }
+        }*/
       }}
     >
-      <Typography.Text>
-        {cardData.brand} **** **** **** {cardData.last4} ({cardData.exp_month}/
-        {cardData.exp_year})
-      </Typography.Text>
+      <SmallCreditCard data={payment.card} />
       <Divider />
       <Form.Item name="name" rules={[{ required: true }]} label={t("fullName")}>
         <Input placeholder={t("fullName")} />

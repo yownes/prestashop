@@ -31,6 +31,10 @@ export interface MyPaymentMethods_me_customer_paymentMethods_edges_node {
    * Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
    */
   billingDetails: string;
+  /**
+   * A set of key/value pairs that you can attach to an object. It can be useful for storing additional information about an object in a structured format.
+   */
+  metadata: string | null;
 }
 
 export interface MyPaymentMethods_me_customer_paymentMethods_edges {

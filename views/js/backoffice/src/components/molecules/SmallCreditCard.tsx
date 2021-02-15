@@ -1,10 +1,10 @@
+import { Typography } from "antd";
 import React from "react";
 
-import styles from "./CreditCard.module.css";
+import styles from "./SmallCreditCard.module.css";
 
 interface SmallCreditCardProps {
   data: string;
-  billing: string;
 }
 
 interface ICreditCardStripe {
@@ -17,19 +17,6 @@ interface ICreditCardStripe {
   exp_month: number;
   exp_year: number;
   last4: string;
-}
-
-interface IBillingDetailsStripe {
-  address: {
-    city: string;
-    country: string;
-    line1: string;
-    postal_code: string;
-    state: string;
-  };
-  email: string;
-  name: string;
-  phone: string;
 }
 
 const CARDS = {
@@ -56,81 +43,34 @@ const SmallCreditCard = ({ data }: SmallCreditCardProps) => {
     .replace(/True/g, "true")
     .replace(/False/g, "false")
     .replace(/'/g, '"');
-
   const card: ICreditCardStripe = JSON.parse(normalizedData);
   return (
-    <div className={styles.creditcard}>
-      <div className={styles.front}>
+    <div style={{ textAlign: "center" }}>
+      <div
+        className={`${styles.creditcard} ${styles.darkcolor} ${
+          CARDS[card.brand]?.darkColor ?? styles.greydark
+        }`}
+      >
         <div
           id={styles.ccsingle}
           dangerouslySetInnerHTML={{ __html: CARDS[card.brand]?.icon }}
         ></div>
-        <svg viewBox="0 0 750 471" id={styles.cardfront}>
-          <g id="CardBackground">
-            <g id="amex_1_">
-              <path
-                className={`${styles.lightcolor} ${
-                  CARDS[card.brand]?.lightColor ?? styles.grey
-                }`}
-                d="M40 0h670c22.1 0 40 17.9 40 40v391c0 22.1-17.9 40-40 40H40c-22.1 0-40-17.9-40-40V40C0 17.9 17.9 0 40 0z"
-              />
-            </g>
-          </g>
-          <path
-            className={`${styles.darkcolor} ${
-              CARDS[card.brand]?.darkColor ?? styles.greydark
-            }`}
-            d="M750 431V193.2c-217.6-57.5-556.4-13.5-750 24.9V431c0 22.1 17.9 40 40 40h670c22.1 0 40-17.9 40-40z"
-          />
-          <text
-            transform="translate(60.106 295.012)"
-            className={`${styles.st2} ${styles.st3} ${styles.st4}`}
-          >{`**** **** **** ${card.last4}`}</text>
-          <text
-            transform="translate(54.107 389.88)"
-            className={`${styles.st7} ${styles.st5} ${styles.st8}`}
-          >
-            nombre
-          </text>
-          <text
-            transform="translate(479.775 388.88)"
-            className={`${styles.st7} ${styles.st5} ${styles.st8}`}
-          >
-            expira
-          </text>
-          <text
-            transform="translate(65.105 241.5)"
-            className={`${styles.st7} ${styles.st5} ${styles.st8}`}
-          >
+        <div className={styles.cardnumbercontainer}>
+          <Typography.Text className={styles.cardnumbertitle}>
             número de tarjeta
-          </text>
-          <text
-            transform="translate(574.422 433.81)"
-            className={`${styles.st2} ${styles.st5} ${styles.st9}`}
-          >
-            {`${
-              card.exp_month < 10 ? `0${card.exp_month}` : card.exp_month
-            }/${card.exp_year.toString().match(/\d{2}$/)}`}
-          </text>
-          <text
-            transform="translate(479.385 417.01)"
-            className={`${styles.st2} ${styles.st10} ${styles.st11}`}
-          >
-            VÁLIDO
-          </text>
-          <text
-            transform="translate(479.385 435.676)"
-            className={`${styles.st2} ${styles.st10} ${styles.st11}`}
-          >
-            HASTA
-          </text>
-          <path className={styles.st2} d="M554.5 421l-14.1-6.8v13.7z" />
-          <g>
-            <path d="M168.1 143.6H82.9c-10.2 0-18.5-8.3-18.5-18.5V74.9c0-10.2 8.3-18.5 18.5-18.5h85.3c10.2 0 18.5 8.3 18.5 18.5v50.2c-.1 10.2-8.4 18.5-18.6 18.5z" />
-            <path d="M82 70h1.5v60H82zM167.4 70h1.5v60h-1.5zM125.5 130.8c-10.2 0-18.5-8.3-18.5-18.5 0-4.6 1.7-8.9 4.7-12.3-3-3.4-4.7-7.7-4.7-12.3 0-10.2 8.3-18.5 18.5-18.5S144 77.5 144 87.7c0 4.6-1.7 8.9-4.7 12.3 3 3.4 4.7 7.7 4.7 12.3-.1 10.2-8.3 18.5-18.5 18.5zm0-60c-9.3 0-16.9 7.6-16.9 16.9 0 4.4 1.7 8.6 4.8 11.8l.5.5-.5.5c-3.1 3.2-4.8 7.4-4.8 11.8 0 9.3 7.6 16.9 16.9 16.9s16.9-7.6 16.9-16.9c0-4.4-1.7-8.6-4.8-11.8l-.5-.5.5-.5c3.1-3.2 4.8-7.4 4.8-11.8 0-9.3-7.6-16.9-16.9-16.9z" />
-            <path d="M82.8 82.1h25.8v1.5H82.8zM82.8 117.9h26.1v1.5H82.8zM142.4 82.1h25.8v1.5h-25.8zM142 117.9h26.2v1.5H142z" />
-          </g>
-        </svg>
+          </Typography.Text>
+          <Typography.Text
+            className={styles.cardnumber}
+          >{`**** **** **** ${card.last4}`}</Typography.Text>
+        </div>
+        <div className={styles.expdatecontainer}>
+          <Typography.Text className={styles.expdatetitle}>
+            expira
+          </Typography.Text>
+          <Typography.Text className={styles.expdate}>{`${
+            card.exp_month < 10 ? `0${card.exp_month}` : card.exp_month
+          }/${card.exp_year.toString().match(/\d{2}$/)}`}</Typography.Text>
+        </div>
       </div>
     </div>
   );

@@ -82,6 +82,7 @@ const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
             name: values.name,
             phone: values.phone ?? null,
           },
+          metadata: { document_id: values.documentId },
         });
         if (error) {
           console.log("[createPaymentMethod error]", error);

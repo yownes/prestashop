@@ -38,6 +38,7 @@ export const MY_PAYMENT_METHODS = gql`
               stripeId
               card
               billingDetails
+              metadata
             }
           }
         }

@@ -15,7 +15,10 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import CreditCard from "../../components/molecules/CreditCard";
 import { useMutation, useQuery } from "@apollo/client";
 import { MY_PAYMENT_METHODS } from "../../api/queries";
-import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
+import {
+  MyPaymentMethods,
+  MyPaymentMethods_me_customer_paymentMethods_edges_node,
+} from "../../api/types/MyPaymentMethods";
 import Loading from "../../components/atoms/Loading";
 import LoadingFullScreen from "../../components/atoms/LoadingFullScreen";
 import CreateCreditCard from "../../components/organisms/CreateCreditCard";
@@ -40,7 +43,9 @@ const PaymentMethod = () => {
   const [addPayment, { loading: changing, data: paymentData }] = useMutation<
     AddPaymentMethod,
     AddPaymentMethodVariables
-  >(ADD_PAYMENT_METHOD);
+  >(ADD_PAYMENT_METHOD, {
+    refetchQueries: [{ query: MY_PAYMENT_METHODS }],
+  });
   const [
     removePaymentMethod,
     { loading: removing, data: removeData },
@@ -51,7 +56,10 @@ const PaymentMethod = () => {
   const [isModalUpdateOpen, setisModalUpdateOpen] = useState(false);
   const [isAdded, setisAdded] = useState(false);
   const [isUpdated, setisUpdated] = useState(false);
-  const [card, setCard] = useState("");
+  const [
+    paymentMethod,
+    setPaymentMethod,
+  ] = useState<MyPaymentMethods_me_customer_paymentMethods_edges_node>();
   const [cardId, setCardId] = useState<string | null>(null);
   const [formCreate] = Form.useForm();
   const [formUpdate] = Form.useForm();
@@ -69,13 +77,11 @@ const PaymentMethod = () => {
   useEffect(() => {
     if (paymentData?.addPaymentMethod?.ok) {
       if (isAdded) {
-        console.log("AÑADIDO");
         formCreate.resetFields();
         message.success(t("client:addPaymentMethodSuccessful"), 4);
         setisAdded(false);
       }
       if (isUpdated) {
-        console.log("EDITADO");
         setisModalUpdateOpen(false);
         formUpdate.resetFields();
         message.success(t("client:updatePaymentMethodSuccessful"), 4);
@@ -111,8 +117,7 @@ const PaymentMethod = () => {
                     <Button
                       icon={<EditOutlined />}
                       onClick={() => {
-                        setCard(node.card);
-                        setCardId(node.stripeId);
+                        setPaymentMethod(node);
                         setisModalUpdateOpen(true);
                       }}
                     />
@@ -125,6 +130,19 @@ const PaymentMethod = () => {
                         if (node.stripeId) {
                           removePaymentMethod({
                             variables: { paymentMethodId: node.stripeId },
+                            update(cache, { data: newData }) {
+                              if (
+                                newData?.detachPaymentMethod?.ok &&
+                                data?.me?.customer
+                              ) {
+                                cache.evict({
+                                  id: cache.identify({
+                                    ...node,
+                                  }),
+                                });
+                                cache.gc();
+                              }
+                            },
                           });
                         }
                       }}
@@ -133,7 +151,6 @@ const PaymentMethod = () => {
                     </Popconfirm>
                     <Popconfirm
                       onConfirm={(e) => {
-                        console.log(e);
                         addPayment({
                           variables: { paymentMethodId: cardId!! },
                           update(cache, { data: newData }) {
@@ -158,6 +175,7 @@ const PaymentMethod = () => {
                             }
                           },
                         });
+                        setisUpdated(true);
                       }}
                       title={t("client:warnings.cardDefault")}
                     >
@@ -171,8 +189,7 @@ const PaymentMethod = () => {
                     <Button
                       icon={<EditOutlined />}
                       onClick={() => {
-                        setCard(node.card);
-                        setCardId(node.stripeId);
+                        setPaymentMethod(node);
                         setisModalUpdateOpen(true);
                       }}
                     />
@@ -203,6 +220,10 @@ const PaymentMethod = () => {
               variables: {
                 paymentMethodId,
               },
+              update(cache, { data: newData }) {
+                if (newData?.addPaymentMethod?.ok && data?.me?.customer) {
+                }
+              },
             });
             setisAdded(true);
             setisModalCreateOpen(false);
@@ -218,8 +239,7 @@ const PaymentMethod = () => {
       >
         {isModalUpdateOpen && (
           <EditCreditCard
-            card={card}
-            cardId={cardId!!}
+            payment={paymentMethod!!}
             form={formUpdate}
             onEdited={(paymentMethodId) => {
               addPayment({
