@@ -1,5 +1,5 @@
 import React, { useEffect, createContext, useContext, useReducer } from "react";
-import { useMutation, useLazyQuery } from "@apollo/client";
+import { useMutation, useLazyQuery, useApolloClient } from "@apollo/client";
 import { REFRESH_TOKEN, REGISTER, TOKEN_AUTH } from "../api/mutations";
 import { Register, RegisterVariables } from "../api/types/Register";
 import { TokenAuth, TokenAuthVariables } from "../api/types/TokenAuth";
@@ -135,6 +135,7 @@ function parseToken(token: string): Token {
 }
 
 function useAuthLogic(): IAuth {
+  const apolloClient = useApolloClient();
   const [state, dispatch] = useReducer(reducer, initialState);
   const [tokenAuth] = useMutation<TokenAuth, TokenAuthVariables>(TOKEN_AUTH);
   const [registerMutation] = useMutation<Register, RegisterVariables>(REGISTER);
@@ -201,6 +202,7 @@ function useAuthLogic(): IAuth {
 
   function logout() {
     localStorage.removeItem(TOKEN_KEY);
+    apolloClient.clearStore();
     dispatch({ type: "LOGOUT" });
   }
 
