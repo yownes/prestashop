@@ -171,7 +171,7 @@ const Profile = () => {
         onCancel={() => {
           setConfirmPassword(false);
         }}
-        okButtonProps={{ style: { display: "none" } }}
+        footer={null}
       >
         <ProfileDangerZone
           id={data?.me?.id ?? ""}

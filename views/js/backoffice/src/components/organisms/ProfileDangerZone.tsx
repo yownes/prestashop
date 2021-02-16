@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Space } from "antd";
 import { useMutation } from "@apollo/client";
 import { Errors as IErrors, useAuth } from "../../lib/auth";
 import {
@@ -26,7 +26,7 @@ const ProfileDangerZone = ({ id, confirmPassword }: ProfileDangerZoneProps) => {
     return null;
   }
   return (
-    <div>
+    <Space direction="vertical" style={{ display: "flex" }}>
       <Errors errors={errors} fields={["password"]} />
       <Form
         onFinish={(values) => {
@@ -41,14 +41,18 @@ const ProfileDangerZone = ({ id, confirmPassword }: ProfileDangerZoneProps) => {
           );
         }}
       >
-        <Form.Item name="password" label={t("confirmPasswordDelete")}>
-          <Input.Password />
+        <Form.Item
+          name="password"
+          label={t("confirmPassword")}
+          rules={[{ required: true, message: t("confirmPasswordToDelete") }]}
+        >
+          <Input.Password onFocus={() => setErrors(undefined)} />
         </Form.Item>
         <Button htmlType="submit" type="primary" danger>
           {t("confirmDeleteAccount")}
         </Button>
       </Form>
-    </div>
+    </Space>
   );
 };
 
