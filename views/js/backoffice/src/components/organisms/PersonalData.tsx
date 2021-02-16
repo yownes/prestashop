@@ -44,7 +44,7 @@ const PersonalData = () => {
           </Col>
         </Row>
       )}
-      <Row gutter={20}>
+      <Row gutter={[20, 20]}>
         <Col span={24}>
           <Card>
             <Title level={2}>{t("client:personalData")}</Title>

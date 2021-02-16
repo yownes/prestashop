@@ -10,7 +10,7 @@ interface ErrorsProps {
 }
 
 const Error = ({ message }: { message: string }) => (
-  <Text type="danger">{message}</Text>
+  <Text type="danger">{message} </Text>
 );
 
 const Errors = ({ errors, fields }: ErrorsProps) => {

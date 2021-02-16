@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect } from "react";
 import { ApolloCache, FetchResult, useMutation } from "@apollo/client";
-import { Button, Input, Form, Card } from "antd";
+import { Button, Input, Form, Card, Space } from "antd";
 import { Redirect } from "react-router-dom";
 import { CREATE_APP } from "../../api/mutations";
 import { CreateApp, CreateAppVariables } from "../../api/types/CreateApp";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../lib/auth";
+import Errors from "../../components/molecules/Errors";
 
 const NewApp = () => {
   const storeInfo: { link: string; name: string } | undefined = (window as any)
@@ -89,16 +90,30 @@ const NewApp = () => {
         >
           <Input disabled={Boolean(storeInfo?.link)} type="url" />
         </Form.Item>
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={loading}
-            loading={loading}
-          >
-            {loading ? t("checking") : t("check")}
-          </Button>
-        </Form.Item>
+        <Space direction="vertical" size="middle">
+          {data?.createApp?.error && (
+            <Errors
+              errors={{
+                nonFieldErrors: [
+                  {
+                    message: t(`newAppErrors.${data?.createApp?.error}`),
+                    code: "error",
+                  },
+                ],
+              }}
+            />
+          )}
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={loading}
+              loading={loading}
+            >
+              {loading ? t("checking") : t("check")}
+            </Button>
+          </Form.Item>
+        </Space>
       </Form>
       {storeInfo?.link && !data?.createApp?.ok && (
         <div>{t("checkLocation")}</div>
@@ -109,7 +124,6 @@ const NewApp = () => {
           <p>{t("installInstructions.description")}</p>
         </div>
       )}
-      {data?.createApp?.error && <span>{data.createApp.error}</span>}
     </Card>
   );
 };
