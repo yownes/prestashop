@@ -46,6 +46,14 @@ export interface Clients_users_edges_node {
   apps: Clients_users_edges_node_apps;
   accountStatus: AccountAccountStatus;
   verified: boolean | null;
+  /**
+   * Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+   */
+  isActive: boolean;
+  /**
+   * Designates whether the user can log into this admin site.
+   */
+  isStaff: boolean;
 }
 
 export interface Clients_users_edges {

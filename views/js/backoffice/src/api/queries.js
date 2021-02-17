@@ -13,11 +13,37 @@ export const ME = gql`
 
 export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
   fragment AccountBasicData on UserNode {
+    id
     username
     email
     accountStatus
     verified
     isActive
+    isStaff
+  }
+`;
+
+export const APP_FRAGMENT = gql`
+  fragment AppBasicData on StoreAppType {
+    id
+    logo
+    name
+    isActive
+    apiLink
+    storeLinks {
+      ios
+      android
+    }
+    builds {
+      edges {
+        node {
+          id
+          buildStatus
+          buildId
+          date
+        }
+      }
+    }
   }
 `;
 
@@ -55,27 +81,14 @@ export const MY_ACCOUNT = gql`
       apps {
         edges {
           node {
-            id
-            logo
-            name
-            storeLinks {
-              ios
-              android
-            }
-            builds {
-              edges {
-                node {
-                  id
-                  buildStatus
-                }
-              }
-            }
+            ...AppBasicData
           }
         }
       }
     }
   }
   ${ACCOUNT_BASIC_DATA_FRAGMENT}
+  ${APP_FRAGMENT}
 `;
 
 export const TEMPLATES = gql`
@@ -189,6 +202,8 @@ export const CLIENTS = gql`
           }
           accountStatus
           verified
+          isActive
+          isStaff
         }
       }
     }
@@ -203,30 +218,14 @@ export const CLIENT = gql`
       apps {
         edges {
           node {
-            id
-            name
-            logo
-            apiLink
-            storeLinks {
-              ios
-              android
-            }
-            builds {
-              edges {
-                node {
-                  id
-                  buildId
-                  date
-                  buildStatus
-                }
-              }
-            }
+            ...AppBasicData
           }
         }
       }
     }
   }
   ${ACCOUNT_BASIC_DATA_FRAGMENT}
+  ${APP_FRAGMENT}
 `;
 
 export const BUILDS = gql`
@@ -241,6 +240,7 @@ export const BUILDS = gql`
           app {
             id
             name
+            isActive
             customer {
               id
               username

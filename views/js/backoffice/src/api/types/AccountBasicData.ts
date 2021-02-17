@@ -12,6 +12,10 @@ import { AccountAccountStatus } from "./globalTypes";
 export interface AccountBasicData {
   __typename: "UserNode";
   /**
+   * The ID of the object.
+   */
+  id: string;
+  /**
    * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
    */
   username: string;
@@ -22,4 +26,8 @@ export interface AccountBasicData {
    * Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
    */
   isActive: boolean;
+  /**
+   * Designates whether the user can log into this admin site.
+   */
+  isStaff: boolean;
 }

@@ -19,6 +19,7 @@ import {
   getColumnSearchProps,
 } from "../../lib/filterColumns";
 import { useTranslation } from "react-i18next";
+import styles from "./Builds.module.css";
 
 function getBuildStatusFilters() {
   let filters: Filter[] = [];
@@ -47,15 +48,15 @@ const Builds = () => {
     },
     {
       title: t("buildId"),
-      dataIndex: "id",
+      dataIndex: "buildId",
       key: "buildId",
       ...getColumnSearchProps<Builds_builds_edges_node>(
-        ["id"],
+        ["buildId"],
         t("admin:search", { data: t("buildId") }),
         t("search"),
         t("reset")
       ),
-      sorter: (a, b) => a.id.localeCompare(b.id),
+      sorter: (a, b) => a.buildId.localeCompare(b.buildId),
     },
     {
       title: t("admin:client"),
@@ -113,6 +114,7 @@ const Builds = () => {
       <Table
         columns={columns}
         dataSource={connectionToNodes(data?.builds)}
+        rowClassName={(row) => (!row.app?.isActive ? styles.app_deleted : "")}
         rowKey={(row) => row.id}
       />
     </div>

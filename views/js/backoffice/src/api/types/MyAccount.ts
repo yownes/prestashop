@@ -22,6 +22,8 @@ export interface MyAccount_me_apps_edges_node_builds_edges_node {
    */
   id: string;
   buildStatus: BuildBuildStatus;
+  buildId: any;
+  date: any;
 }
 
 export interface MyAccount_me_apps_edges_node_builds_edges {
@@ -48,6 +50,11 @@ export interface MyAccount_me_apps_edges_node {
   id: string;
   logo: string | null;
   name: string;
+  isActive: boolean | null;
+  /**
+   * Link to GraphQl API of the store
+   */
+  apiLink: string | null;
   storeLinks: MyAccount_me_apps_edges_node_storeLinks | null;
   builds: MyAccount_me_apps_edges_node_builds;
 }
@@ -85,6 +92,10 @@ export interface MyAccount_me {
    * Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
    */
   isActive: boolean;
+  /**
+   * Designates whether the user can log into this admin site.
+   */
+  isStaff: boolean;
   apps: MyAccount_me_apps;
 }
 

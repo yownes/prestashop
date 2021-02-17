@@ -1,23 +1,26 @@
 import Table, { ColumnsType } from "antd/lib/table";
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { MyAccount_me_apps } from "../../api/types/MyAccount";
+import { Link, useHistory } from "react-router-dom";
+import {
+  MyAccount_me_apps,
+  MyAccount_me_apps_edges_node,
+} from "../../api/types/MyAccount";
 import { getAppBuildState } from "../../lib/appBuildState";
 import connectionToNodes from "../../lib/connectionToNodes";
 import BuildState from "./BuildState";
-import { Typography } from "antd";
-import { AppBasicData } from "../../api/types/AppBasicData";
-import styles from "./AppsTable.module.css";
+import styles from "./AppTable.module.css";
 
 interface AppsTableProps {
   dataSource?: MyAccount_me_apps;
-  columns?: ColumnsType<AppBasicData>;
+  columns?: ColumnsType<MyAccount_me_apps_edges_node>;
 }
 
 const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
   const { t } = useTranslation(["translation", "admin"]);
+  const history = useHistory();
   const allCols = useMemo(() => {
-    const cols: ColumnsType<AppBasicData> = [
+    const cols: ColumnsType<MyAccount_me_apps_edges_node> = [
       {
         title: t("icon"),
         dataIndex: "logo",
@@ -36,7 +39,7 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
         title: t("name"),
         dataIndex: "name",
         key: "name",
-        render: (name) => <Typography.Text strong>{name}</Typography.Text>,
+        render: (name, record) => <Link to={`/app/${record.id}`}>{name}</Link>,
       },
       {
         title: t("urls"),
@@ -75,7 +78,12 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
       dataSource={data}
       locale={{ emptyText: t("admin:noApps") }}
       pagination={data.length > 5 ? { pageSize: 5 } : false}
-      rowClassName={(row) => (!row.isActive ? styles.app_deleted : "")}
+      onRow={(record) => {
+        return {
+          onClick: () => history.push(`/app/${record.id}`),
+        };
+      }}
+      rowClassName={styles.row}
       rowKey={(row) => row.id}
     />
   );

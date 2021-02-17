@@ -28,6 +28,7 @@ export interface Builds_builds_edges_node_app {
    */
   id: string;
   name: string;
+  isActive: boolean | null;
   customer: Builds_builds_edges_node_app_customer | null;
 }
 

@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useQuery, useMutation } from "@apollo/client";
 import { CLIENT } from "../../api/queries";
-import {
-  Client as IClient,
-  ClientVariables,
-  Client_user_apps,
-  Client_user_apps_edges_node_builds_edges_node,
-} from "../../api/types/Client";
+import { Client as IClient, ClientVariables } from "../../api/types/Client";
 import Loading from "../../components/atoms/Loading";
 import {
   Button,
@@ -21,35 +17,21 @@ import {
   Typography,
 } from "antd";
 import AppsTable from "../../components/molecules/AppsTable";
-import BuildsTable from "../../components/molecules/BuildsTable";
+import BuildsTable, {
+  getBuildsForCustomer,
+} from "../../components/molecules/BuildsTable";
 import { DeleteOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { BAN_USER, DELETE_APP, UNSUBSCRIBE } from "../../api/mutations";
 import { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
 import { BanUser, BanUserVariables } from "../../api/types/BanUser";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
-import connectionToNodes from "../../lib/connectionToNodes";
 import { ProfileInfo } from "../../components/molecules";
 import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
-import { useTranslation } from "react-i18next";
 
 const { Text, Title } = Typography;
 
 interface ClientProps {
   id: string;
-}
-
-function getBuilds(apps?: Client_user_apps) {
-  const nodes = connectionToNodes(apps);
-  let all: Client_user_apps_edges_node_builds_edges_node[] = [];
-  nodes.forEach(({ builds, name, id }) => {
-    const buildNodes =
-      connectionToNodes(builds).map((build) => ({
-        ...build,
-        app: { id, name },
-      })) ?? [];
-    all.push(...buildNodes);
-  });
-  return all;
 }
 
 const Client = () => {
@@ -172,6 +154,9 @@ const Client = () => {
                   title: t("admin:actions"),
                   key: "actions",
                   render: (_, record) => {
+                    if (!record.isActive) {
+                      return <Typography>App eliminada</Typography>;
+                    }
                     return (
                       <Popconfirm
                         title={t("admin:warnings.app")}
@@ -183,8 +168,6 @@ const Client = () => {
                             update(cache, { data }) {
                               if (data?.deleteApp?.ok) {
                                 const id = cache.identify({ ...record });
-                                console.log({ id });
-
                                 cache.evict({
                                   id,
                                 });
@@ -210,7 +193,7 @@ const Client = () => {
         <Col md={12} sm={24}>
           <Card>
             <Title>{t("admin:builds")}</Title>
-            <BuildsTable dataSource={getBuilds(data?.user?.apps)} />
+            <BuildsTable dataSource={getBuildsForCustomer(data?.user)} />
           </Card>
         </Col>
       </Row>

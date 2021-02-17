@@ -21,6 +21,7 @@ import {
 } from "../../lib/filterColumns";
 import { useTranslation } from "react-i18next";
 import VerifiedState from "../../components/molecules/VerifiedState";
+import styles from "./Clients.module.css";
 
 function getAccountStatusFilters() {
   let filters: Filter[] = [];
@@ -111,8 +112,21 @@ const Clients = () => {
       ),
       sorter: (a, b) => Number(a.verified) - Number(b.verified),
     },
+    {
+      title: t("isActive"),
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (isActive: boolean) => <VerifiedState verified={isActive} />,
+      ...getColumnFilterProps<Clients_users_edges_node>(
+        ["isActive"],
+        getVerifiedStatusFilters()
+      ),
+      sorter: (a, b) => Number(a.isActive) - Number(b.isActive),
+    },
   ];
-  const dataSource = connectionToNodes(data?.users);
+  const dataSource = connectionToNodes(data?.users).filter(
+    (data) => !data.isStaff
+  );
   return (
     <div>
       <Table
@@ -122,6 +136,7 @@ const Clients = () => {
           return { onClick: () => history.push(`/clients/${record.id}`) };
         }}
         pagination={dataSource.length > 5 ? { pageSize: 5 } : false}
+        rowClassName={styles.row}
         rowKey={(row) => row.id}
       />
     </div>

@@ -21,9 +21,9 @@ export interface Client_user_apps_edges_node_builds_edges_node {
    * The ID of the object.
    */
   id: string;
+  buildStatus: BuildBuildStatus;
   buildId: any;
   date: any;
-  buildStatus: BuildBuildStatus;
 }
 
 export interface Client_user_apps_edges_node_builds_edges {
@@ -48,8 +48,9 @@ export interface Client_user_apps_edges_node {
    * The ID of the object.
    */
   id: string;
-  name: string;
   logo: string | null;
+  name: string;
+  isActive: boolean | null;
   /**
    * Link to GraphQl API of the store
    */
@@ -91,6 +92,10 @@ export interface Client_user {
    * Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
    */
   isActive: boolean;
+  /**
+   * Designates whether the user can log into this admin site.
+   */
+  isStaff: boolean;
   apps: Client_user_apps;
 }
 

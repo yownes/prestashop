@@ -31,6 +31,7 @@
   "profile": "Perfil",
   "profileInfo": "Información de perfil",
   "username": "Nombre de usuario",
+  "id": "ID",
   "logout": "Cerrar sesión",
   "accountStatus": {
     "title": "Estado de la cuenta",
@@ -40,6 +41,7 @@
     "WAITING_PAYMENT": "Pendiente de pago"
   },
   "verifiedStatus": "Verificado",
+  "isActive": "Activo",
   "select": "Seleccionar",
   "priceWithTaxes": "Precio con IVA incluido",
   "404title": "ERROR 404",

@@ -23,7 +23,7 @@ import { MyAccount } from "../../api/types/MyAccount";
 import Loading from "../../components/atoms/Loading";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
 import ProfileDangerZone from "../../components/organisms/ProfileDangerZone";
-import AppsTable from "../../components/molecules/AppsTable";
+import AppTable from "../../components/molecules/AppTable";
 import { UNSUBSCRIBE } from "../../api/mutations";
 import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
 import { EllipsisOutlined } from "@ant-design/icons";
@@ -154,7 +154,7 @@ const Profile = () => {
                     label: t("client:addNewApp"),
                   }}
                 />
-                <AppsTable dataSource={data?.me?.apps} />
+                <AppTable dataSource={data?.me?.apps} />
               </>
             ) : (
               <Placeholder

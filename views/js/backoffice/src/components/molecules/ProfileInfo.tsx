@@ -20,12 +20,15 @@ const ProfileInfo = ({ profile, action, verified }: ProfileInfoProps) => {
       size="small"
       bordered
       extra={action}
-      column={{ md: 2, xs: 1, sm: 2, lg: 4 }}
+      column={{ xs: 1, sm: 2, md: 3, lg: 6 }}
     >
       {profile?.username && (
         <Descriptions.Item label={t("username")}>
           {profile.username}
         </Descriptions.Item>
+      )}
+      {profile?.id && profile.isStaff && (
+        <Descriptions.Item label={t("id")}>{profile.id}</Descriptions.Item>
       )}
       {profile?.email && (
         <Descriptions.Item label={t("email")}>
@@ -37,9 +40,14 @@ const ProfileInfo = ({ profile, action, verified }: ProfileInfoProps) => {
           <UserState state={profile.accountStatus} />
         </Descriptions.Item>
       )}
-      {verified && (
+      {verified && profile?.isStaff && (
         <Descriptions.Item label={t("verifiedStatus")}>
           <VerifiedState verified={profile?.verified} />
+        </Descriptions.Item>
+      )}
+      {profile?.isStaff && (
+        <Descriptions.Item label={t("isActive")}>
+          <VerifiedState verified={profile?.isActive} />
         </Descriptions.Item>
       )}
     </Descriptions>
