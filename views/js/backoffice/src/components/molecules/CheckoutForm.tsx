@@ -1,38 +1,60 @@
-import React, { useState } from "react";
-import { Button, Card, Col, Row, Typography, message } from "antd";
-import { useMutation } from "@apollo/client";
-import { useHistory } from "react-router-dom";
-import { PlanInterval } from "../../api/types/globalTypes";
+import React, { useEffect, useState } from "react";
+import { Button, Card, Col, message, Modal, Row, Typography } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  AccountAccountStatus,
+  PlanInterval,
+} from "../../api/types/globalTypes";
+import { MyAccount } from "../../api/types/MyAccount";
+import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
 import { SUBSCRIBE } from "../../api/mutations";
+import { MY_ACCOUNT, MY_PAYMENT_METHODS } from "../../api/queries";
 import { Subscribe, SubscribeVariables } from "../../api/types/Subscribe";
 import Errors from "./Errors";
 import { CheckoutLocationState } from "../../pages/client/Checkout";
-import CreateCreditCard from "../organisms/CreateCreditCard";
+import PaymentMethod from "../../pages/client/PaymentMethod";
 import { useTranslation } from "react-i18next";
+import LoadingFullScreen from "../atoms/LoadingFullScreen";
 
+const { confirm } = Modal;
 const { Title, Text } = Typography;
 
 interface CheckoutFormProps {
+  onSubscribed: () => void;
   plan: CheckoutLocationState;
 }
 
-const CheckoutForm = ({ plan }: CheckoutFormProps) => {
-  const history = useHistory();
-  const [paymentMethodId, setPaymentMethodId] = useState<string>();
-  const [createSubscription, { data }] = useMutation<
+const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
+  const [paymentMethodId, setPaymentMethodId] = useState<string | null>();
+  const { data: dataAccount } = useQuery<MyAccount>(MY_ACCOUNT);
+  const { data: paymentMethods } = useQuery<MyPaymentMethods>(
+    MY_PAYMENT_METHODS
+  );
+  const [createSubscription, { data, loading: subscribing }] = useMutation<
     Subscribe,
     SubscribeVariables
   >(SUBSCRIBE);
   const { t } = useTranslation(["client", "translation"]);
+  useEffect(() => {
+    setPaymentMethodId(
+      paymentMethods?.me?.customer?.defaultPaymentMethod?.stripeId
+    );
+    return () => {
+      setPaymentMethodId(null);
+    };
+  }, [paymentMethods]);
+
   return (
     <Row gutter={[20, 20]}>
-      <Col sm={24} md={14}>
-        <CreateCreditCard onCreated={setPaymentMethodId}></CreateCreditCard>
+      <Col sm={24} md={16}>
+        <Title level={2}>{t("client:selectPaymentMethod")}</Title>
+        <PaymentMethod />
       </Col>
-      <Col sm={24} md={10}>
+      <Col sm={24} md={8}>
         <Row gutter={[20, 20]}>
-          <Col span={24}>
-            <Card>
+          <Card>
+            <Col span={24}>
               <Title level={2}>{t("yourPayment")}</Title>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Text type="secondary">{plan.name}</Text>
@@ -46,43 +68,65 @@ const CheckoutForm = ({ plan }: CheckoutFormProps) => {
                   })}
                 </Text>
               </div>
-            </Card>
-          </Col>
-          <Col span={24}>
-            {paymentMethodId && (
-              <Button
-                onClick={() => {
-                  createSubscription({
-                    variables: {
-                      paymentMethodId,
-                      planId: plan.stripeId!!,
-                    },
-                  }).then(({ data }) => {
-                    if (data?.subscribe?.ok) {
-                      history.replace("/profile");
-                    } else {
-                      message.error(data?.subscribe?.error);
+            </Col>
+            <Col span={24}>
+              {paymentMethodId && (
+                <Button
+                  onClick={() => {
+                    if (dataAccount?.me?.id) {
+                      confirm({
+                        title: t("client:warnings.confirmSubscription"),
+                        icon: <ExclamationCircleOutlined />,
+                        onOk: () => {
+                          createSubscription({
+                            variables: {
+                              paymentMethodId,
+                              planId: plan.stripeId!!,
+                            },
+                            update(cache, { data: result }) {
+                              if (result?.subscribe?.ok && dataAccount.me) {
+                                cache.modify({
+                                  id: cache.identify({
+                                    ...dataAccount?.me,
+                                  }),
+                                  fields: {
+                                    accountStatus: () =>
+                                      AccountAccountStatus.PAID_ACCOUNT,
+                                  },
+                                });
+                              }
+                            },
+                          }).then(({ data }) => {
+                            if (data?.subscribe?.ok) {
+                              onSubscribed();
+                            } else {
+                              message.error(data?.subscribe?.error);
+                            }
+                          });
+                        },
+                      });
                     }
-                  });
+                  }}
+                  type="primary"
+                  size="large"
+                >
+                  {t("client:confirmSubscription")}
+                </Button>
+              )}
+            </Col>
+            <Col span={24}>
+              <Errors
+                errors={{
+                  nonFieldErrors: data?.subscribe?.error
+                    ? [{ message: data?.subscribe?.error, code: "error" }]
+                    : undefined,
                 }}
-                type="primary"
-                size="large"
-              >
-                {t("translation:confirm")}
-              </Button>
-            )}
-          </Col>
-          <Col span={24}>
-            <Errors
-              errors={{
-                nonFieldErrors: data?.subscribe?.error
-                  ? [{ message: data?.subscribe?.error, code: "error" }]
-                  : undefined,
-              }}
-            />
-          </Col>
+              />
+            </Col>
+          </Card>
         </Row>
       </Col>
+      {subscribing && <LoadingFullScreen tip={t("client:subscribing")} />}
     </Row>
   );
 };

@@ -1,6 +1,6 @@
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
-import { Switch, Table } from "antd";
+import { Switch, Table, Typography } from "antd";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PLANS } from "../../api/queries";
@@ -15,6 +15,8 @@ import { CheckoutLocationState } from "../../pages/client/Checkout";
 import Loading from "../atoms/Loading";
 import RateSelection from "../molecules/RateSelection";
 
+const { Title } = Typography;
+
 export interface Rate {
   title: string;
   subtitle?: string;
@@ -26,6 +28,10 @@ export interface Rate {
 export interface Feature {
   title: string;
   id: string;
+}
+
+interface RateTableProps {
+  onPlanSelected: (plan: CheckoutLocationState) => void;
 }
 
 function selectPlan(
@@ -62,7 +68,7 @@ function notNull(
   return (value as Plans_features).id !== undefined;
 }
 
-const RateTable = () => {
+const RateTable = ({ onPlanSelected }: RateTableProps) => {
   const { t } = useTranslation("client");
   const { data, loading } = useQuery<Plans>(PLANS);
   const [interval, setInterval] = useState(PlanInterval.MONTH);
@@ -83,6 +89,7 @@ const RateTable = () => {
     });
   return (
     <>
+      <Title level={2}>{t("client:selectPlan")}</Title>
       <Table
         columns={[
           {
@@ -113,6 +120,7 @@ const RateTable = () => {
                   interval,
                   rate.name
                 )}
+                onPlanSelected={onPlanSelected}
               />
             ),
             key: rate.id,

@@ -58,12 +58,6 @@ const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
           return;
         }
         const cardElement = elements.getElement(CardElement);
-        console.log(
-          "[stripe, elements, cardElement]",
-          stripe,
-          elements,
-          cardElement
-        );
         if (!cardElement) {
           setCreating(false);
           return;
@@ -85,7 +79,6 @@ const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
           metadata: { document_id: values.documentId },
         });
         if (error) {
-          console.log("[createPaymentMethod error]", error);
           setCreating(false);
           setErrs(error);
         } else {

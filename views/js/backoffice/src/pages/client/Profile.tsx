@@ -5,14 +5,17 @@ import {
   Col,
   Dropdown,
   Menu,
+  message,
   Modal,
   Popconfirm,
   Row,
   Typography,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { Link, useHistory } from "react-router-dom";
+import Loading from "../../components/atoms/Loading";
+import LoadingFullScreen from "../../components/atoms/LoadingFullScreen";
 import {
   Placeholder,
   TitleWithAction,
@@ -20,7 +23,6 @@ import {
 } from "../../components/molecules";
 import { MY_ACCOUNT } from "../../api/queries";
 import { MyAccount } from "../../api/types/MyAccount";
-import Loading from "../../components/atoms/Loading";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
 import ProfileDangerZone from "../../components/organisms/ProfileDangerZone";
 import AppTable from "../../components/molecules/AppTable";
@@ -33,11 +35,26 @@ const Profile = () => {
   const history = useHistory();
   const [confirmPassword, setConfirmPassword] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const [isUnsubscribed, setIsUnsubscribed] = useState(false);
   const { t } = useTranslation(["translation", "client"]);
   const { loading, data } = useQuery<MyAccount>(MY_ACCOUNT);
-  const [unsubscribe] = useMutation<Unsubscribe, UnsubscribeVariables>(
-    UNSUBSCRIBE
-  );
+  console.log("MY ACCOUNT", data);
+  const [
+    unsubscribe,
+    { loading: unsubscribing, data: unsubscribeData },
+  ] = useMutation<Unsubscribe, UnsubscribeVariables>(UNSUBSCRIBE);
+  message.config({
+    maxCount: 1,
+  });
+  useEffect(() => {
+    if (unsubscribeData?.dropOut?.ok) {
+      if (isUnsubscribed) {
+        message.success(t("client:unsubscribeSuccessful"), 4);
+        setIsUnsubscribed(false);
+      }
+    }
+  }, [isUnsubscribed, t, unsubscribeData]);
+
   if (loading) return <Loading />;
 
   const profileMenu = (
@@ -52,7 +69,7 @@ const Profile = () => {
             cancelText={t("cancel")}
             okText={t("confirm")}
             title={
-              <Trans i18nKey="warnings.subscription" ns="client">
+              <Trans i18nKey="warnings.cancelSubscription" ns="client">
                 <h4>¿Realmente deseas cancelar la suscripción al servicio?</h4>
                 <p>
                   Todas las apps que tengas serán eliminadas de las tiendas de
@@ -70,8 +87,7 @@ const Profile = () => {
                     if (result?.dropOut?.ok && data.me) {
                       cache.modify({
                         id: cache.identify({
-                          __ref: data?.me.id,
-                          __typename: data?.me.__typename,
+                          ...data?.me,
                         }),
                         fields: {
                           accountStatus: () => AccountAccountStatus.REGISTERED,
@@ -80,6 +96,7 @@ const Profile = () => {
                     }
                   },
                 });
+                setIsUnsubscribed(true);
               }
             }}
           >
@@ -138,7 +155,7 @@ const Profile = () => {
             {data?.me?.accountStatus === AccountAccountStatus.REGISTERED && (
               <Placeholder
                 claim={t("client:subscribeNow")}
-                cta={{ title: t("client:subscribe"), link: "/pay" }}
+                cta={{ title: t("client:subscribe"), link: "/checkout" }}
               ></Placeholder>
             )}
           </Card>
@@ -178,6 +195,7 @@ const Profile = () => {
           confirmPassword={confirmPassword}
         />
       </Modal>
+      {unsubscribing && <LoadingFullScreen tip={t("client:unsubscribing")} />}
     </>
   );
 };

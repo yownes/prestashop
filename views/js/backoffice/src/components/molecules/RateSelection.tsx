@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Typography } from "antd";
-import { Link } from "react-router-dom";
 import { PlanInterval } from "../../api/types/globalTypes";
 import { CheckoutLocationState } from "../../pages/client/Checkout";
 
@@ -13,9 +12,15 @@ interface RateSelectionProps {
   subtitle?: string;
   title: string;
   plan: CheckoutLocationState;
+  onPlanSelected: (plan: CheckoutLocationState) => void;
 }
 
-const RateSelection = ({ subtitle, title, plan }: RateSelectionProps) => {
+const RateSelection = ({
+  subtitle,
+  title,
+  plan,
+  onPlanSelected,
+}: RateSelectionProps) => {
   const { t } = useTranslation("translation");
   return (
     <div className={styles.container}>
@@ -25,9 +30,9 @@ const RateSelection = ({ subtitle, title, plan }: RateSelectionProps) => {
         <Text strong>{plan.amount}</Text>€/
         {plan.interval === PlanInterval.MONTH ? t("month") : t("year")}
       </Title>
-      <Link to={{ pathname: `/checkout`, state: plan }}>
-        <Button type="primary">{t("select")}</Button>
-      </Link>
+      <Button onClick={() => onPlanSelected(plan)} type="primary">
+        {t("select")}
+      </Button>
       <Text type="secondary" style={{ display: "block" }}>
         {t("priceWithTaxes")}
       </Text>

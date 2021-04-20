@@ -10,6 +10,7 @@ import {
   Space,
   Typography,
   message,
+  Alert,
 } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import CreditCard from "../../components/molecules/CreditCard";
@@ -34,6 +35,7 @@ import {
   RemovePaymentMethodVariables,
 } from "../../api/types/RemovePaymentMethod";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const { Text } = Typography;
 
@@ -101,108 +103,135 @@ const PaymentMethod = () => {
     <Row gutter={[20, 20]}>
       <Col span={24}>
         <Space size="large" wrap>
-          {connectionToNodes(data?.me?.customer?.paymentMethods).map((node) => (
-            <Card
-              bodyStyle={{
-                padding: 0,
-              }}
-              bordered={false}
-              key={node.stripeId}
-            >
-              <CreditCard data={node.card} billing={node.billingDetails} />
-              <Space size="middle">
-                {node.stripeId !==
-                data?.me?.customer?.defaultPaymentMethod?.stripeId ? (
-                  <>
-                    <Button
-                      icon={<EditOutlined />}
-                      onClick={() => {
-                        setPaymentMethod(node);
-                        setisModalUpdateOpen(true);
-                      }}
-                    />
-                    <Popconfirm
-                      cancelText={t("cancel")}
-                      okText={t("delete")}
-                      title={t("client:warnings.card")}
-                      placement="topLeft"
-                      onConfirm={() => {
-                        if (node.stripeId) {
-                          removePaymentMethod({
-                            variables: { paymentMethodId: node.stripeId },
-                            update(cache, { data: newData }) {
-                              if (
-                                newData?.detachPaymentMethod?.ok &&
-                                data?.me?.customer
-                              ) {
-                                cache.evict({
-                                  id: cache.identify({
-                                    ...node,
-                                  }),
-                                });
-                                cache.gc();
-                              }
-                            },
-                          });
-                        }
-                      }}
-                    >
-                      <Button danger icon={<DeleteOutlined />} />
-                    </Popconfirm>
-                    <Popconfirm
-                      onConfirm={(e) => {
-                        addPayment({
-                          variables: { paymentMethodId: cardId!! },
-                          update(cache, { data: newData }) {
-                            if (
-                              newData?.addPaymentMethod?.ok &&
-                              data?.me?.customer
-                            ) {
-                              cache.modify({
-                                id: cache.identify({ ...data.me.customer }),
-                                fields: {
-                                  defaultPaymentMethod(
-                                    prevValue,
-                                    { toReference }
+          {data?.me?.customer ? (
+            connectionToNodes(data?.me?.customer?.paymentMethods).map(
+              (node) => (
+                <Card
+                  bodyStyle={{
+                    padding: 0,
+                  }}
+                  bordered={false}
+                  key={node.stripeId}
+                >
+                  <CreditCard data={node.card} billing={node.billingDetails} />
+                  <Space size="middle">
+                    {node.stripeId !==
+                    data?.me?.customer?.defaultPaymentMethod?.stripeId ? (
+                      <>
+                        <Button
+                          icon={<EditOutlined />}
+                          onClick={() => {
+                            setPaymentMethod(node);
+                            setisModalUpdateOpen(true);
+                          }}
+                        />
+                        <Popconfirm
+                          cancelText={t("cancel")}
+                          okText={t("delete")}
+                          title={t("client:warnings.card")}
+                          placement="topLeft"
+                          onConfirm={() => {
+                            if (node.stripeId) {
+                              removePaymentMethod({
+                                variables: { paymentMethodId: node.stripeId },
+                                update(cache, { data: newData }) {
+                                  if (
+                                    newData?.detachPaymentMethod?.ok &&
+                                    data?.me?.customer
                                   ) {
-                                    const node = connectionToNodes(
-                                      data?.me?.customer?.paymentMethods
-                                    ).find((node) => node?.stripeId === cardId);
-                                    return toReference({ ...node });
-                                  },
+                                    cache.evict({
+                                      id: cache.identify({
+                                        ...node,
+                                      }),
+                                    });
+                                    cache.gc();
+                                  }
                                 },
                               });
                             }
-                          },
-                        });
-                        setisUpdated(true);
-                      }}
-                      title={t("client:warnings.cardDefault")}
-                    >
-                      <Button onClick={() => setCardId(node.stripeId)}>
-                        {t("client:asDefault")}
-                      </Button>
-                    </Popconfirm>
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      icon={<EditOutlined />}
-                      onClick={() => {
-                        setPaymentMethod(node);
-                        setisModalUpdateOpen(true);
-                      }}
-                    />
-                    <Text strong>({t("client:defaultCard")})</Text>
-                  </>
-                )}
-              </Space>
-            </Card>
-          ))}
+                          }}
+                        >
+                          <Button danger icon={<DeleteOutlined />} />
+                        </Popconfirm>
+                        <Popconfirm
+                          onConfirm={(e) => {
+                            addPayment({
+                              variables: { paymentMethodId: cardId!! },
+                              update(cache, { data: newData }) {
+                                if (
+                                  newData?.addPaymentMethod?.ok &&
+                                  data?.me?.customer
+                                ) {
+                                  cache.modify({
+                                    id: cache.identify({ ...data.me.customer }),
+                                    fields: {
+                                      defaultPaymentMethod(
+                                        prevValue,
+                                        { toReference }
+                                      ) {
+                                        const node = connectionToNodes(
+                                          data?.me?.customer?.paymentMethods
+                                        ).find(
+                                          (node) => node?.stripeId === cardId
+                                        );
+                                        return toReference({ ...node });
+                                      },
+                                    },
+                                  });
+                                }
+                              },
+                            });
+                            setisUpdated(true);
+                          }}
+                          title={t("client:warnings.cardDefault")}
+                        >
+                          <Button onClick={() => setCardId(node.stripeId)}>
+                            {t("client:asDefault")}
+                          </Button>
+                        </Popconfirm>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          icon={<EditOutlined />}
+                          onClick={() => {
+                            setPaymentMethod(node);
+                            setisModalUpdateOpen(true);
+                          }}
+                        />
+                        <Text strong>({t("client:defaultCard")})</Text>
+                      </>
+                    )}
+                  </Space>
+                </Card>
+              )
+            )
+          ) : (
+            <Alert
+              action={
+                <Link to="/checkout">
+                  <Button
+                    size="small"
+                    style={{ marginLeft: 20 }}
+                    type="primary"
+                  >
+                    {t("client:subscribe")}
+                  </Button>
+                </Link>
+              }
+              showIcon
+              message={t("client:subscribeNowPayment")}
+              type="warning"
+            />
+          )}
         </Space>
       </Col>
       <Col span={24}>
-        <Button onClick={() => setisModalCreateOpen(true)} type="primary">
+        <Button
+          disabled={!data?.me?.customer}
+          onClick={() => setisModalCreateOpen(true)}
+          type="primary"
+        >
           {t("client:addPaymentMethod")}
         </Button>
       </Col>
@@ -222,6 +251,7 @@ const PaymentMethod = () => {
               },
               update(cache, { data: newData }) {
                 if (newData?.addPaymentMethod?.ok && data?.me?.customer) {
+                  /*TODO: update cache*/
                 }
               },
             });

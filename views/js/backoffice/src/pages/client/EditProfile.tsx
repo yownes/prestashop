@@ -1,6 +1,5 @@
 import React from "react";
-import { Button, Card, Col, Row, Typography } from "antd";
-import { Link } from "react-router-dom";
+import { Card, Col, Row, Typography } from "antd";
 import PaymentMethod from "./PaymentMethod";
 import ChangePassword from "../../components/organisms/ChangePassword";
 import PersonalData from "../../components/organisms/PersonalData";
@@ -28,11 +27,6 @@ const EditProfile = () => {
             <ChangePassword />
           </Card>
         </Col>
-      </Row>
-      <Row>
-        <Link to="/profile">
-          <Button danger>{t("cancel")}</Button>
-        </Link>
       </Row>
     </>
   );
