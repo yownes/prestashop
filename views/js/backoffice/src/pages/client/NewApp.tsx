@@ -7,10 +7,12 @@ import { CreateApp, CreateAppVariables } from "../../api/types/CreateApp";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../lib/auth";
 import Errors from "../../components/molecules/Errors";
+import { baseApp } from "./App";
 
 const NewApp = () => {
-  const storeInfo: { link: string; name: string } | undefined = (window as any)
-    .__YOWNES_STORE_INFO__;
+  const storeInfo:
+    | { link: string; name: string; color: { color: string; text: string } }
+    | undefined = (window as any).__YOWNES_STORE_INFO__;
   const { t } = useTranslation("client");
   const { user } = useAuth();
   const [create, { data, loading }] = useMutation<
@@ -53,6 +55,7 @@ const NewApp = () => {
           data: {
             apiLink: storeInfo.link,
             name: storeInfo.name,
+            color: baseApp.color,
           },
         },
         update,
@@ -71,7 +74,13 @@ const NewApp = () => {
         }}
         onFinish={(values) => {
           create({
-            variables: { data: { apiLink: values.apiLink, name: values.name } },
+            variables: {
+              data: {
+                apiLink: values.apiLink,
+                name: values.name,
+                color: baseApp.color,
+              },
+            },
             update,
           });
         }}
@@ -96,7 +105,7 @@ const NewApp = () => {
               errors={{
                 nonFieldErrors: [
                   {
-                    message: t(`newAppErrors.${data?.createApp?.error}`),
+                    message: t(`appErrors.${data?.createApp?.error}`),
                     code: "error",
                   },
                 ],

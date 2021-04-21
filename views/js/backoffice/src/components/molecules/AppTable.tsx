@@ -1,5 +1,6 @@
-import Table, { ColumnsType } from "antd/lib/table";
 import React, { useMemo } from "react";
+import Table, { ColumnsType } from "antd/lib/table";
+import { FileImageOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
 import {
@@ -25,15 +26,18 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
         title: t("icon"),
         dataIndex: "logo",
         key: "icon",
-        render: (logo) => (
-          <img
-            src={logo}
-            alt={t("logo")}
-            width={40}
-            height={40}
-            style={{ objectFit: "contain" }}
-          />
-        ),
+        render: (logo) =>
+          logo ? (
+            <img
+              src={logo}
+              alt={t("logo")}
+              width={40}
+              height={40}
+              style={{ objectFit: "contain" }}
+            />
+          ) : (
+            <FileImageOutlined className={styles.icon} />
+          ),
       },
       {
         title: t("name"),
@@ -50,10 +54,15 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
           if (!urls.ios && !urls.android) return <span>-</span>;
           return (
             <>
-              <a href={urls.ios} style={{ padding: 5 }}>
+              <a
+                href={urls.ios}
+                style={{ paddingRight: 10 }}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
                 iOS
               </a>
-              <a href={urls.android} style={{ padding: 5 }}>
+              <a href={urls.android} rel="noopener noreferrer" target="_blank">
                 Android
               </a>
             </>
@@ -79,6 +88,9 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
       locale={{ emptyText: t("admin:noApps") }}
       pagination={data.length > 5 ? { pageSize: 5 } : false}
       onRow={(record) => {
+        if (record.storeLinks?.android && record.storeLinks?.ios) {
+          return {};
+        }
         return {
           onClick: () => history.push(`/app/${record.id}`),
         };

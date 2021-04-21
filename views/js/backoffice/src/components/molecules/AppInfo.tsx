@@ -102,11 +102,18 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
                 <a
                   className={styles.infoStores__link}
                   href={app.storeLinks.ios}
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   iOS
                 </a>
               ) : (
-                <a href="*" className={styles.infoStores__link}>
+                <a
+                  href="*"
+                  className={styles.infoStores__link}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
                   iOS
                 </a>
               )}
@@ -119,11 +126,18 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
                 <a
                   className={styles.infoStores__link}
                   href={app.storeLinks.android}
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   Android
                 </a>
               ) : (
-                <a href="*" className={styles.infoStores__link}>
+                <a
+                  href="*"
+                  className={styles.infoStores__link}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
                   Android
                 </a>
               )}
@@ -181,6 +195,10 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
                               },
                             },
                           });
+                        } else {
+                          message.error(
+                            t(`appErrors.${data?.updateApp?.error}`)
+                          );
                         }
                       },
                     });

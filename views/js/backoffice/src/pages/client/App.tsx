@@ -33,7 +33,7 @@ function appsAreEqual(state: StoreAppInput, app?: App_app | null): boolean {
   );
 }
 
-const baseApp: StoreAppInput = {
+export const baseApp: StoreAppInput = {
   apiLink: "(no link)",
   template: "VGVtcGxhdGVUeXBlOjE=",
   name: "(no name)",
