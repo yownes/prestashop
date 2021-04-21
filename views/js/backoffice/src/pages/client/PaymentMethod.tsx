@@ -249,11 +249,6 @@ const PaymentMethod = () => {
               variables: {
                 paymentMethodId,
               },
-              update(cache, { data: newData }) {
-                if (newData?.addPaymentMethod?.ok && data?.me?.customer) {
-                  /*TODO: update cache*/
-                }
-              },
             });
             setisAdded(true);
             setisModalCreateOpen(false);

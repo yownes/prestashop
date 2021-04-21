@@ -42,6 +42,7 @@
   },
   "verifiedStatus": "Verificado",
   "isActive": "Activo",
+  "plan": "Suscripción",
   "select": "Seleccionar",
   "priceWithTaxes": "Precio con IVA incluido",
   "404title": "ERROR 404",
