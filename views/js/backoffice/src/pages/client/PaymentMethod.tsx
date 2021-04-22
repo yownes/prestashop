@@ -36,6 +36,7 @@ import {
 } from "../../api/types/RemovePaymentMethod";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { colors } from "../../lib/colors";
 
 const { Text } = Typography;
 
@@ -102,18 +103,34 @@ const PaymentMethod = () => {
   return (
     <Row gutter={[20, 20]}>
       <Col span={24}>
-        <Space size="large" wrap>
+        <Space wrap>
           {data?.me?.customer ? (
             connectionToNodes(data?.me?.customer?.paymentMethods).map(
               (node) => (
                 <Card
                   bodyStyle={{
                     padding: 0,
+                    marginBottom: 10,
                   }}
                   bordered={false}
                   key={node.stripeId}
                 >
-                  <CreditCard data={node.card} billing={node.billingDetails} />
+                  <div
+                    style={{
+                      border:
+                        node.stripeId ===
+                        data?.me?.customer?.defaultPaymentMethod?.stripeId
+                          ? `1px solid ${colors.primary}`
+                          : "1px solid #FFF",
+                      borderRadius: 20,
+                      marginBottom: 5,
+                    }}
+                  >
+                    <CreditCard
+                      data={node.card}
+                      billing={node.billingDetails}
+                    />
+                  </div>
                   <Space size="middle">
                     {node.stripeId !==
                     data?.me?.customer?.defaultPaymentMethod?.stripeId ? (
