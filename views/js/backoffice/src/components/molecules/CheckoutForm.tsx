@@ -94,6 +94,8 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
                                       AccountAccountStatus.PAID_ACCOUNT,
                                   },
                                 });
+                              } else {
+                                console.log("ERROR createSubscrition");
                               }
                             },
                           }).then(({ data }) => {

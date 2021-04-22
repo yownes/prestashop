@@ -11,6 +11,7 @@ import { AccountAccountStatus } from "../../api/types/globalTypes";
 import { MyAccount } from "../../api/types/MyAccount";
 import { Plans_plans_edges_node_planSet_edges_node } from "../../api/types/Plans";
 import { MY_ACCOUNT } from "../../api/queries";
+import Loading from "../../components/atoms/Loading";
 import CheckoutForm from "../../components/molecules/CheckoutForm";
 import { RateTable } from "../../components/organisms";
 import { useTranslation } from "react-i18next";
@@ -18,11 +19,6 @@ import { useTranslation } from "react-i18next";
 export interface CheckoutLocationState
   extends Plans_plans_edges_node_planSet_edges_node {
   name: string;
-}
-
-interface StepsProps {
-  icon: JSX.Element;
-  title: string;
 }
 
 const { Step } = Steps;
@@ -35,11 +31,19 @@ const Checkout = () => {
   const prev = () => {
     setCurrent(current - 1);
   };
+  if (!data?.me?.accountStatus) {
+    return <Loading />;
+  }
   if (!plan && current !== 0) {
     setCurrent(0);
   }
   if (data?.me?.accountStatus !== AccountAccountStatus.REGISTERED) {
-    return <Redirect to="/profile" />;
+    if (current === 0) {
+      return <Redirect to="/profile" />;
+    }
+    if (current === 3) {
+      return <Redirect to="/profile" />;
+    }
   }
   return (
     <Card>
@@ -89,7 +93,9 @@ const Checkout = () => {
           subTitle={t("subscribeDescriptionSuccessful")}
           extra={[
             <Link to="/profile">
-              <Button type="primary">{t("goProfile")}</Button>
+              <Button type="primary" onClick={() => setCurrent(3)}>
+                {t("goProfile")}
+              </Button>
             </Link>,
           ]}
         ></Result>
