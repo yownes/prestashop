@@ -39,6 +39,29 @@ export enum PlanInterval {
   YEAR = "YEAR",
 }
 
+export interface PaymentBillingDetailsAddressInput {
+  line1?: string | null;
+  city?: string | null;
+  country?: string | null;
+  state?: string | null;
+}
+
+export interface PaymentBillingDetailsInput {
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  address?: PaymentBillingDetailsAddressInput | null;
+}
+
+export interface PaymentInput {
+  billingDetails?: PaymentBillingDetailsInput | null;
+  metadata?: PaymentMetadataInput | null;
+}
+
+export interface PaymentMetadataInput {
+  documentId?: string | null;
+}
+
 export interface PaymentMethodAppInput {
   stripeTestPublic: string;
   stripeTestSecret: string;

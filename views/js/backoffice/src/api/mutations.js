@@ -186,6 +186,23 @@ export const ADD_PAYMENT_METHOD = gql`
   }
 `;
 
+export const UPDATE_PAYMENT_METHOD = gql`
+  mutation UpdatePaymentMethod(
+    $id: ID!
+    $paymentMethodId: ID!
+    $payment: PaymentInput!
+  ) {
+    updatePaymentMethod(
+      id: $id
+      paymentMethodId: $paymentMethodId
+      payment: $payment
+    ) {
+      ok
+      error
+    }
+  }
+`;
+
 export const REMOVE_PAYMENT_METHOD = gql`
   mutation RemovePaymentMethod($paymentMethodId: ID!) {
     detachPaymentMethod(paymentMethodId: $paymentMethodId) {

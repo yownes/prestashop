@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Button, Divider, Form, Input, Select, Space, Typography } from "antd";
+import {
+  Button,
+  Divider,
+  Form,
+  Input,
+  message,
+  Select,
+  Space,
+  Typography,
+} from "antd";
 import Errors from "../molecules/Errors";
 import SmallCreditCard from "../molecules/SmallCreditCard";
 import { Elements, useStripe } from "@stripe/react-stripe-js";
@@ -8,6 +17,13 @@ import { MyPaymentMethods_me_customer_paymentMethods_edges_node } from "../../ap
 import { useTranslation } from "react-i18next";
 import * as Countries from "../../data/countries.json";
 import { FormInstance } from "antd/lib/form";
+import { useMutation } from "@apollo/client";
+import {
+  UpdatePaymentMethod,
+  UpdatePaymentMethodVariables,
+} from "../../api/types/UpdatePaymentMethod";
+import { UPDATE_PAYMENT_METHOD } from "../../api/mutations";
+import { MY_PAYMENT_METHODS } from "../../api/queries";
 
 interface ICreditCard {
   brand: "visa" | "maestro" | "mastercard";
@@ -48,14 +64,11 @@ enum Language {
   de = "de",
 }
 
-/*const stripe = new Stripe("pk_test_RG1KlTBaXWs8pCamCoLixIIu00FTwuG937", {
-  apiVersion: "2020-08-27",
-});*/
 const stripePromise = loadStripe("pk_test_RG1KlTBaXWs8pCamCoLixIIu00FTwuG937");
 
 interface EditCreditCardProps {
   payment: MyPaymentMethods_me_customer_paymentMethods_edges_node;
-  onEdited: (paymentMethodId: string) => void;
+  onEdited: () => void;
   form?: FormInstance;
 }
 
@@ -68,18 +81,12 @@ const EditCreditCardContainer = (props: EditCreditCardProps) => {
 };
 
 const EditCreditCard = ({ payment, onEdited, form }: EditCreditCardProps) => {
-  const [editing, setEditing] = useState(false);
+  const [isUpdated, setisUpdated] = useState(false);
   const [errs, setErrs] = useState<StripeError>();
   const stripe = useStripe();
   const { t, i18n } = useTranslation(["translation", "client"]);
   const country = i18n.language.split("-")[0] as Language;
   const language = Language[country] ?? "es";
-  const normalizedCard = payment.card
-    .replace(/None/g, "null")
-    .replace(/True/g, "true")
-    .replace(/False/g, "false")
-    .replace(/'/g, '"');
-  const cardData: ICreditCard = JSON.parse(normalizedCard);
   const normalizedBilling = payment.billingDetails
     ?.replace(/None/g, "null")
     .replace(/True/g, "true")
@@ -94,6 +101,15 @@ const EditCreditCard = ({ payment, onEdited, form }: EditCreditCardProps) => {
         .replace(/'/g, '"')
     : "{}";
   const metadataData: IMetadata = JSON.parse(normalizedMetadata ?? "{}");
+  const [
+    updatePaymentMethod,
+    { loading: loadingUpdate, data: dataUpdate },
+  ] = useMutation<UpdatePaymentMethod, UpdatePaymentMethodVariables>(
+    UPDATE_PAYMENT_METHOD,
+    {
+      refetchQueries: [{ query: MY_PAYMENT_METHODS }],
+    }
+  );
   useEffect(() => {
     form?.setFieldsValue({
       name: billingData?.name,
@@ -106,6 +122,16 @@ const EditCreditCard = ({ payment, onEdited, form }: EditCreditCardProps) => {
       documentId: metadataData.document_id,
     });
   }, [billingData, form, metadataData.document_id]);
+  message.config({
+    maxCount: 1,
+  });
+  useEffect(() => {
+    if (dataUpdate?.updatePaymentMethod?.ok && isUpdated) {
+      onEdited();
+      setisUpdated(false);
+      message.success(t("client:updatePaymentMethodSuccessful"), 4);
+    }
+  }, [dataUpdate, isUpdated, onEdited, t]);
 
   return (
     <Form
@@ -122,42 +148,34 @@ const EditCreditCard = ({ payment, onEdited, form }: EditCreditCardProps) => {
       }}
       validateMessages={{ required: t("client:requiredInput") }} // eslint-disable-line no-template-curly-in-string
       onFinish={async (values) => {
-        console.log("[[EditCreditCard > onFinish values]]", values);
-        setEditing(true);
         if (!stripe) {
-          console.log("!stripe || !elements");
-          setEditing(false);
+          console.log("!stripe");
           return;
         }
-        /*const { error, paymentMethod } = await stripe.createPaymentMethod(
-          payment.stripeId,
-          {
-            billing_details: {
-              address: {
-                city: values.city,
-                country: values.country,
-                line1: values.direction,
-                state: values.state,
+        updatePaymentMethod({
+          variables: {
+            id: payment.id,
+            paymentMethodId: payment.stripeId!!,
+            payment: {
+              billingDetails: {
+                name: values.name,
+                email: values.email,
+                phone: values.phone,
+                address: {
+                  line1: values.direction,
+                  city: values.city,
+                  country: values.country,
+                  state: values.state,
+                },
               },
-              email: values.email,
-              name: values.name,
-              phone: values.phone ?? null,
+              metadata: {
+                documentId: values.documentId,
+              },
             },
-            metadata: { document_id: values.documentId },
-          }
-        );
-        if (error) {
-          setEditing(false);
-          setErrs(error);
-        } else {
-          const paymentMethodId = paymentMethod?.id;
-          if (!paymentMethodId) {
-            setEditing(false);
-            return;
-          }
-          setEditing(false);
-          onEdited(paymentMethodId);
-        }*/
+          },
+        }).then(() => {
+          setisUpdated(true);
+        });
       }}
     >
       <SmallCreditCard data={payment.card} />
@@ -216,10 +234,12 @@ const EditCreditCard = ({ payment, onEdited, form }: EditCreditCardProps) => {
         }}
       />
       <Space direction="vertical" size="middle">
-        <Typography.Text type="warning">
-          {t("client:defaultPaymentMethodWarning")}
-        </Typography.Text>
-        <Button loading={editing} htmlType="submit" type="primary" size="large">
+        <Button
+          loading={loadingUpdate}
+          htmlType="submit"
+          type="primary"
+          size="large"
+        >
           {t("client:updatePaymentMethod")}
         </Button>
       </Space>
