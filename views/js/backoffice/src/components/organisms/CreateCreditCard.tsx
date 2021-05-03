@@ -8,7 +8,7 @@ import {
 } from "@stripe/react-stripe-js";
 import CardSection from "../molecules/CardSection";
 import Errors from "../molecules/Errors";
-import { loadStripe, StripeError } from "@stripe/stripe-js";
+import { loadStripe, PaymentMethod, StripeError } from "@stripe/stripe-js";
 import { useTranslation } from "react-i18next";
 import * as Countries from "../../data/countries.json";
 import { FormInstance } from "antd/lib/form";
@@ -26,7 +26,7 @@ enum Language {
 const stripePromise = loadStripe("pk_test_RG1KlTBaXWs8pCamCoLixIIu00FTwuG937");
 
 interface CreateCreditCardProps {
-  onCreated: (paymentMethodId: string) => void;
+  onCreated: (paymentMethod: PaymentMethod | undefined) => void;
   form?: FormInstance;
 }
 
@@ -82,13 +82,8 @@ const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
           setCreating(false);
           setErrs(error);
         } else {
-          const paymentMethodId = paymentMethod?.id;
-          if (!paymentMethodId) {
-            setCreating(false);
-            return;
-          }
           setCreating(false);
-          onCreated(paymentMethodId);
+          onCreated(paymentMethod);
         }
       }}
     >

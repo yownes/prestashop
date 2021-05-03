@@ -13,17 +13,18 @@ import {
   Alert,
 } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import CreditCard from "../../components/molecules/CreditCard";
+import CreditCard from "../molecules/CreditCard";
 import { useMutation, useQuery } from "@apollo/client";
 import { MY_PAYMENT_METHODS } from "../../api/queries";
 import {
   MyPaymentMethods,
   MyPaymentMethods_me_customer_paymentMethods_edges_node,
 } from "../../api/types/MyPaymentMethods";
-import Loading from "../../components/atoms/Loading";
-import LoadingFullScreen from "../../components/atoms/LoadingFullScreen";
-import CreateCreditCard from "../../components/organisms/CreateCreditCard";
-import EditCreditCard from "../../components/organisms/EditCreditCard";
+import Loading from "../atoms/Loading";
+import LoadingFullScreen from "../atoms/LoadingFullScreen";
+import SelectableCreditCard from "../molecules/SelectableCreditCard";
+import CreateCreditCard from "./CreateCreditCard";
+import EditCreditCard from "./EditCreditCard";
 import { ADD_PAYMENT_METHOD, REMOVE_PAYMENT_METHOD } from "../../api/mutations";
 import {
   AddPaymentMethod,
@@ -34,13 +35,25 @@ import {
   RemovePaymentMethod,
   RemovePaymentMethodVariables,
 } from "../../api/types/RemovePaymentMethod";
+import { PaymentMethod as PaymentMethodType } from "@stripe/stripe-js";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { colors } from "../../lib/colors";
 
 const { Text } = Typography;
 
-const PaymentMethod = () => {
+interface PaymentMethodProps {
+  onCreated?: (prop: string) => void;
+}
+
+const PaymentMethod = ({ onCreated }: PaymentMethodProps) => {
+  const location = useLocation();
+  const [cardId, setCardId] = useState<string | null>(null);
+  const [isModalCreateOpen, setisModalCreateOpen] = useState(false);
+  const [isModalUpdateOpen, setisModalUpdateOpen] = useState(false);
+  const [isAdded, setisAdded] = useState(false);
+  const [isUpdated, setisUpdated] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
   const { t } = useTranslation(["translation", "client"]);
   const { data, loading } = useQuery<MyPaymentMethods>(MY_PAYMENT_METHODS);
   const [addPayment, { loading: changing, data: paymentData }] = useMutation<
@@ -55,15 +68,13 @@ const PaymentMethod = () => {
   ] = useMutation<RemovePaymentMethod, RemovePaymentMethodVariables>(
     REMOVE_PAYMENT_METHOD
   );
-  const [isModalCreateOpen, setisModalCreateOpen] = useState(false);
-  const [isModalUpdateOpen, setisModalUpdateOpen] = useState(false);
-  const [isAdded, setisAdded] = useState(false);
-  const [isUpdated, setisUpdated] = useState(false);
+  const [tempPaymentMethod, setTempPaymentMethod] = useState<
+    PaymentMethodType[] | undefined
+  >([]);
   const [
     paymentMethod,
     setPaymentMethod,
   ] = useState<MyPaymentMethods_me_customer_paymentMethods_edges_node>();
-  const [cardId, setCardId] = useState<string | null>(null);
   const [formCreate] = Form.useForm();
   const [formUpdate] = Form.useForm();
   const handleCancelCreate = () => {
@@ -223,6 +234,27 @@ const PaymentMethod = () => {
                 </Card>
               )
             )
+          ) : location.pathname === "/checkout" ? (
+            tempPaymentMethod &&
+            tempPaymentMethod.map((temp) => (
+              <>
+                <>{console.log("temp", temp, selectedId)}</>
+                <Card
+                  bodyStyle={{
+                    padding: 0,
+                    marginBottom: 10,
+                  }}
+                  bordered={false}
+                  key={temp.id}
+                >
+                  <SelectableCreditCard
+                    data={temp}
+                    onSelected={() => setSelectedId(temp.id)}
+                    selected={temp.id === selectedId}
+                  />
+                </Card>
+              </>
+            ))
           ) : (
             <Alert
               action={
@@ -245,7 +277,7 @@ const PaymentMethod = () => {
       </Col>
       <Col span={24}>
         <Button
-          disabled={!data?.me?.customer}
+          disabled={!data?.me?.customer && location.pathname !== "/checkout"}
           onClick={() => setisModalCreateOpen(true)}
           type="primary"
         >
@@ -261,12 +293,24 @@ const PaymentMethod = () => {
       >
         <CreateCreditCard
           form={formCreate}
-          onCreated={(paymentMethodId) => {
-            addPayment({
-              variables: {
-                paymentMethodId,
-              },
-            });
+          onCreated={(paymentMethod) => {
+            if (data?.me?.customer) {
+              addPayment({
+                variables: {
+                  paymentMethodId: paymentMethod!!.id,
+                },
+              });
+            } else {
+              if (paymentMethod) {
+                onCreated && onCreated(paymentMethod.id);
+                setTempPaymentMethod((tempPaymentMethod) => [
+                  ...(tempPaymentMethod ?? []),
+                  paymentMethod,
+                ]);
+                setSelectedId(paymentMethod.id);
+                formCreate.resetFields();
+              }
+            }
             setisAdded(true);
             setisModalCreateOpen(false);
           }}
@@ -283,13 +327,7 @@ const PaymentMethod = () => {
           <EditCreditCard
             payment={paymentMethod!!}
             form={formUpdate}
-            onEdited={(paymentMethodId) => {
-              addPayment({
-                variables: {
-                  paymentMethodId,
-                },
-              });
-              setisUpdated(true);
+            onEdited={() => {
               setisModalUpdateOpen(false);
             }}
           />

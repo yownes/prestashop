@@ -13,7 +13,7 @@ import { MY_ACCOUNT, MY_PAYMENT_METHODS } from "../../api/queries";
 import { Subscribe, SubscribeVariables } from "../../api/types/Subscribe";
 import Errors from "./Errors";
 import { CheckoutLocationState } from "../../pages/client/Checkout";
-import PaymentMethod from "../../pages/client/PaymentMethod";
+import PaymentMethod from "../organisms/PaymentMethod";
 import { useTranslation } from "react-i18next";
 import LoadingFullScreen from "../atoms/LoadingFullScreen";
 
@@ -34,7 +34,9 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
   const [createSubscription, { data, loading: subscribing }] = useMutation<
     Subscribe,
     SubscribeVariables
-  >(SUBSCRIBE);
+  >(SUBSCRIBE, {
+    refetchQueries: [{ query: MY_PAYMENT_METHODS }],
+  });
   const { t } = useTranslation(["client", "translation"]);
   useEffect(() => {
     setPaymentMethodId(
@@ -49,7 +51,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
     <Row gutter={[20, 20]}>
       <Col sm={24} md={16}>
         <Title level={2}>{t("client:selectPaymentMethod")}</Title>
-        <PaymentMethod />
+        <PaymentMethod onCreated={setPaymentMethodId} />
       </Col>
       <Col sm={24} md={8}>
         <Row gutter={[20, 20]}>

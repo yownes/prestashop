@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Col, Row, Typography } from "antd";
-import PaymentMethod from "./PaymentMethod";
+import PaymentMethod from "../../components/organisms/PaymentMethod";
 import ChangePassword from "../../components/organisms/ChangePassword";
 import PersonalData from "../../components/organisms/PersonalData";
 import { useTranslation } from "react-i18next";
