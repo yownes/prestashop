@@ -78,7 +78,7 @@
   },
   "appErrors": {
     "101": "Recurso no encontrado",
-    "102": "No tienes permiso para ver el recurso solicitado",
+    "102": "No tienes permiso para acceder al recurso solicitado",
     "103": "La tienda ya tiene una aplicación creada",
     "201": "Introduce la url de una tienda válida"
   },

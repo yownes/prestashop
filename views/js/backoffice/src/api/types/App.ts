@@ -15,6 +15,14 @@ export interface App_app_color {
   text: string | null;
 }
 
+export interface App_app_customer {
+  __typename: "UserNode";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+}
+
 export interface App_app_template {
   __typename: "TemplateType";
   /**
@@ -62,6 +70,7 @@ export interface App_app {
   id: string;
   name: string;
   color: App_app_color | null;
+  customer: App_app_customer | null;
   /**
    * Link to GraphQl API of the store
    */

@@ -1,10 +1,11 @@
 import { Button, Card, Col, message, Popconfirm, Row, Typography } from "antd";
 import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useParams, useHistory, Redirect } from "react-router-dom";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { DELETE_APP } from "../../api/mutations";
 import { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
-import { APP } from "../../api/queries";
+import { Me } from "../../api/types/Me";
+import { APP, ME } from "../../api/queries";
 import { App as IApp, AppVariables, App_app } from "../../api/types/App";
 import Loading from "../../components/atoms/Loading";
 import { AppInfo } from "../../components/molecules";
@@ -45,9 +46,11 @@ const { Title } = Typography;
 
 const App = () => {
   const { appId } = useParams<AppParamTypes>();
+  const [notYourRecurse, setNotYourRecurse] = useState(false);
   const [state, setState] = useState<StoreAppInput>(baseApp);
   const { t } = useTranslation(["translation", "client"]);
   const history = useHistory();
+  const { data: me } = useQuery<Me>(ME);
   const [getAppById, { loading, data }] = useLazyQuery<IApp, AppVariables>(APP);
   const [deleteApp, { loading: loadingDelete }] = useMutation<
     DeleteApp,
@@ -65,14 +68,18 @@ const App = () => {
         },
         logo: data.app.logo,
       });
+      if (data.app.customer?.id !== me?.me?.id) {
+        setNotYourRecurse(true);
+      }
     }
-  }, [data]);
+  }, [data, me]);
   useEffect(() => {
     if (appId) {
       getAppById({ variables: { id: appId } });
     }
   }, [appId, getAppById]);
   if (!state || loading) return <Loading />;
+  if (notYourRecurse) return <Redirect to="/profile" />;
   return (
     <>
       <Row gutter={[20, 20]}>
@@ -87,6 +94,7 @@ const App = () => {
             />
           </Card>
         </Col>
+        <Col></Col>
       </Row>
       <Row gutter={[20, 20]}>
         <Col span={14}>
@@ -119,11 +127,13 @@ const App = () => {
         </Col>
       </Row>
       <Row gutter={[20, 20]}>
+        <Col></Col>
         <Col span={24}>
           <Card>
             <AppPayment appId={appId!!} />
           </Card>
         </Col>
+        <Col></Col>
       </Row>
       <Row gutter={[20, 20]}>
         <Col span={24}>

@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Divider,
-  Form,
-  Input,
-  message,
-  Select,
-  Space,
-  Typography,
-} from "antd";
+import { Button, Divider, Form, Input, message, Select, Space } from "antd";
 import Errors from "../molecules/Errors";
 import SmallCreditCard from "../molecules/SmallCreditCard";
 import { Elements, useStripe } from "@stripe/react-stripe-js";
@@ -81,7 +72,7 @@ const EditCreditCardContainer = (props: EditCreditCardProps) => {
 };
 
 const EditCreditCard = ({ payment, onEdited, form }: EditCreditCardProps) => {
-  const [isUpdated, setisUpdated] = useState(false);
+  const [isUpdated, setisUpdated] = useState(false); // eslint-disable-next-line
   const [errs, setErrs] = useState<StripeError>();
   const stripe = useStripe();
   const { t, i18n } = useTranslation(["translation", "client"]);

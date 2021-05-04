@@ -114,6 +114,9 @@ export const APP = gql`
         color
         text
       }
+      customer {
+        id
+      }
       apiLink
       template {
         id
