@@ -86,6 +86,11 @@ const Client = () => {
                         },
                       },
                     });
+                    data?.user?.accountStatus === AccountAccountStatus.BANNED
+                      ? message.success(t("admin:unbanAccountSuccessful"), 4)
+                      : message.success(t("admin:banAccountSuccessful"), 4);
+                  } else {
+                    message.error(banData?.banUser?.error);
                   }
                 },
               });
@@ -99,20 +104,45 @@ const Client = () => {
           </Text>
         </Popconfirm>
       </Menu.Item>
-      <Menu.Item>
-        <Popconfirm
-          cancelText={t("cancel")}
-          okText={t("admin:unsubscribe")}
-          title={t("admin:warnings.unsubscribe")}
-          placement="left"
-          onConfirm={() => {
-            setIsOverlayVisible(false);
-            unsubscribe({ variables: { userId: id } });
-          }}
-        >
-          <Text type="danger">{t("admin:unsubscribeAccount")}</Text>
-        </Popconfirm>
-      </Menu.Item>
+      {data?.user?.subscription && (
+        <Menu.Item>
+          <Popconfirm
+            cancelText={t("cancel")}
+            okText={t("admin:unsubscribe")}
+            title={t("admin:warnings.unsubscribe")}
+            placement="left"
+            onConfirm={() => {
+              setIsOverlayVisible(false);
+              unsubscribe({
+                variables: { userId: id },
+                update(cache, { data: unsubscribeData }) {
+                  if (unsubscribeData?.dropOut?.ok) {
+                    console.log("drop out OK", data.user?.subscription);
+                    cache.modify({
+                      id: cache.identify({ ...data.user }),
+                      fields: {
+                        subscription: () => undefined,
+                      },
+                    });
+                  } else {
+                    console.log("drop out ERR");
+                  }
+                },
+              })
+                .then((data) => {
+                  if (data.data?.dropOut?.ok) {
+                    message.success(t("admin:unsubscribeAccountSuccessful"));
+                  } else {
+                    message.error(data.data?.dropOut?.error);
+                  }
+                })
+                .catch((err) => message.error(err));
+            }}
+          >
+            <Text type="danger">{t("admin:unsubscribeAccount")}</Text>
+          </Popconfirm>
+        </Menu.Item>
+      )}
     </Menu>
   );
   const profieActions = (
@@ -142,6 +172,7 @@ const Client = () => {
             </Row>
           </Card>
         </Col>
+        <Col></Col>
       </Row>
       <Row gutter={[20, 20]}>
         <Col md={12} sm={24}>
@@ -155,7 +186,7 @@ const Client = () => {
                   key: "actions",
                   render: (_, record) => {
                     if (!record.isActive) {
-                      return <Typography>App eliminada</Typography>;
+                      return <Typography>{t("admin:deletedApp")}</Typography>;
                     }
                     return (
                       <Popconfirm
@@ -172,6 +203,10 @@ const Client = () => {
                                   id,
                                 });
                                 cache.gc();
+                                message.success(
+                                  t("admin:deleteAppSuccessful"),
+                                  4
+                                );
                               } else {
                                 message.error(data?.deleteApp?.error);
                               }

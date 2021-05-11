@@ -43,6 +43,8 @@
   "verifiedStatus": "Verificado",
   "isActive": "Activo",
   "plan": "Suscripción",
+  "noPlan": "Sin suscripción activa",
+  "currentPeriodEnd": "Renovación",
   "select": "Seleccionar",
   "priceWithTaxes": "Precio con IVA incluido",
   "404title": "ERROR 404",

@@ -63,7 +63,7 @@ const Profile = () => {
         <Link to="/profile/edit">{t("update")}</Link>
       </Menu.Item>
       <Menu.Divider></Menu.Divider>
-      {data?.me?.accountStatus === AccountAccountStatus.PAID_ACCOUNT && (
+      {data?.me?.subscription && (
         <Menu.Item>
           <Popconfirm
             cancelText={t("cancel")}
@@ -91,6 +91,7 @@ const Profile = () => {
                         }),
                         fields: {
                           accountStatus: () => AccountAccountStatus.REGISTERED,
+                          subscription: () => undefined,
                         },
                       });
                     }

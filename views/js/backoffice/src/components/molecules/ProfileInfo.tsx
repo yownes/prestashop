@@ -1,11 +1,12 @@
 import React, { ReactNode } from "react";
 import { useQuery } from "@apollo/client";
-import { Descriptions, Typography } from "antd";
+import { Descriptions, Space, Typography } from "antd";
 import UserState from "./UserState";
 import { AccountBasicData } from "../../api/types/AccountBasicData";
 import { MyAccount } from "../../api/types/MyAccount";
 import { MY_ACCOUNT } from "../../api/queries";
 import { useTranslation } from "react-i18next";
+import format from "date-fns/format";
 import VerifiedState from "./VerifiedState";
 import Loading from "../atoms/Loading";
 
@@ -15,6 +16,8 @@ interface ProfileInfoProps {
   verified?: boolean;
 }
 
+const { Text, Title } = Typography;
+
 const ProfileInfo = ({ profile, action, verified }: ProfileInfoProps) => {
   const { data } = useQuery<MyAccount>(MY_ACCOUNT);
   const { t } = useTranslation();
@@ -23,7 +26,7 @@ const ProfileInfo = ({ profile, action, verified }: ProfileInfoProps) => {
   }
   return (
     <Descriptions
-      title={<Typography.Title level={2}>{t("profileInfo")}</Typography.Title>}
+      title={<Title level={2}>{t("profileInfo")}</Title>}
       layout="vertical"
       size="small"
       bordered
@@ -58,9 +61,30 @@ const ProfileInfo = ({ profile, action, verified }: ProfileInfoProps) => {
           <VerifiedState verified={profile?.isActive} />
         </Descriptions.Item>
       )}
-      {data?.me.isStaff && (
-        <Descriptions.Item label={t("plan")}>{"PLAN"}</Descriptions.Item>
-      )}
+      <Descriptions.Item label={t("plan")}>
+        {profile?.subscription ? (
+          <>
+            <Text>{profile?.subscription?.plan?.product?.name}</Text>
+            <Text>
+              {t("currentPeriodEnd")}{" "}
+              {format(
+                new Date(profile.subscription.currentPeriodEnd),
+                "dd/MM/yyyy"
+              )}
+            </Text>
+            <Text>
+              {profile?.subscription?.plan?.amount}
+              {profile.subscription.plan?.currency === "eur"
+                ? "€"
+                : profile.subscription.plan?.currency}
+              {"/"}
+              {t(`${profile.subscription.plan?.interval}`.toLocaleLowerCase())}
+            </Text>
+          </>
+        ) : (
+          <Text>{t("noPlan")}</Text>
+        )}
+      </Descriptions.Item>
     </Descriptions>
   );
 };

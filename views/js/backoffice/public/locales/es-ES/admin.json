@@ -17,12 +17,17 @@
     "account": "¿Realmente deseas eliminar la cuenta?",
     "app": "¿Realmente deseas eliminar la app?"
   },
+  "deletedApp": "App eliminada",
+  "deleteAppSuccessful": "App eliminada con éxito",
   "ban": "Banear",
   "banAccount": "Banear cuenta",
+  "banAccountSuccessful": "Cuenta baneada con éxito",
   "unban": "Desbanear",
   "unbanAccount": "Desbanear cuenta",
+  "unbanAccountSuccessful": "Cuenta desbaneada con éxito",
   "unsubscribe": "Dar de baja",
   "unsubscribeAccount": "Dar de baja la suscripción",
+  "unsubscribeAccountSuccessful": "Suscripción dada de baja con éxito",
   "actions": "Acciones",
   "profile": "Perfil"
 }

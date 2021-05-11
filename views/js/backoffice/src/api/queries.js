@@ -20,6 +20,19 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
     verified
     isActive
     isStaff
+    subscription {
+      id
+      currentPeriodEnd
+      plan {
+        amount
+        interval
+        currency
+        product {
+          id
+          name
+        }
+      }
+    }
   }
 `;
 

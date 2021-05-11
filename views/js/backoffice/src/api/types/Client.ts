@@ -3,11 +3,59 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { AccountAccountStatus, BuildBuildStatus } from "./globalTypes";
+import { AccountAccountStatus, PlanInterval, BuildBuildStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: Client
 // ====================================================
+
+export interface Client_user_subscription_plan_product {
+  __typename: "StripeProductType";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+  /**
+   * The product's name, meant to be displayable to the customer. Applicable to both `service` and `good` types.
+   */
+  name: string;
+}
+
+export interface Client_user_subscription_plan {
+  __typename: "StripePlanType";
+  /**
+   * Amount (as decimal) to be charged on the interval specified.
+   */
+  amount: number | null;
+  /**
+   * The frequency with which a subscription should be billed.
+   */
+  interval: PlanInterval;
+  /**
+   * Three-letter ISO currency code
+   */
+  currency: string;
+  /**
+   * The product whose pricing this plan determines.
+   */
+  product: Client_user_subscription_plan_product | null;
+}
+
+export interface Client_user_subscription {
+  __typename: "StripeSubscriptionType";
+  /**
+   * The ID of the object.
+   */
+  id: string;
+  /**
+   * End of the current period for which the subscription has been invoiced. At the end of this period, a new invoice will be created.
+   */
+  currentPeriodEnd: any;
+  /**
+   * The plan associated with this subscription. This value will be `null` for multi-plan subscriptions
+   */
+  plan: Client_user_subscription_plan | null;
+}
 
 export interface Client_user_apps_edges_node_storeLinks {
   __typename: "StoreLinks";
@@ -96,6 +144,10 @@ export interface Client_user {
    * Designates whether the user can log into this admin site.
    */
   isStaff: boolean;
+  /**
+   * The user's Stripe Subscription object, if it exists
+   */
+  subscription: Client_user_subscription | null;
   apps: Client_user_apps;
 }
 

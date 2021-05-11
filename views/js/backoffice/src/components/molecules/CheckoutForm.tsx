@@ -35,7 +35,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
     Subscribe,
     SubscribeVariables
   >(SUBSCRIBE, {
-    refetchQueries: [{ query: MY_PAYMENT_METHODS }],
+    refetchQueries: [{ query: MY_PAYMENT_METHODS }, { query: MY_ACCOUNT }],
   });
   const { t } = useTranslation(["client", "translation"]);
   useEffect(() => {
@@ -85,28 +85,15 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
                               paymentMethodId,
                               planId: plan.stripeId!!,
                             },
-                            update(cache, { data: result }) {
-                              if (result?.subscribe?.ok && dataAccount.me) {
-                                cache.modify({
-                                  id: cache.identify({
-                                    ...dataAccount?.me,
-                                  }),
-                                  fields: {
-                                    accountStatus: () =>
-                                      AccountAccountStatus.PAID_ACCOUNT,
-                                  },
-                                });
+                          })
+                            .then(({ data }) => {
+                              if (data?.subscribe?.ok) {
+                                onSubscribed();
                               } else {
-                                console.log("ERROR createSubscrition");
+                                message.error(data?.subscribe?.error);
                               }
-                            },
-                          }).then(({ data }) => {
-                            if (data?.subscribe?.ok) {
-                              onSubscribed();
-                            } else {
-                              message.error(data?.subscribe?.error);
-                            }
-                          });
+                            })
+                            .catch((err) => message.error(err));
                         },
                       });
                     }
