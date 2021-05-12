@@ -3,13 +3,15 @@ import { useQuery } from "@apollo/client";
 import Table, { ColumnsType } from "antd/lib/table";
 import forIn from "lodash/forIn";
 import { Link, useHistory } from "react-router-dom";
-import { CLIENTS } from "../../api/queries";
+import { CLIENTS, PLANS } from "../../api/queries";
 import {
   Clients as IClients,
   ClientsVariables,
   Clients_users_edges_node,
   Clients_users_edges_node_apps_edges,
+  Clients_users_edges_node_subscription_plan_product,
 } from "../../api/types/Clients";
+import { Plans } from "../../api/types/Plans";
 import Loading from "../../components/atoms/Loading";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
 import UserState from "../../components/molecules/UserState";
@@ -23,11 +25,25 @@ import { useTranslation } from "react-i18next";
 import VerifiedState from "../../components/molecules/VerifiedState";
 import styles from "./Clients.module.css";
 
+interface IPlan {
+  id: string;
+  name: string;
+}
+
 function getAccountStatusFilters() {
   let filters: Filter[] = [];
   forIn(AccountAccountStatus, (value) => {
     filters.push({ text: <UserState state={value}></UserState>, value: value });
   });
+  return filters;
+}
+
+function getSubscriptionFilters(plans: IPlan[]) {
+  let filters: Filter[] = [];
+  for (let plan of plans) {
+    filters.push({ text: plan.name, value: plan.name });
+  }
+  filters.push({ text: "Sin suscripción", value: "-" });
   return filters;
 }
 
@@ -48,6 +64,14 @@ const Clients = () => {
   const history = useHistory();
   const { t } = useTranslation(["translation", "admin"]);
   const { loading, data } = useQuery<IClients, ClientsVariables>(CLIENTS);
+  const { data: plansData } = useQuery<Plans>(PLANS);
+  const dataSource = connectionToNodes(data?.users).filter(
+    (data) => !data.isStaff
+  );
+  const plans: IPlan[] = connectionToNodes(plansData?.plans).map((data) => ({
+    id: data.id,
+    name: data.name,
+  }));
   if (loading) {
     return <Loading />;
   }
@@ -102,6 +126,19 @@ const Clients = () => {
       sorter: (a, b) => a.accountStatus.localeCompare(b.accountStatus),
     },
     {
+      title: t("plan"),
+      dataIndex: ["subscription", "plan", "product"]
+        ? ["subscription", "plan", "product", "name"]
+        : "-",
+      key: "subscription",
+      render: (product: Clients_users_edges_node_subscription_plan_product) =>
+        product ?? "-",
+      ...getColumnFilterProps<Clients_users_edges_node>(
+        ["subscription", "plan", "product", "name"],
+        getSubscriptionFilters(plans)
+      ),
+    },
+    {
       title: t("verifiedStatus"),
       dataIndex: "verified",
       key: "verified",
@@ -124,9 +161,6 @@ const Clients = () => {
       sorter: (a, b) => Number(a.isActive) - Number(b.isActive),
     },
   ];
-  const dataSource = connectionToNodes(data?.users).filter(
-    (data) => !data.isStaff
-  );
   return (
     <div>
       <Table
@@ -135,7 +169,7 @@ const Clients = () => {
         onRow={(record) => {
           return { onClick: () => history.push(`/clients/${record.id}`) };
         }}
-        pagination={dataSource.length > 5 ? { pageSize: 5 } : false}
+        //pagination={dataSource.length > 5 ? { pageSize: 5 } : false}
         rowClassName={styles.row}
         rowKey={(row) => row.id}
       />

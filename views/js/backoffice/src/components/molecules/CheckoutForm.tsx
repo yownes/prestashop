@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Col, message, Modal, Row, Typography } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@apollo/client";
-import {
-  AccountAccountStatus,
-  PlanInterval,
-} from "../../api/types/globalTypes";
+import { PlanInterval } from "../../api/types/globalTypes";
 import { MyAccount } from "../../api/types/MyAccount";
 import { MyPaymentMethods } from "../../api/types/MyPaymentMethods";
 import { SUBSCRIBE } from "../../api/mutations";

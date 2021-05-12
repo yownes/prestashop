@@ -216,6 +216,14 @@ export const CLIENTS = gql`
               }
             }
           }
+          subscription {
+            plan {
+              product {
+                id
+                name
+              }
+            }
+          }
           accountStatus
           verified
           isActive

@@ -78,7 +78,7 @@ export function getColumnFilterProps<T>(
   return {
     filters: filters,
     onFilter: (value: string | number | boolean, record: T): boolean => {
-      const valuee = get(record, dataIndex);
+      const valuee = get(record, dataIndex) ?? "-";
       const regex = new RegExp(value as string, "i");
       return regex.test(valuee);
     },

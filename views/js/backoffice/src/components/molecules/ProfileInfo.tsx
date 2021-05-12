@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { useQuery } from "@apollo/client";
-import { Descriptions, Space, Typography } from "antd";
+import { Descriptions, Typography } from "antd";
 import UserState from "./UserState";
 import { AccountBasicData } from "../../api/types/AccountBasicData";
 import { MyAccount } from "../../api/types/MyAccount";
@@ -64,14 +64,7 @@ const ProfileInfo = ({ profile, action, verified }: ProfileInfoProps) => {
       <Descriptions.Item label={t("plan")}>
         {profile?.subscription ? (
           <>
-            <Text>{profile?.subscription?.plan?.product?.name}</Text>
-            <Text>
-              {t("currentPeriodEnd")}{" "}
-              {format(
-                new Date(profile.subscription.currentPeriodEnd),
-                "dd/MM/yyyy"
-              )}
-            </Text>
+            <Text>{profile?.subscription?.plan?.product?.name} </Text>
             <Text>
               {profile?.subscription?.plan?.amount}
               {profile.subscription.plan?.currency === "eur"
@@ -79,6 +72,13 @@ const ProfileInfo = ({ profile, action, verified }: ProfileInfoProps) => {
                 : profile.subscription.plan?.currency}
               {"/"}
               {t(`${profile.subscription.plan?.interval}`.toLocaleLowerCase())}
+            </Text>
+            <Text> {t("currentPeriodEnd")} </Text>
+            <Text>
+              {format(
+                new Date(profile.subscription.currentPeriodEnd),
+                "dd/MM/yyyy"
+              )}
             </Text>
           </>
         ) : (
