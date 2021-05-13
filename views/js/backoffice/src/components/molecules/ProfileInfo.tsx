@@ -66,14 +66,14 @@ const ProfileInfo = ({ profile, action, verified }: ProfileInfoProps) => {
           <>
             <Text>{profile?.subscription?.plan?.product?.name} </Text>
             <Text>
-              {profile?.subscription?.plan?.amount}
+              ({profile?.subscription?.plan?.amount}
               {profile.subscription.plan?.currency === "eur"
                 ? "€"
                 : profile.subscription.plan?.currency}
               {"/"}
-              {t(`${profile.subscription.plan?.interval}`.toLocaleLowerCase())}
+              {t(`${profile.subscription.plan?.interval}`.toLocaleLowerCase())})
             </Text>
-            <Text> {t("currentPeriodEnd")} </Text>
+            <Text>, {t("currentPeriodEnd").toLocaleLowerCase()} </Text>
             <Text>
               {format(
                 new Date(profile.subscription.currentPeriodEnd),
