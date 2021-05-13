@@ -6,6 +6,7 @@ import {
   PasswordChange,
   PasswordChangeVariables,
 } from "../../api/types/PasswordChange";
+import LoadingFullScreen from "../atoms/LoadingFullScreen";
 import Errors from "../molecules/Errors";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../lib/auth";
@@ -94,6 +95,7 @@ const ChangePassword = () => {
           </Button>
         </Form.Item>
       </Form>
+      {loading && <LoadingFullScreen tip={t("changing")} />}
     </>
   );
 };

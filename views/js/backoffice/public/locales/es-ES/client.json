@@ -113,6 +113,7 @@
   "prodPrivateKey": "Clave Secreta (producción)",
   "updateStripeKeys": "Actualizar claves de Stripe",
   "changePassword": "Modificar contraseña",
+  "changing": "Cambiando la contraseña",
   "changePasswordSuccessful": "Contraseña cambiada con éxito",
   "oldPassword": "Contraseña actual",
   "newPassword": "Nueva contraseña",
