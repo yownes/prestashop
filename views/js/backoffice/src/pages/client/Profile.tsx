@@ -101,7 +101,7 @@ const Profile = () => {
               }
             }}
           >
-            <Typography.Text type="danger">
+            <Typography.Text type="danger" style={{ display: "flex", flex: 1 }}>
               {t("client:cancelSubscription")}
             </Typography.Text>
           </Popconfirm>
@@ -118,7 +118,7 @@ const Profile = () => {
             setIsOverlayVisible(false);
           }}
         >
-          <Typography.Text type="danger">
+          <Typography.Text type="danger" style={{ display: "flex", flex: 1 }}>
             {t("client:deleteAccount")}
           </Typography.Text>
         </Popconfirm>

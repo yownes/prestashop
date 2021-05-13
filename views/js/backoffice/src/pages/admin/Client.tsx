@@ -105,7 +105,7 @@ const Client = () => {
             }
           }}
         >
-          <Text type="danger">
+          <Text type="danger" style={{ display: "flex", flex: 1 }}>
             {data?.user?.accountStatus === AccountAccountStatus.BANNED
               ? t("admin:unbanAccount")
               : t("admin:banAccount")}
@@ -147,7 +147,9 @@ const Client = () => {
                 .catch((err) => message.error(err));
             }}
           >
-            <Text type="danger">{t("admin:unsubscribeAccount")}</Text>
+            <Text type="danger" style={{ display: "flex", flex: 1 }}>
+              {t("admin:unsubscribeAccount")}
+            </Text>
           </Popconfirm>
         </Menu.Item>
       )}
