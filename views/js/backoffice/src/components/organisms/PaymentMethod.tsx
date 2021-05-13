@@ -238,7 +238,6 @@ const PaymentMethod = ({ onCreated }: PaymentMethodProps) => {
             tempPaymentMethod &&
             tempPaymentMethod.map((temp) => (
               <>
-                <>{console.log("temp", temp, selectedId)}</>
                 <Card
                   bodyStyle={{
                     padding: 0,

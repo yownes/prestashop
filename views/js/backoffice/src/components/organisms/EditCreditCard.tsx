@@ -112,7 +112,8 @@ const EditCreditCard = ({ payment, onEdited, form }: EditCreditCardProps) => {
       phone: billingData?.phone,
       documentId: metadataData.document_id,
     });
-  }, [billingData, form, metadataData.document_id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   message.config({
     maxCount: 1,
   });
