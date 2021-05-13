@@ -15,6 +15,7 @@ import { StoreAppInput } from "../../api/types/globalTypes";
 import AppPayment from "../../components/organisms/AppPayment";
 import { Trans, useTranslation } from "react-i18next";
 import styles from "./App.module.css";
+import LoadingFullScreen from "../../components/atoms/LoadingFullScreen";
 
 interface AppParamTypes {
   appId?: string;
@@ -52,7 +53,7 @@ const App = () => {
   const history = useHistory();
   const { data: me } = useQuery<Me>(ME);
   const [getAppById, { loading, data }] = useLazyQuery<IApp, AppVariables>(APP);
-  const [deleteApp, { loading: loadingDelete }] = useMutation<
+  const [deleteApp, { loading: deleting }] = useMutation<
     DeleteApp,
     DeleteAppVariables
   >(DELETE_APP);
@@ -166,8 +167,8 @@ const App = () => {
             }}
           >
             <Button
-              disabled={loadingDelete}
-              loading={loadingDelete}
+              disabled={deleting}
+              loading={deleting}
               type="primary"
               danger
             >
@@ -176,6 +177,7 @@ const App = () => {
           </Popconfirm>
         </Col>
       </Row>
+      {deleting && <LoadingFullScreen tip={t("deleting")} />}
     </>
   );
 };

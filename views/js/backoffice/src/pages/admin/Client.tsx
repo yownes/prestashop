@@ -5,6 +5,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { CLIENT } from "../../api/queries";
 import { Client as IClient, ClientVariables } from "../../api/types/Client";
 import Loading from "../../components/atoms/Loading";
+import LoadingFullScreen from "../../components/atoms/LoadingFullScreen";
 import {
   Button,
   Card,
@@ -41,11 +42,18 @@ const Client = () => {
   const { loading, data } = useQuery<IClient, ClientVariables>(CLIENT, {
     variables: { id },
   });
-  const [deleteApp] = useMutation<DeleteApp, DeleteAppVariables>(DELETE_APP);
-  const [banUser] = useMutation<BanUser, BanUserVariables>(BAN_USER);
-  const [unsubscribe] = useMutation<Unsubscribe, UnsubscribeVariables>(
-    UNSUBSCRIBE
-  );
+  const [deleteApp, { loading: deleting }] = useMutation<
+    DeleteApp,
+    DeleteAppVariables
+  >(DELETE_APP);
+  const [banUser, { loading: banning }] = useMutation<
+    BanUser,
+    BanUserVariables
+  >(BAN_USER);
+  const [unsubscribe, { loading: unsubscribing }] = useMutation<
+    Unsubscribe,
+    UnsubscribeVariables
+  >(UNSUBSCRIBE);
   if (loading) {
     return <Loading />;
   }
@@ -232,6 +240,14 @@ const Client = () => {
           </Card>
         </Col>
       </Row>
+      {banning &&
+        (data?.user?.accountStatus === AccountAccountStatus.BANNED ? (
+          <LoadingFullScreen tip={t("admin:unbanning")} />
+        ) : (
+          <LoadingFullScreen tip={t("admin:banning")} />
+        ))}
+      {deleting && <LoadingFullScreen tip={t("admin:deleting")} />}
+      {unsubscribing && <LoadingFullScreen tip={t("admin:unsubscribing")} />}
     </>
   );
 };

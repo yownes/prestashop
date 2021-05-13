@@ -31,6 +31,7 @@
     "end": "Finalizado"
   },
   "deleteAccount": "Eliminar cuenta",
+  "deleting": "Eliminando cuenta",
   "deleteApp": "Eliminar App",
   "publishApp": "Publicar App",
   "saveChanges": "Guardar cambios",
