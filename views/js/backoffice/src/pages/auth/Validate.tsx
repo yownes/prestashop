@@ -6,8 +6,10 @@ import {
   VerifyAccount,
   VerifyAccountVariables,
 } from "../../api/types/VerifyAccount";
+import { MY_ACCOUNT } from "../../api/queries";
 import Errors from "../../components/molecules/Errors";
-import { Button } from "antd";
+import { Button, Card, Result } from "antd";
+import LoadingFullScreen from "../../components/atoms/LoadingFullScreen";
 import { useTranslation } from "react-i18next";
 
 interface ValidateParamTypes {
@@ -16,26 +18,45 @@ interface ValidateParamTypes {
 
 const Validate = () => {
   const location = useParams<ValidateParamTypes>();
-  const { t } = useTranslation("auth");
+  const { t } = useTranslation(["auth", "client"]);
   const [verifyAccount, { loading, data }] = useMutation<
     VerifyAccount,
     VerifyAccountVariables
-  >(VERIFY_ACCOUNT);
-
+  >(VERIFY_ACCOUNT, {
+    refetchQueries: [{ query: MY_ACCOUNT }],
+  });
   useEffect(() => {
     verifyAccount({ variables: { token: location.token } });
   }, [location.token, verifyAccount]);
   if (loading) {
-    return <div>Verificando cuenta...</div>;
+    return <LoadingFullScreen tip={t("verifying")} />;
   }
   return (
-    <div>
-      {data?.verifyAccount?.success && <h1>{t("successfulValidation")}</h1>}
-      <Errors errors={data?.verifyAccount?.errors} />
-      <Link to="/profile">
-        <Button>{t("backToProfile")}</Button>
-      </Link>
-    </div>
+    <Card>
+      {data?.verifyAccount?.success && (
+        <Result
+          status="success"
+          title={t("successfulValidation")}
+          extra={[
+            <Link to="/profile">
+              <Button type="primary">{t("client:goProfile")}</Button>
+            </Link>,
+          ]}
+        ></Result>
+      )}
+      {data?.verifyAccount?.errors && (
+        <Result
+          status="error"
+          title={t("failedValidation")}
+          subTitle={<Errors errors={data?.verifyAccount?.errors} />}
+          extra={[
+            <Link to="/profile">
+              <Button type="primary">{t("client:goProfile")}</Button>
+            </Link>,
+          ]}
+        ></Result>
+      )}
+    </Card>
   );
 };
 
