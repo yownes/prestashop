@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { AccountAccountStatus, PlanInterval, BuildBuildStatus } from "./globalTypes";
+import { AccountAccountStatus, PlanInterval } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: MyAccount
@@ -57,72 +57,6 @@ export interface MyAccount_me_subscription {
   plan: MyAccount_me_subscription_plan | null;
 }
 
-export interface MyAccount_me_apps_edges_node_storeLinks {
-  __typename: "StoreLinks";
-  ios: string | null;
-  android: string | null;
-}
-
-export interface MyAccount_me_apps_edges_node_builds_edges_node {
-  __typename: "BuildType";
-  /**
-   * The ID of the object.
-   */
-  id: string;
-  buildStatus: BuildBuildStatus;
-  buildId: any;
-  date: any;
-}
-
-export interface MyAccount_me_apps_edges_node_builds_edges {
-  __typename: "BuildTypeEdge";
-  /**
-   * The item at the end of the edge
-   */
-  node: MyAccount_me_apps_edges_node_builds_edges_node | null;
-}
-
-export interface MyAccount_me_apps_edges_node_builds {
-  __typename: "BuildTypeConnection";
-  /**
-   * Contains the nodes in this connection.
-   */
-  edges: (MyAccount_me_apps_edges_node_builds_edges | null)[];
-}
-
-export interface MyAccount_me_apps_edges_node {
-  __typename: "StoreAppType";
-  /**
-   * The ID of the object.
-   */
-  id: string;
-  logo: string | null;
-  name: string;
-  isActive: boolean | null;
-  /**
-   * Link to GraphQl API of the store
-   */
-  apiLink: string | null;
-  storeLinks: MyAccount_me_apps_edges_node_storeLinks | null;
-  builds: MyAccount_me_apps_edges_node_builds;
-}
-
-export interface MyAccount_me_apps_edges {
-  __typename: "StoreAppTypeEdge";
-  /**
-   * The item at the end of the edge
-   */
-  node: MyAccount_me_apps_edges_node | null;
-}
-
-export interface MyAccount_me_apps {
-  __typename: "StoreAppTypeConnection";
-  /**
-   * Contains the nodes in this connection.
-   */
-  edges: (MyAccount_me_apps_edges | null)[];
-}
-
 export interface MyAccount_me {
   __typename: "UserNode";
   /**
@@ -148,7 +82,6 @@ export interface MyAccount_me {
    * The user's Stripe Subscription object, if it exists
    */
   subscription: MyAccount_me_subscription | null;
-  apps: MyAccount_me_apps;
 }
 
 export interface MyAccount {

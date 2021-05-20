@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import Table, { ColumnsType } from "antd/lib/table";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-import { MyAccount_me_apps } from "../../api/types/MyAccount";
+import { Client_user_apps } from "../../api/types/Client";
 import { getAppBuildState } from "../../lib/appBuildState";
 import connectionToNodes from "../../lib/connectionToNodes";
 import BuildState from "./BuildState";
@@ -11,7 +11,7 @@ import { AppBasicData } from "../../api/types/AppBasicData";
 import styles from "./AppsTable.module.css";
 
 interface AppsTableProps {
-  dataSource?: MyAccount_me_apps;
+  dataSource?: Client_user_apps;
   columns?: ColumnsType<AppBasicData>;
 }
 

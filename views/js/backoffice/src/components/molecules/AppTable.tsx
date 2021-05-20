@@ -3,25 +3,22 @@ import Table, { ColumnsType } from "antd/lib/table";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
-import {
-  MyAccount_me_apps,
-  MyAccount_me_apps_edges_node,
-} from "../../api/types/MyAccount";
+import { Apps_apps, Apps_apps_edges_node } from "../../api/types/Apps";
 import { getAppBuildState } from "../../lib/appBuildState";
 import connectionToNodes from "../../lib/connectionToNodes";
 import BuildState from "./BuildState";
 import styles from "./AppTable.module.css";
 
 interface AppsTableProps {
-  dataSource?: MyAccount_me_apps;
-  columns?: ColumnsType<MyAccount_me_apps_edges_node>;
+  dataSource?: Apps_apps | null;
+  columns?: ColumnsType<Apps_apps_edges_node>;
 }
 
 const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
   const { t } = useTranslation(["translation", "admin"]);
   const history = useHistory();
   const allCols = useMemo(() => {
-    const cols: ColumnsType<MyAccount_me_apps_edges_node> = [
+    const cols: ColumnsType<Apps_apps_edges_node> = [
       {
         title: t("icon"),
         dataIndex: "logo",

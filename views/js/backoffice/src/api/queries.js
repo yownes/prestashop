@@ -91,17 +91,9 @@ export const MY_ACCOUNT = gql`
     me {
       id
       ...AccountBasicData
-      apps {
-        edges {
-          node {
-            ...AppBasicData
-          }
-        }
-      }
     }
   }
   ${ACCOUNT_BASIC_DATA_FRAGMENT}
-  ${APP_FRAGMENT}
 `;
 
 export const TEMPLATES = gql`
@@ -116,6 +108,19 @@ export const TEMPLATES = gql`
       }
     }
   }
+`;
+
+export const APPS = gql`
+  query Apps($is_active: Boolean!) {
+    apps(isActive: $is_active) {
+      edges {
+        node {
+          ...AppBasicData
+        }
+      }
+    }
+  }
+  ${APP_FRAGMENT}
 `;
 
 export const APP = gql`

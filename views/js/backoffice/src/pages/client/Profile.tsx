@@ -21,12 +21,13 @@ import {
   TitleWithAction,
   ProfileInfo,
 } from "../../components/molecules";
-import { MY_ACCOUNT } from "../../api/queries";
+import { APPS, MY_ACCOUNT } from "../../api/queries";
 import { MyAccount } from "../../api/types/MyAccount";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
 import ProfileDangerZone from "../../components/organisms/ProfileDangerZone";
 import AppTable from "../../components/molecules/AppTable";
 import { UNSUBSCRIBE } from "../../api/mutations";
+import { Apps, AppsVariables } from "../../api/types/Apps";
 import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { Trans, useTranslation } from "react-i18next";
@@ -38,7 +39,12 @@ const Profile = () => {
   const [isUnsubscribed, setIsUnsubscribed] = useState(false);
   const { t } = useTranslation(["translation", "client"]);
   const { loading, data } = useQuery<MyAccount>(MY_ACCOUNT);
-  console.log("MY ACCOUNT", data);
+  const { loading: loadingData, data: appsData } = useQuery<
+    Apps,
+    AppsVariables
+  >(APPS, {
+    variables: { is_active: true },
+  });
   const [
     unsubscribe,
     { loading: unsubscribing, data: unsubscribeData },
@@ -55,7 +61,7 @@ const Profile = () => {
     }
   }, [isUnsubscribed, t, unsubscribeData]);
 
-  if (loading) return <Loading />;
+  if (loading || loadingData) return <Loading />;
 
   const profileMenu = (
     <Menu>
@@ -164,7 +170,7 @@ const Profile = () => {
         </Col>
         <Col lg={12} xs={24}>
           <Card>
-            {(data?.me?.apps?.edges.length ?? 0) > 0 ? (
+            {(appsData?.apps?.edges.length ?? 0) > 0 ? (
               <>
                 <TitleWithAction
                   title={t("apps")}
@@ -173,7 +179,7 @@ const Profile = () => {
                     label: t("client:addNewApp"),
                   }}
                 />
-                <AppTable dataSource={data?.me?.apps} />
+                <AppTable dataSource={appsData?.apps} />
               </>
             ) : (
               <Placeholder

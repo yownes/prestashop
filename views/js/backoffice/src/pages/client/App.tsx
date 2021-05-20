@@ -177,7 +177,7 @@ const App = () => {
           </Popconfirm>
         </Col>
       </Row>
-      {deleting && <LoadingFullScreen tip={t("deleting")} />}
+      {deleting && <LoadingFullScreen tip={t("client:deletingApp")} />}
     </>
   );
 };
