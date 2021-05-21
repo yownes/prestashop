@@ -198,10 +198,7 @@ const Profile = () => {
         }}
         footer={null}
       >
-        <ProfileDangerZone
-          id={data?.me?.id ?? ""}
-          confirmPassword={confirmPassword}
-        />
+        <ProfileDangerZone confirmPassword={confirmPassword} />
       </Modal>
       {unsubscribing && <LoadingFullScreen tip={t("client:unsubscribing")} />}
     </>

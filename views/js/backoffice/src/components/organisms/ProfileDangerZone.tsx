@@ -11,15 +11,15 @@ import Errors from "../molecules/Errors";
 import { useTranslation } from "react-i18next";
 
 interface ProfileDangerZoneProps {
-  id: string;
   confirmPassword: boolean;
 }
 
-const ProfileDangerZone = ({ id, confirmPassword }: ProfileDangerZoneProps) => {
+const ProfileDangerZone = ({ confirmPassword }: ProfileDangerZoneProps) => {
   const [errors, setErrors] = useState<IErrors>();
-  const [deleteAccount] = useMutation<DeleteAccount, DeleteAccountVariables>(
-    DELETE_ACCOUNT
-  );
+  const [deleteAccount, { loading }] = useMutation<
+    DeleteAccount,
+    DeleteAccountVariables
+  >(DELETE_ACCOUNT);
   const { t } = useTranslation("client");
   const { logout } = useAuth();
   if (!confirmPassword) {
@@ -48,7 +48,7 @@ const ProfileDangerZone = ({ id, confirmPassword }: ProfileDangerZoneProps) => {
         >
           <Input.Password onFocus={() => setErrors(undefined)} />
         </Form.Item>
-        <Button htmlType="submit" type="primary" danger>
+        <Button loading={loading} htmlType="submit" type="primary" danger>
           {t("confirmDeleteAccount")}
         </Button>
       </Form>
