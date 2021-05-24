@@ -4,9 +4,10 @@ import { useParams, useHistory, Redirect } from "react-router-dom";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { DELETE_APP } from "../../api/mutations";
 import { DeleteApp, DeleteAppVariables } from "../../api/types/DeleteApp";
-import { Me } from "../../api/types/Me";
-import { APP, ME } from "../../api/queries";
+import { APP, APP_OWNER_ACTIVE, ME } from "../../api/queries";
 import { App as IApp, AppVariables, App_app } from "../../api/types/App";
+import { AppOwnerActive } from "../../api/types/AppOwnerActive";
+import { Me } from "../../api/types/Me";
 import Loading from "../../components/atoms/Loading";
 import { AppInfo } from "../../components/molecules";
 import { TemplateSelector, ColorPicker } from "../../components/organisms";
@@ -46,12 +47,16 @@ export const baseApp: StoreAppInput = {
 const { Title } = Typography;
 
 const App = () => {
-  const { appId } = useParams<AppParamTypes>();
-  const [notYourRecurse, setNotYourRecurse] = useState(false);
   const [state, setState] = useState<StoreAppInput>(baseApp);
+  const [notYourRecurse, setNotYourRecurse] = useState(false);
+  const { appId } = useParams<AppParamTypes>();
   const { t } = useTranslation(["translation", "client"]);
   const history = useHistory();
   const { data: me } = useQuery<Me>(ME);
+  const {
+    loading: loadingOwnerActive,
+    data: dataOwnerActive,
+  } = useQuery<AppOwnerActive>(APP_OWNER_ACTIVE, { variables: { id: appId } });
   const [getAppById, { loading, data }] = useLazyQuery<IApp, AppVariables>(APP);
   const [deleteApp, { loading: deleting }] = useMutation<
     DeleteApp,
@@ -69,17 +74,21 @@ const App = () => {
         },
         logo: data.app.logo,
       });
-      if (data.app.customer?.id !== me?.me?.id) {
-        setNotYourRecurse(true);
-      }
     }
   }, [data, me]);
   useEffect(() => {
     if (appId) {
-      getAppById({ variables: { id: appId } });
+      if (dataOwnerActive?.appcustomer?.isOwnerAndActive) {
+        getAppById({ variables: { id: appId } });
+      }
+      if (dataOwnerActive?.appcustomer?.isOwnerAndActive === false) {
+        setNotYourRecurse(true);
+      }
+    } else {
+      setNotYourRecurse(true);
     }
-  }, [appId, getAppById]);
-  if (!state || loading) return <Loading />;
+  }, [appId, dataOwnerActive, getAppById]);
+  if (loadingOwnerActive || !state || loading) return <Loading />;
   if (notYourRecurse) return <Redirect to="/profile" />;
   return (
     <>
@@ -161,6 +170,12 @@ const App = () => {
                     cache.gc();
                     message.success(t("client:appDeleted"), 4);
                     history.replace("/profile");
+                  } else {
+                    message.error(
+                      t(`client:appErrors.${data?.deleteApp?.error}`) ||
+                        "Error",
+                      4
+                    );
                   }
                 },
               });

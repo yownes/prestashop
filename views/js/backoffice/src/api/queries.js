@@ -123,6 +123,14 @@ export const APPS = gql`
   ${APP_FRAGMENT}
 `;
 
+export const APP_OWNER_ACTIVE = gql`
+  query AppOwnerActive($id: ID!) {
+    appcustomer(id: $id) {
+      isOwnerAndActive
+    }
+  }
+`;
+
 export const APP = gql`
   query App($id: ID!) {
     app(id: $id) {

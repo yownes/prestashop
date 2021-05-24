@@ -87,10 +87,10 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
                               if (data?.subscribe?.ok) {
                                 onSubscribed();
                               } else {
-                                message.error(data?.subscribe?.error);
+                                message.error(data?.subscribe?.error, 4);
                               }
                             })
-                            .catch((err) => message.error(err));
+                            .catch((err) => message.error(err, 4));
                         },
                       });
                     }

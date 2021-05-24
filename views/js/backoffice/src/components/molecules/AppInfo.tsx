@@ -197,7 +197,8 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
                           });
                         } else {
                           message.error(
-                            t(`appErrors.${data?.updateApp?.error}`)
+                            t(`appErrors.${data?.updateApp?.error}`) || "Error",
+                            4
                           );
                         }
                       },

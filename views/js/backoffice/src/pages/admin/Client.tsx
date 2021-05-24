@@ -98,7 +98,7 @@ const Client = () => {
                       ? message.success(t("admin:unbanAccountSuccessful"), 4)
                       : message.success(t("admin:banAccountSuccessful"), 4);
                   } else {
-                    message.error(banData?.banUser?.error);
+                    message.error(banData?.banUser?.error, 4);
                   }
                 },
               });
@@ -141,10 +141,10 @@ const Client = () => {
                   if (data.data?.dropOut?.ok) {
                     message.success(t("admin:unsubscribeAccountSuccessful"));
                   } else {
-                    message.error(data.data?.dropOut?.error);
+                    message.error(data.data?.dropOut?.error, 4);
                   }
                 })
-                .catch((err) => message.error(err));
+                .catch((err) => message.error(err, 4));
             }}
           >
             <Text type="danger" style={{ display: "flex", flex: 1 }}>
@@ -218,7 +218,7 @@ const Client = () => {
                                   4
                                 );
                               } else {
-                                message.error(data?.deleteApp?.error);
+                                message.error(data?.deleteApp?.error, 4);
                               }
                             },
                           });

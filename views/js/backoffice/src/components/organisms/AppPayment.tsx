@@ -110,7 +110,7 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
                   errors={{
                     nonFieldErrors: [
                       {
-                        message: t(`appErrors.${errs}`) || "",
+                        message: t(`appErrors.${errs}`) || "Error",
                         code: errs,
                       },
                     ],
