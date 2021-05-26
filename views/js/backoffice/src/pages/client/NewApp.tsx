@@ -5,7 +5,6 @@ import { Redirect } from "react-router-dom";
 import { CREATE_APP } from "../../api/mutations";
 import { CreateApp, CreateAppVariables } from "../../api/types/CreateApp";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../../lib/auth";
 import Errors from "../../components/molecules/Errors";
 import { baseApp } from "./App";
 
@@ -14,39 +13,34 @@ const NewApp = () => {
     | { link: string; name: string; color: { color: string; text: string } }
     | undefined = (window as any).__YOWNES_STORE_INFO__;
   const { t } = useTranslation("client");
-  const { user } = useAuth();
   const [create, { data, loading }] = useMutation<
     CreateApp,
     CreateAppVariables
   >(CREATE_APP);
 
-  const update = useCallback(
-    function (
-      cache: ApolloCache<CreateApp>,
-      { data }: FetchResult<CreateApp, Record<string, any>, Record<string, any>>
-    ) {
-      if (data?.createApp?.ok) {
-        const me = cache.identify({ ...user });
-        cache.modify({
-          id: me,
-          fields: {
-            apps(existing, { toReference }) {
-              return {
-                edges: [
-                  ...existing.edges,
-                  {
-                    __typename: "StoreAppTypeEdge",
-                    node: toReference({ ...data.createApp?.storeApp }),
-                  },
-                ],
-              };
-            },
+  const update = useCallback(function (
+    cache: ApolloCache<CreateApp>,
+    { data }: FetchResult<CreateApp, Record<string, any>, Record<string, any>>
+  ) {
+    if (data?.createApp?.ok) {
+      cache.modify({
+        fields: {
+          apps(existing, { toReference }) {
+            return {
+              edges: [
+                ...existing.edges,
+                {
+                  __typename: "StoreAppTypeEdge",
+                  node: toReference({ ...data.createApp?.storeApp }),
+                },
+              ],
+            };
           },
-        });
-      }
-    },
-    [user]
-  );
+        },
+      });
+    }
+  },
+  []);
 
   useEffect(() => {
     if (storeInfo) {
