@@ -26,10 +26,10 @@ const ProfileDangerZone = ({ confirmPassword }: ProfileDangerZoneProps) => {
     DeleteAccount,
     DeleteAccountVariables
   >(DELETE_ACCOUNT);
-  const [
-    unsubscribe,
-    { loading: unsubscribing, data: unsubscribeData },
-  ] = useMutation<Unsubscribe, UnsubscribeVariables>(UNSUBSCRIBE);
+  const [unsubscribe, { loading: unsubscribing }] = useMutation<
+    Unsubscribe,
+    UnsubscribeVariables
+  >(UNSUBSCRIBE);
   const { t } = useTranslation("client");
   const { logout } = useAuth();
   if (!confirmPassword) {

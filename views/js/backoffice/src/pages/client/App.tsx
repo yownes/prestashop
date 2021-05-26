@@ -152,8 +152,8 @@ const App = () => {
             okText={t("delete")}
             title={
               <Trans i18nKey="warnings.app" ns="client">
-                <div>¿Realmente deseas eliminar la App?</div>
-                <div>Será retirada de la AppStore y PlayStore</div>
+                <strong></strong>
+                <p></p>
               </Trans>
             }
             onConfirm={() => {

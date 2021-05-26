@@ -75,12 +75,16 @@ const Profile = () => {
             cancelText={t("cancel")}
             okText={t("confirm")}
             title={
-              <Trans i18nKey="warnings.cancelSubscription" ns="client">
-                <h4>¿Realmente deseas cancelar la suscripción al servicio?</h4>
-                <p>
-                  Todas las apps que tengas serán eliminadas de las tiendas de
-                  aplicaciones
-                </p>
+              <Trans
+                i18nKey={
+                  appsData?.apps && appsData?.apps?.edges.length > 0
+                    ? "warnings.cancelSubscription"
+                    : "warnings.cancelSubscriptionNoApps"
+                }
+                ns="client"
+              >
+                <strong></strong>
+                <p></p>
               </Trans>
             }
             placement="left"
@@ -117,7 +121,23 @@ const Profile = () => {
         <Popconfirm
           cancelText={t("cancel")}
           okText={t("delete")}
-          title={t("client:warnings.account")}
+          title={
+            <Trans
+              i18nKey={
+                data?.me?.subscription
+                  ? appsData?.apps && appsData?.apps?.edges.length > 0
+                    ? "warnings.accountSubsApps"
+                    : "warnings.accountSubsNoApps"
+                  : appsData?.apps && appsData?.apps?.edges.length > 0
+                  ? "warnings.accountNoSubsApps"
+                  : "warnings.accountNoSubsNoApps"
+              }
+              ns="client"
+            >
+              <strong></strong>
+              <p></p>
+            </Trans>
+          }
           placement="left"
           onConfirm={() => {
             setConfirmPassword(true);

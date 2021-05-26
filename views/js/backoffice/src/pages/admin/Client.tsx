@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { useQuery, useMutation } from "@apollo/client";
 import { CLIENT } from "../../api/queries";
 import { Client as IClient, ClientVariables } from "../../api/types/Client";
@@ -69,9 +69,23 @@ const Client = () => {
               : t("admin:ban")
           }
           title={
-            data?.user?.accountStatus === AccountAccountStatus.BANNED
-              ? t("admin:warnings.unban")
-              : t("admin:warnings.ban")
+            <Trans
+              i18nKey={
+                data?.user?.accountStatus === AccountAccountStatus.BANNED
+                  ? "admin:warnings.unban"
+                  : data?.user?.subscription
+                  ? data?.user?.apps && data?.user?.apps.edges.length > 0
+                    ? "admin:warnings.banSubsApps"
+                    : "admin:warnings.banSubsNoApps"
+                  : data?.user?.apps && data?.user?.apps.edges.length > 0
+                  ? "admin:warnings.banNoSubsApps"
+                  : "admin:warnings.banNoSubsNoApps"
+              }
+              ns="client"
+            >
+              <strong></strong>
+              <p></p>
+            </Trans>
           }
           onConfirm={() => {
             setIsOverlayVisible(false);
@@ -117,7 +131,19 @@ const Client = () => {
           <Popconfirm
             cancelText={t("cancel")}
             okText={t("admin:unsubscribe")}
-            title={t("admin:warnings.unsubscribe")}
+            title={
+              <Trans
+                i18nKey={
+                  data.user.apps && data.user?.apps?.edges.length > 0
+                    ? "admin:warnings.unsubscribe"
+                    : "admin:warnings.unsubscribeNoApps"
+                }
+                ns="client"
+              >
+                <strong></strong>
+                <p></p>
+              </Trans>
+            }
             placement="left"
             onConfirm={() => {
               setIsOverlayVisible(false);
@@ -125,15 +151,12 @@ const Client = () => {
                 variables: { userId: id },
                 update(cache, { data: unsubscribeData }) {
                   if (unsubscribeData?.dropOut?.ok) {
-                    console.log("drop out OK", data.user?.subscription);
                     cache.modify({
                       id: cache.identify({ ...data.user }),
                       fields: {
                         subscription: () => undefined,
                       },
                     });
-                  } else {
-                    console.log("drop out ERR");
                   }
                 },
               })

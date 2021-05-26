@@ -11,11 +11,14 @@
   "date": "Fecha",
   "search": "Buscar {{data}}",
   "warnings": {
-    "ban": "¿Estás seguro que deseas banear esta cuenta?",
-    "unban": "¿Estás seguro que deseas desbanear esta cuenta?",
-    "unsubscribe": "¿Realmente deseas dar de baja la suscripción de la cuenta?",
-    "account": "¿Realmente deseas eliminar la cuenta?",
-    "app": "¿Realmente deseas eliminar la app?"
+    "banSubsApps": "<1>¿Banear esta cuenta?</1><2>Se cancelará la suscripción y se eliminarán las apps de las tiendas de aplicaciones</2>",
+    "banSubsNoApps": "<1>¿Banear esta cuenta?</1><2>Se cancelará la suscripción</2>",
+    "banNoSubsApps": "<1>¿Banear esta cuenta?</1><2>Se eliminarán las apps de las tiendas de aplicaciones</2>",
+    "banNoSubsNoApps": "<1>¿Banear esta cuenta?</1>",
+    "unban": "¿Desbanear esta cuenta?",
+    "unsubscribe": "<1>¿Dar de baja la suscripción de la cuenta?</1><2>Todas las apps serán eliminadas de las tiendas de aplicaciones</2>",
+    "unsubscribeNoApps": "<1>¿Dar de baja la suscripción de la cuenta?</1>",
+    "app": "¿Eliminar la app?"
   },
   "deletedApp": "App eliminada",
   "deleting": "Eliminando la app",
