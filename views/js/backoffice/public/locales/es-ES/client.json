@@ -83,6 +83,7 @@
     "description": "Instala el plugin en tu plataforma de tienda online e introduce en la parte de arriba la dirección web para comprobar que es accesible"
   },
   "appErrors": {
+    "100": "Error desconocido",
     "101": "Recurso no encontrado",
     "102": "No tienes permiso para acceder al recurso solicitado",
     "103": "La tienda ya tiene una aplicación creada",

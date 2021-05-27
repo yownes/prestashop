@@ -28,6 +28,7 @@ const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
         {defaultColors.map((color) => (
           <Color
             color={color}
+            key={color}
             onClick={() =>
               onChange({ color, text: (value?.text as TextColor) ?? "white" })
             }

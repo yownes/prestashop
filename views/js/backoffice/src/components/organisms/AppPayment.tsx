@@ -40,7 +40,9 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
   const [updatePayment, { data: mutationData }] = useMutation<
     ModifyAppPayment,
     ModifyAppPaymentVariables
-  >(MODIFY_APP_PAYMENT);
+  >(MODIFY_APP_PAYMENT, {
+    refetchQueries: [{ query: APP_PAYMENTS, variables: { id: appId } }],
+  });
   useEffect(() => {
     if (mutationData?.modifyPaymentMethodApp?.error) {
       setErrs(mutationData.modifyPaymentMethodApp.error);

@@ -110,15 +110,17 @@ const App = () => {
         <Col span={14}>
           <Card className={styles.card}>
             <Title level={2}>{t("client:style")}</Title>
-            <TemplateSelector
-              value={state.template!!}
-              onChange={(selected) => {
-                setState((val) => ({
-                  ...val,
-                  template: selected,
-                }));
-              }}
-            />
+            {state.template ? (
+              <TemplateSelector
+                value={state.template}
+                onChange={(selected) => {
+                  setState((val) => ({
+                    ...val,
+                    template: selected,
+                  }));
+                }}
+              />
+            ) : null}
             <ColorPicker
               value={state.color!!}
               onChange={(selected) => {
@@ -132,16 +134,16 @@ const App = () => {
         </Col>
         <Col span={10}>
           <Card className={styles.card}>
-            <AppPreview id={data?.app?.id!!} app={state} />
+            {data?.app?.id ? (
+              <AppPreview id={data?.app?.id} app={state} />
+            ) : null}
           </Card>
         </Col>
       </Row>
       <Row gutter={[20, 20]}>
         <Col></Col>
         <Col span={24}>
-          <Card>
-            <AppPayment appId={appId!!} />
-          </Card>
+          <Card>{appId ? <AppPayment appId={appId} /> : null}</Card>
         </Col>
         <Col></Col>
       </Row>
