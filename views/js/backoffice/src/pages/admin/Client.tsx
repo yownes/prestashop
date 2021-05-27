@@ -89,33 +89,84 @@ const Client = () => {
           }
           onConfirm={() => {
             setIsOverlayVisible(false);
-            if (data?.user?.id) {
-              banUser({
-                variables: {
-                  userId: data.user.id,
-                  ban:
-                    data?.user?.accountStatus !== AccountAccountStatus.BANNED,
-                },
-                update(cache, { data: banData }) {
-                  if (banData?.banUser?.ok) {
-                    cache.modify({
-                      id: cache.identify({ ...data.user }),
-                      fields: {
-                        accountStatus(prev: AccountAccountStatus) {
-                          return prev === AccountAccountStatus.BANNED
-                            ? AccountAccountStatus.REGISTERED
-                            : AccountAccountStatus.BANNED;
+            if (data?.user) {
+              if (data.user.subscription) {
+                unsubscribe({
+                  variables: { userId: data?.user?.id },
+                  update(cache, { data: unsubs }) {
+                    if (unsubs?.dropOut?.ok && data.user) {
+                      cache.modify({
+                        id: cache.identify({
+                          ...data?.user,
+                        }),
+                        fields: {
+                          accountStatus: () => AccountAccountStatus.REGISTERED,
+                          subscription: () => undefined,
                         },
-                      },
-                    });
-                    data?.user?.accountStatus === AccountAccountStatus.BANNED
-                      ? message.success(t("admin:unbanAccountSuccessful"), 4)
-                      : message.success(t("admin:banAccountSuccessful"), 4);
-                  } else {
-                    message.error(banData?.banUser?.error, 4);
-                  }
-                },
-              });
+                      });
+                    }
+                  },
+                }).then(() => {
+                  banUser({
+                    variables: {
+                      userId: data.user!!.id,
+                      ban:
+                        data?.user?.accountStatus !==
+                        AccountAccountStatus.BANNED,
+                    },
+                    update(cache, { data: banData }) {
+                      if (banData?.banUser?.ok) {
+                        cache.modify({
+                          id: cache.identify({ ...data.user }),
+                          fields: {
+                            accountStatus(prev: AccountAccountStatus) {
+                              return prev === AccountAccountStatus.BANNED
+                                ? AccountAccountStatus.REGISTERED
+                                : AccountAccountStatus.BANNED;
+                            },
+                          },
+                        });
+                        data?.user?.accountStatus ===
+                        AccountAccountStatus.BANNED
+                          ? message.success(
+                              t("admin:unbanAccountSuccessful"),
+                              4
+                            )
+                          : message.success(t("admin:banAccountSuccessful"), 4);
+                      } else {
+                        message.error(banData?.banUser?.error, 4);
+                      }
+                    },
+                  });
+                });
+              } else {
+                banUser({
+                  variables: {
+                    userId: data.user!!.id,
+                    ban:
+                      data?.user?.accountStatus !== AccountAccountStatus.BANNED,
+                  },
+                  update(cache, { data: banData }) {
+                    if (banData?.banUser?.ok) {
+                      cache.modify({
+                        id: cache.identify({ ...data.user }),
+                        fields: {
+                          accountStatus(prev: AccountAccountStatus) {
+                            return prev === AccountAccountStatus.BANNED
+                              ? AccountAccountStatus.REGISTERED
+                              : AccountAccountStatus.BANNED;
+                          },
+                        },
+                      });
+                      data?.user?.accountStatus === AccountAccountStatus.BANNED
+                        ? message.success(t("admin:unbanAccountSuccessful"), 4)
+                        : message.success(t("admin:banAccountSuccessful"), 4);
+                    } else {
+                      message.error(banData?.banUser?.error, 4);
+                    }
+                  },
+                });
+              }
             }
           }}
         >
@@ -154,6 +205,7 @@ const Client = () => {
                     cache.modify({
                       id: cache.identify({ ...data.user }),
                       fields: {
+                        accountStatus: () => AccountAccountStatus.REGISTERED,
                         subscription: () => undefined,
                       },
                     });
