@@ -18,7 +18,7 @@
     "unsubscribeNoApps": "<1>¿Dar de baja la suscripción de la cuenta?</1>",
     "app": "¿Eliminar la app?"
   },
-  "deletedApp": "App eliminada",
+  "deletedApp": "Eliminada",
   "deleting": "Eliminando la app",
   "deleteAppSuccessful": "App eliminada con éxito",
   "ban": "Banear",

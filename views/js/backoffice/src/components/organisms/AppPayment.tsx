@@ -37,12 +37,15 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
       },
     }
   );
-  const [updatePayment, { data: mutationData }] = useMutation<
-    ModifyAppPayment,
-    ModifyAppPaymentVariables
-  >(MODIFY_APP_PAYMENT, {
-    refetchQueries: [{ query: APP_PAYMENTS, variables: { id: appId } }],
-  });
+  const [
+    updatePayment,
+    { loading: updating, data: mutationData },
+  ] = useMutation<ModifyAppPayment, ModifyAppPaymentVariables>(
+    MODIFY_APP_PAYMENT,
+    {
+      refetchQueries: [{ query: APP_PAYMENTS, variables: { id: appId } }],
+    }
+  );
   useEffect(() => {
     if (mutationData?.modifyPaymentMethodApp?.error) {
       setErrs(mutationData.modifyPaymentMethodApp.error);
@@ -119,7 +122,7 @@ const AppPayment = ({ appId }: AppPaymentProps) => {
                   }}
                 />
               )}
-              <Button htmlType="submit" type="primary">
+              <Button loading={updating} htmlType="submit" type="primary">
                 {t("updateStripeKeys")}
               </Button>
             </Space>

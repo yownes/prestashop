@@ -1,5 +1,5 @@
 .app_deleted * {
-  color: red;
+  text-decoration: line-through;
   font-style: italic;
 }
 

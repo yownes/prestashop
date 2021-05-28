@@ -93,60 +93,48 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
           </Typography.Title>
         </Col>
         <Col lg={{ span: 5 }} md={{ span: 8 }} xs={{ span: 8 }}>
-          <Row justify="center">
-            <BuildState state={getAppBuildState(app)} />
-          </Row>
-          <Row justify="center">
-            <Col>
-              {app?.storeLinks?.ios ? (
-                <a
-                  className={styles.infoStores__link}
-                  href={app.storeLinks.ios}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  iOS
-                </a>
-              ) : (
-                <a
-                  href="*"
-                  className={styles.infoStores__link}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  iOS
-                </a>
-              )}
-            </Col>
-            <Col>
-              <Typography.Text>-</Typography.Text>
-            </Col>
-            <Col>
-              {app?.storeLinks?.android ? (
-                <a
-                  className={styles.infoStores__link}
-                  href={app.storeLinks.android}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Android
-                </a>
-              ) : (
-                <a
-                  href="*"
-                  className={styles.infoStores__link}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Android
-                </a>
-              )}
-            </Col>
-          </Row>
+          <Space direction="vertical" size="middle">
+            <Row>
+              <BuildState state={getAppBuildState(app)} />
+            </Row>
+            <Row>
+              <Col>
+                {app?.storeLinks?.ios ? (
+                  <a
+                    href={app.storeLinks.ios}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    iOS
+                  </a>
+                ) : (
+                  <Typography.Text disabled>iOS</Typography.Text>
+                )}
+              </Col>
+              <Col>
+                <Typography.Text className={styles.infoStores__link}>
+                  -
+                </Typography.Text>
+              </Col>
+              <Col>
+                {app?.storeLinks?.android ? (
+                  <a
+                    href={app.storeLinks.android}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Android
+                  </a>
+                ) : (
+                  <Typography.Text disabled>Android</Typography.Text>
+                )}
+              </Col>
+            </Row>
+          </Space>
         </Col>
         <Col lg={{ span: 5 }} md={{ span: 16 }} xs={{ span: 16 }}>
-          <Row justify="center">
-            <Space direction="vertical">
+          <Row>
+            <Space direction="vertical" size="middle">
               <Button className={styles.info__button} type="primary">
                 {t("client:publishApp")}
               </Button>

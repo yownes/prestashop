@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Table } from "antd";
+import { Space, Table, Typography } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
@@ -49,21 +49,28 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
         key: "urls",
         // responsive: ["md"],
         render: (urls) => {
-          if (!urls.ios && !urls.android) return <span>-</span>;
           return (
-            <>
-              <a
-                href={urls.ios}
-                style={{ paddingRight: 10 }}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                iOS
-              </a>
-              <a href={urls.android} rel="noopener noreferrer" target="_blank">
-                Android
-              </a>
-            </>
+            <Space size="middle">
+              {urls.ios ? (
+                <a href={urls.ios} rel="noopener noreferrer" target="_blank">
+                  iOS
+                </a>
+              ) : (
+                <Typography.Text disabled>iOS</Typography.Text>
+              )}
+              <Typography.Text>-</Typography.Text>
+              {urls.android ? (
+                <a
+                  href={urls.android}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Android
+                </a>
+              ) : (
+                <Typography.Text disabled>Android</Typography.Text>
+              )}
+            </Space>
           );
         },
       },
