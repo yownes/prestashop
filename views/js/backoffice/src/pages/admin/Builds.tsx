@@ -114,6 +114,7 @@ const Builds = () => {
       <Table
         columns={columns}
         dataSource={connectionToNodes(data?.builds)}
+        locale={{ emptyText: t("noBuilds") }}
         rowClassName={(row) => (!row.app?.isActive ? styles.app_deleted : "")}
         rowKey={(row) => row.id}
       />

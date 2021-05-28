@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
-import Table, { ColumnsType } from "antd/lib/table";
+import { Table, Typography } from "antd";
+import { ColumnsType } from "antd/lib/table";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { Client_user_apps } from "../../api/types/Client";
 import { getAppBuildState } from "../../lib/appBuildState";
 import connectionToNodes from "../../lib/connectionToNodes";
 import BuildState from "./BuildState";
-import { Typography } from "antd";
 import { AppBasicData } from "../../api/types/AppBasicData";
 import styles from "./AppsTable.module.css";
 
@@ -16,7 +16,7 @@ interface AppsTableProps {
 }
 
 const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
-  const { t } = useTranslation(["translation", "admin"]);
+  const { t } = useTranslation("translation");
   const allCols = useMemo(() => {
     const cols: ColumnsType<AppBasicData> = [
       {
@@ -87,7 +87,7 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
     <Table
       columns={allCols}
       dataSource={data}
-      locale={{ emptyText: t("admin:noApps") }}
+      locale={{ emptyText: t("noApps") }}
       pagination={data.length > 5 ? { pageSize: 5 } : false}
       rowClassName={(row) => (!row.isActive ? styles.app_deleted : "")}
       rowKey={(row) => row.id}

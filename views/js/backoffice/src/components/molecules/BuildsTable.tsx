@@ -1,6 +1,6 @@
 import React from "react";
-import { Typography } from "antd";
-import Table, { ColumnsType } from "antd/lib/table";
+import { Table, Typography } from "antd";
+import { ColumnsType } from "antd/lib/table";
 import { useTranslation } from "react-i18next";
 import { Builds_builds_edges_node } from "../../api/types/Builds";
 import { BuildBuildStatus } from "../../api/types/globalTypes";
@@ -36,7 +36,7 @@ export function getBuildsForCustomer(
 }
 
 const BuildsTable = ({ dataSource }: BuildsTableProps) => {
-  const { t } = useTranslation(["translation", "admin"]);
+  const { t } = useTranslation("translation");
   const columns: ColumnsType<Builds_builds_edges_node> = [
     {
       title: t("date"),
@@ -64,7 +64,7 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
     <Table
       columns={columns}
       dataSource={dataSource}
-      locale={{ emptyText: t("admin:noBuilds") }}
+      locale={{ emptyText: t("noBuilds") }}
       pagination={dataSource.length > 5 ? { pageSize: 5 } : false}
       rowClassName={(row) => (!row.app?.isActive ? styles.app_deleted : "")}
       rowKey={(row) => row.buildId}

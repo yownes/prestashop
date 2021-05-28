@@ -1,13 +1,11 @@
 {
   "app": "App",
   "apps": "Apps",
-  "noApps": "Ninguna App",
   "clients": "Clientes",
   "client": "Cliente",
   "clientID": "ID Cliente",
   "builds": "Builds",
   "buildID": "ID Build",
-  "noBuilds": "Ninguna Build",
   "date": "Fecha",
   "search": "Buscar {{data}}",
   "warnings": {

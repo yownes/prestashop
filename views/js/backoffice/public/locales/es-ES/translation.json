@@ -2,6 +2,8 @@
   "tos": { "title": "Términos y Condiciones" },
   "apps": "Apps",
   "app": "App",
+  "noApps": "Ninguna App",
+  "noBuilds": "Ninguna Build",
   "accept": "Aceptar",
   "delete": "Eliminar",
   "update": "Editar",

@@ -1,7 +1,8 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
-import Table, { ColumnsType } from "antd/lib/table";
+import { Table } from "antd";
 import forIn from "lodash/forIn";
+import { useQuery } from "@apollo/client";
+import { ColumnsType } from "antd/lib/table";
 import { Link, useHistory } from "react-router-dom";
 import { CLIENTS, PLANS } from "../../api/queries";
 import {
@@ -169,7 +170,6 @@ const Clients = () => {
         onRow={(record) => {
           return { onClick: () => history.push(`/clients/${record.id}`) };
         }}
-        //pagination={dataSource.length > 5 ? { pageSize: 5 } : false}
         rowClassName={styles.row}
         rowKey={(row) => row.id}
       />

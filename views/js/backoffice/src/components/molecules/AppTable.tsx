@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
-import Table, { ColumnsType } from "antd/lib/table";
+import { Table } from "antd";
+import { ColumnsType } from "antd/lib/table";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
@@ -15,7 +16,7 @@ interface AppsTableProps {
 }
 
 const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
-  const { t } = useTranslation(["translation", "admin"]);
+  const { t } = useTranslation("translation");
   const history = useHistory();
   const allCols = useMemo(() => {
     const cols: ColumnsType<Apps_apps_edges_node> = [
@@ -82,7 +83,7 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
     <Table
       columns={allCols}
       dataSource={data}
-      locale={{ emptyText: t("admin:noApps") }}
+      locale={{ emptyText: t("noApps") }}
       pagination={data.length > 5 ? { pageSize: 5 } : false}
       onRow={(record) => {
         if (record.storeLinks?.android && record.storeLinks?.ios) {
