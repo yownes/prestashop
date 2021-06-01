@@ -89,7 +89,7 @@ const Builds = () => {
       key: "app",
       ...getColumnSearchProps<Builds_builds_edges_node>(
         ["app", "name"],
-        t("admin:app"),
+        t("admin:search", { data: t("admin:app") }),
         t("search"),
         t("reset")
       ),

@@ -1,11 +1,22 @@
 import React, { useMemo } from "react";
 import { Space, Table, Typography } from "antd";
+import { forIn } from "lodash";
 import { ColumnsType } from "antd/lib/table";
+import BuildStateVisualizer from "../../components/molecules/BuildState";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-import { Client_user_apps } from "../../api/types/Client";
+import {
+  Client_user_apps,
+  Client_user_apps_edges_node,
+} from "../../api/types/Client";
 import { getAppBuildState } from "../../lib/appBuildState";
+import { BuildBuildStatus } from "../../api/types/globalTypes";
 import connectionToNodes from "../../lib/connectionToNodes";
+import {
+  Filter,
+  getColumnFilterProps,
+  getColumnSearchProps,
+} from "../../lib/filterColumns";
 import BuildState from "./BuildState";
 import { AppBasicData } from "../../api/types/AppBasicData";
 import styles from "./AppsTable.module.css";
@@ -13,6 +24,17 @@ import styles from "./AppsTable.module.css";
 interface AppsTableProps {
   dataSource?: Client_user_apps;
   columns?: ColumnsType<AppBasicData>;
+}
+
+function getBuildStatusFilters() {
+  let filters: Filter[] = [];
+  forIn(BuildBuildStatus, (value) => {
+    filters.push({
+      text: <BuildStateVisualizer state={value}></BuildStateVisualizer>,
+      value: value,
+    });
+  });
+  return filters;
 }
 
 const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
@@ -41,6 +63,13 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
         dataIndex: "name",
         key: "name",
         render: (name) => <Typography.Text strong>{name}</Typography.Text>,
+        ...getColumnSearchProps<Client_user_apps_edges_node>(
+          ["name"],
+          t("admin:search", { data: t("app") }),
+          t("search"),
+          t("reset")
+        ),
+        sorter: (a, b) => a.name.localeCompare(b.name),
       },
       {
         title: t("urls"),
@@ -80,6 +109,13 @@ const AppsTable = ({ dataSource, columns }: AppsTableProps) => {
         render: (_, record) => {
           return <BuildState state={getAppBuildState(record)}></BuildState>;
         },
+        ...getColumnFilterProps<Client_user_apps_edges_node>(
+          ["builds", "edges", "_", "node", "buildStatus"],
+          getBuildStatusFilters(),
+          "last"
+        ),
+        sorter: (a, b) =>
+          getAppBuildState(a).localeCompare(getAppBuildState(b)),
       },
     ];
     return columns ? [...cols, ...columns] : cols;

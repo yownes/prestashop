@@ -72,12 +72,23 @@ export function getColumnSearchProps<T>(
 }
 
 export function getColumnFilterProps<T>(
-  dataIndex: keyof T | string[],
-  filters: Filter[]
+  dataIndex: string[],
+  filters: Filter[],
+  position?: "first" | "last"
 ) {
+  const index = dataIndex.indexOf("_");
   return {
     filters: filters,
     onFilter: (value: string | number | boolean, record: T): boolean => {
+      if (position === "first") {
+      }
+      if (position === "last") {
+        let data = dataIndex;
+        data[index] = String(get(record, data.slice(0, index)).length - 1);
+        const valuee = get(record, data) ?? "-";
+        const regex = new RegExp(value as string, "i");
+        return regex.test(valuee);
+      }
       const valuee = get(record, dataIndex) ?? "-";
       const regex = new RegExp(value as string, "i");
       return regex.test(valuee);

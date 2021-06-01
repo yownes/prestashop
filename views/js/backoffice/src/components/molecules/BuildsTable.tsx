@@ -1,6 +1,8 @@
 import React from "react";
 import { Table, Typography } from "antd";
 import { ColumnsType } from "antd/lib/table";
+import { forIn } from "lodash";
+import BuildStateVisualizer from "../../components/molecules/BuildState";
 import { useTranslation } from "react-i18next";
 import { Builds_builds_edges_node } from "../../api/types/Builds";
 import { BuildBuildStatus } from "../../api/types/globalTypes";
@@ -8,9 +10,25 @@ import BuildState from "./BuildState";
 import styles from "./BuildsTable.module.css";
 import { Client_user } from "../../api/types/Client";
 import connectionToNodes from "../../lib/connectionToNodes";
+import {
+  Filter,
+  getColumnFilterProps,
+  getColumnSearchProps,
+} from "../../lib/filterColumns";
 
 interface BuildsTableProps {
   dataSource: Builds_builds_edges_node[];
+}
+
+function getBuildStatusFilters() {
+  let filters: Filter[] = [];
+  forIn(BuildBuildStatus, (value) => {
+    filters.push({
+      text: <BuildStateVisualizer state={value}></BuildStateVisualizer>,
+      value: value,
+    });
+  });
+  return filters;
 }
 
 export function getBuildsForCustomer(
@@ -36,21 +54,40 @@ export function getBuildsForCustomer(
 }
 
 const BuildsTable = ({ dataSource }: BuildsTableProps) => {
-  const { t } = useTranslation("translation");
+  const { t } = useTranslation(["translation", "admin"]);
   const columns: ColumnsType<Builds_builds_edges_node> = [
     {
       title: t("date"),
       dataIndex: "date",
       key: "data",
       render: (date: Date) => date.toLocaleDateString(),
+      sorter: (a, b) => a.date - b.date,
     },
     {
       title: t("buildId"),
       dataIndex: "buildId",
       key: "buildId",
       render: (buildId) => <Typography.Text strong>{buildId}</Typography.Text>,
+      ...getColumnSearchProps<Builds_builds_edges_node>(
+        ["buildId"],
+        t("admin:search", { data: t("buildId") }),
+        t("search"),
+        t("reset")
+      ),
+      sorter: (a, b) => a.buildId.localeCompare(b.buildId),
     },
-    { title: "App", dataIndex: ["app", "name"], key: "app.name" },
+    {
+      title: "App",
+      dataIndex: ["app", "name"],
+      key: "app.name",
+      ...getColumnSearchProps<Builds_builds_edges_node>(
+        ["app", "name"],
+        t("admin:search", { data: t("app") }),
+        t("search"),
+        t("reset")
+      ),
+      sorter: (a, b) => a.app!!.name.localeCompare(b.app!!.name),
+    },
     {
       title: t("state"),
       dataIndex: "buildStatus",
@@ -58,6 +95,11 @@ const BuildsTable = ({ dataSource }: BuildsTableProps) => {
       render: (state: BuildBuildStatus) => {
         return <BuildState state={state}></BuildState>;
       },
+      ...getColumnFilterProps<Builds_builds_edges_node>(
+        ["buildStatus"],
+        getBuildStatusFilters()
+      ),
+      sorter: (a, b) => a.buildStatus.localeCompare(b.buildStatus),
     },
   ];
   return (
