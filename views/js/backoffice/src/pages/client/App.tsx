@@ -110,17 +110,15 @@ const App = () => {
         <Col span={14}>
           <Card className={styles.card}>
             <Title level={2}>{t("client:style")}</Title>
-            {state.template ? (
-              <TemplateSelector
-                value={state.template}
-                onChange={(selected) => {
-                  setState((val) => ({
-                    ...val,
-                    template: selected,
-                  }));
-                }}
-              />
-            ) : null}
+            <TemplateSelector
+              value={state.template!!}
+              onChange={(selected) => {
+                setState((val) => ({
+                  ...val,
+                  template: selected,
+                }));
+              }}
+            />
             <ColorPicker
               value={state.color!!}
               onChange={(selected) => {

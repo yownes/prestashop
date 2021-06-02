@@ -38,7 +38,7 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
   }, [dataUpdate, t]);
   return (
     <>
-      <Row align="middle" justify="start">
+      <Row align="middle" justify="start" gutter={[20, 20]}>
         <Col lg={{ span: 4 }} md={{ span: 8 }} xs={{ span: 8 }}>
           <ImageUpload
             value={data.logo}

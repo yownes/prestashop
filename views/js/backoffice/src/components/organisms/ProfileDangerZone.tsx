@@ -91,7 +91,7 @@ const ProfileDangerZone = ({ confirmPassword }: ProfileDangerZoneProps) => {
             label={t("confirmPassword")}
             rules={[{ required: true, message: t("confirmPasswordToDelete") }]}
           >
-            <Input.Password onFocus={() => setErrors(undefined)} />
+            <Input.Password autoFocus onFocus={() => setErrors(undefined)} />
           </Form.Item>
           <Button loading={deleting} htmlType="submit" type="primary" danger>
             {t("confirmDeleteAccount")}

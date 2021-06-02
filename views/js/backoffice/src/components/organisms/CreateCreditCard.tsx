@@ -88,7 +88,7 @@ const CreateCreditCard = ({ onCreated, form }: CreateCreditCardProps) => {
       }}
     >
       <Form.Item name="name" rules={[{ required: true }]} label={t("fullName")}>
-        <Input placeholder={t("fullName")} />
+        <Input autoFocus placeholder={t("fullName")} />
       </Form.Item>
       <Form.Item name="email" rules={[{ required: true }]} label={t("email")}>
         <Input placeholder={t("email")} type="email" />

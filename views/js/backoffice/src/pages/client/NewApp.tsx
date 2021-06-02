@@ -84,7 +84,7 @@ const NewApp = () => {
           label={t("appName")}
           rules={[{ required: true, message: t("required.app") }]}
         >
-          <Input />
+          <Input autoFocus />
         </Form.Item>
         <Form.Item
           name="apiLink"
