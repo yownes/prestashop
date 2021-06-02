@@ -39,6 +39,7 @@ import { PaymentMethod as PaymentMethodType } from "@stripe/stripe-js";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { colors } from "../../lib/colors";
+import { ICreditCardStripe } from "../molecules/CreditCard";
 
 const { Text } = Typography;
 
@@ -108,131 +109,176 @@ const PaymentMethod = ({ onCreated }: PaymentMethodProps) => {
       message.success(t("client:removePaymentMethodSuccessful"), 4);
     }
   }, [removeData, t]);
+  const card: ICreditCardStripe | undefined =
+    (data?.me?.customer?.paymentMethods &&
+      data?.me?.customer?.defaultPaymentMethod &&
+      JSON.parse(
+        connectionToNodes(data?.me?.customer?.paymentMethods)
+          .find(
+            (payment) =>
+              payment.stripeId ===
+              data?.me?.customer?.defaultPaymentMethod?.stripeId
+          )
+          ?.card.replace(/None/g, "null")
+          .replace(/True/g, "true")
+          .replace(/False/g, "false")
+          .replace(/'/g, '"')!!
+      )) ||
+    undefined;
 
   if (loading) return <Loading />;
 
   return (
     <Row gutter={[20, 20]}>
       <Col span={24}>
+        {card && new Date(card.exp_year, card.exp_month) < new Date() && (
+          <Row gutter={[20, 20]}>
+            <Col span={24}>
+              <Alert
+                showIcon
+                message={t("expiredPayment.message")}
+                description={t("expiredPayment.help")}
+                type="warning"
+              />
+            </Col>
+            <Col></Col>
+          </Row>
+        )}
         <Space wrap>
           {data?.me?.customer ? (
             connectionToNodes(data?.me?.customer?.paymentMethods).map(
-              (node) => (
-                <Card
-                  bodyStyle={{
-                    padding: 0,
-                    marginBottom: 10,
-                  }}
-                  bordered={false}
-                  key={node.stripeId}
-                >
-                  <div
-                    style={{
-                      border:
-                        node.stripeId ===
-                        data?.me?.customer?.defaultPaymentMethod?.stripeId
-                          ? `1px solid ${colors.primary}`
-                          : "1px solid #FFF",
-                      borderRadius: 20,
-                      marginBottom: 5,
+              (node) => {
+                const creditcard: ICreditCardStripe = JSON.parse(
+                  node.card
+                    .replace(/None/g, "null")
+                    .replace(/True/g, "true")
+                    .replace(/False/g, "false")
+                    .replace(/'/g, '"')
+                );
+                return (
+                  <Card
+                    bodyStyle={{
+                      padding: 0,
+                      marginBottom: 10,
                     }}
+                    bordered={false}
+                    key={node.stripeId}
                   >
-                    <CreditCard
-                      data={node.card}
-                      billing={node.billingDetails}
-                    />
-                  </div>
-                  <Space size="middle">
-                    {node.stripeId !==
-                    data?.me?.customer?.defaultPaymentMethod?.stripeId ? (
-                      <>
-                        <Button
-                          icon={<EditOutlined />}
-                          onClick={() => {
-                            setPaymentMethod(node);
-                            setisModalUpdateOpen(true);
-                          }}
-                        />
-                        <Popconfirm
-                          cancelText={t("cancel")}
-                          okText={t("delete")}
-                          title={t("client:warnings.card")}
-                          placement="topLeft"
-                          onConfirm={() => {
-                            if (node.stripeId) {
-                              removePaymentMethod({
-                                variables: { paymentMethodId: node.stripeId },
+                    <div
+                      style={{
+                        border:
+                          node.stripeId ===
+                          data?.me?.customer?.defaultPaymentMethod?.stripeId
+                            ? new Date(
+                                creditcard.exp_year,
+                                creditcard.exp_month
+                              ) < new Date()
+                              ? `1px solid red`
+                              : `1px solid ${colors.primary}`
+                            : "1px solid #FFF",
+                        borderRadius: 20,
+                        marginBottom: 5,
+                      }}
+                    >
+                      <CreditCard
+                        data={node.card}
+                        billing={node.billingDetails}
+                      />
+                    </div>
+                    <Space size="middle">
+                      {node.stripeId !==
+                      data?.me?.customer?.defaultPaymentMethod?.stripeId ? (
+                        <>
+                          <Button
+                            icon={<EditOutlined />}
+                            onClick={() => {
+                              setPaymentMethod(node);
+                              setisModalUpdateOpen(true);
+                            }}
+                          />
+                          <Popconfirm
+                            cancelText={t("cancel")}
+                            okText={t("delete")}
+                            title={t("client:warnings.card")}
+                            placement="topLeft"
+                            onConfirm={() => {
+                              if (node.stripeId) {
+                                removePaymentMethod({
+                                  variables: { paymentMethodId: node.stripeId },
+                                  update(cache, { data: newData }) {
+                                    if (
+                                      newData?.detachPaymentMethod?.ok &&
+                                      data?.me?.customer
+                                    ) {
+                                      cache.evict({
+                                        id: cache.identify({
+                                          ...node,
+                                        }),
+                                      });
+                                      cache.gc();
+                                    }
+                                  },
+                                });
+                              }
+                            }}
+                          >
+                            <Button danger icon={<DeleteOutlined />} />
+                          </Popconfirm>
+                          <Popconfirm
+                            onConfirm={(e) => {
+                              addPayment({
+                                variables: { paymentMethodId: cardId!! },
                                 update(cache, { data: newData }) {
                                   if (
-                                    newData?.detachPaymentMethod?.ok &&
+                                    newData?.addPaymentMethod?.ok &&
                                     data?.me?.customer
                                   ) {
-                                    cache.evict({
+                                    cache.modify({
                                       id: cache.identify({
-                                        ...node,
+                                        ...data.me.customer,
                                       }),
+                                      fields: {
+                                        defaultPaymentMethod(
+                                          prevValue,
+                                          { toReference }
+                                        ) {
+                                          const node = connectionToNodes(
+                                            data?.me?.customer?.paymentMethods
+                                          ).find(
+                                            (node) => node?.stripeId === cardId
+                                          );
+                                          return toReference({ ...node });
+                                        },
+                                      },
                                     });
-                                    cache.gc();
                                   }
                                 },
                               });
-                            }
-                          }}
-                        >
-                          <Button danger icon={<DeleteOutlined />} />
-                        </Popconfirm>
-                        <Popconfirm
-                          onConfirm={(e) => {
-                            addPayment({
-                              variables: { paymentMethodId: cardId!! },
-                              update(cache, { data: newData }) {
-                                if (
-                                  newData?.addPaymentMethod?.ok &&
-                                  data?.me?.customer
-                                ) {
-                                  cache.modify({
-                                    id: cache.identify({ ...data.me.customer }),
-                                    fields: {
-                                      defaultPaymentMethod(
-                                        prevValue,
-                                        { toReference }
-                                      ) {
-                                        const node = connectionToNodes(
-                                          data?.me?.customer?.paymentMethods
-                                        ).find(
-                                          (node) => node?.stripeId === cardId
-                                        );
-                                        return toReference({ ...node });
-                                      },
-                                    },
-                                  });
-                                }
-                              },
-                            });
-                            setisUpdated(true);
-                          }}
-                          title={t("client:warnings.cardDefault")}
-                        >
-                          <Button onClick={() => setCardId(node.stripeId)}>
-                            {t("client:asDefault")}
-                          </Button>
-                        </Popconfirm>
-                      </>
-                    ) : (
-                      <>
-                        <Button
-                          icon={<EditOutlined />}
-                          onClick={() => {
-                            setPaymentMethod(node);
-                            setisModalUpdateOpen(true);
-                          }}
-                        />
-                        <Text strong>({t("client:defaultCard")})</Text>
-                      </>
-                    )}
-                  </Space>
-                </Card>
-              )
+                              setisUpdated(true);
+                            }}
+                            title={t("client:warnings.cardDefault")}
+                          >
+                            <Button onClick={() => setCardId(node.stripeId)}>
+                              {t("client:asDefault")}
+                            </Button>
+                          </Popconfirm>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            icon={<EditOutlined />}
+                            onClick={() => {
+                              setPaymentMethod(node);
+                              setisModalUpdateOpen(true);
+                            }}
+                          />
+                          <Text strong>({t("client:defaultCard")})</Text>
+                        </>
+                      )}
+                    </Space>
+                  </Card>
+                );
+              }
             )
           ) : location.pathname === "/checkout" ? (
             tempPaymentMethod &&

@@ -35,6 +35,11 @@
   "username": "Nombre de usuario",
   "id": "ID",
   "logout": "Cerrar sesión",
+  "expiredPayment": {
+    "message": "Actualiza tu método de pago",
+    "description": "Tu método de pago por defecto ha caducado. Actualízalo para el correcto funcionamiento de tu cuenta",
+    "help": "Tu método de pago por defecto ha caducado. Selecciona otro o crea uno nuevo"
+  },
   "accountStatus": {
     "title": "Estado de la cuenta",
     "BANNED": "Baneado",
