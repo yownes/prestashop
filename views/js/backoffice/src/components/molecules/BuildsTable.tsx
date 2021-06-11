@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, Typography } from "antd";
 import { ColumnsType } from "antd/lib/table";
-import { forIn } from "lodash";
+import forIn from "lodash/forIn";
 import BuildStateVisualizer from "../../components/molecules/BuildState";
 import { useTranslation } from "react-i18next";
 import { Builds_builds_edges_node } from "../../api/types/Builds";

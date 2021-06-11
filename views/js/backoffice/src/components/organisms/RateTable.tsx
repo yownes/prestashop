@@ -2,6 +2,7 @@ import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
 import { Switch, Table, Typography } from "antd";
 import React, { useState } from "react";
+import reverse from "lodash/reverse";
 import { useTranslation } from "react-i18next";
 import { PLANS } from "../../api/queries";
 import { PlanInterval } from "../../api/types/globalTypes";
@@ -14,6 +15,7 @@ import connectionToNodes from "../../lib/connectionToNodes";
 import { CheckoutLocationState } from "../../pages/client/Checkout";
 import Loading from "../atoms/Loading";
 import RateSelection from "../molecules/RateSelection";
+import styles from "./RateTable.module.css";
 
 const { Title } = Typography;
 
@@ -73,7 +75,7 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
   const { data, loading } = useQuery<Plans>(PLANS);
   const [interval, setInterval] = useState(PlanInterval.MONTH);
   if (loading) return <Loading />;
-  const nodes = connectionToNodes(data?.plans);
+  const nodes = reverse(connectionToNodes(data?.plans));
   const dataSource = data?.features
     ?.filter<Plans_features>(notNull)
     .map((feat) => {
@@ -85,6 +87,7 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
       return {
         ...feat,
         ...ids,
+        key: feat.id,
       };
     });
   return (
@@ -94,7 +97,7 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
         columns={[
           {
             title: (
-              <>
+              <div className={styles.switch}>
                 <span>{t("monthlyPayment")} </span>
                 <Switch
                   checked={interval === PlanInterval.MONTH}
@@ -104,7 +107,7 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
                     );
                   }}
                 />
-              </>
+              </div>
             ),
             dataIndex: "name",
             fixed: "left",
@@ -135,8 +138,9 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
           })),
         ]}
         pagination={false}
-        scroll={{ x: 1500 /*, y: "40vh"*/ }}
+        //scroll={{ x: 1500 /*, y: "40vh"*/ }}
         dataSource={dataSource}
+        className={styles.table}
       />
     </>
   );

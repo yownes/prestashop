@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Space, Table, Typography } from "antd";
-import { forIn } from "lodash";
+import forIn from "lodash/forIn";
 import { ColumnsType } from "antd/lib/table";
 import BuildStateVisualizer from "../../components/molecules/BuildState";
 import { FileImageOutlined } from "@ant-design/icons";

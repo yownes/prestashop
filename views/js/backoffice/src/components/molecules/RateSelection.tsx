@@ -33,7 +33,7 @@ const RateSelection = ({
       <Button onClick={() => onPlanSelected(plan)} type="primary">
         {t("select")}
       </Button>
-      <Text type="secondary" style={{ display: "block" }}>
+      <Text type="secondary" style={{ display: "block", marginTop: 10 }}>
         {t("priceWithTaxes")}
       </Text>
     </div>

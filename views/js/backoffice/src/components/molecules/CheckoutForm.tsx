@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, message, Modal, Row, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Divider,
+  message,
+  Modal,
+  Row,
+  Typography,
+} from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@apollo/client";
 import { PlanInterval } from "../../api/types/globalTypes";
@@ -52,21 +61,77 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
       </Col>
       <Col sm={24} md={8}>
         <Row gutter={[20, 20]}>
-          <Card>
+          <Card style={{ width: "100%" }}>
             <Col span={24}>
-              <Title level={2}>{t("yourPayment")}</Title>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Text type="secondary">{plan.name}</Text>
-                <Text type="secondary">
-                  {t("subscriptionResume", {
-                    amount: plan.amount,
-                    interval:
-                      plan.interval === PlanInterval.MONTH
-                        ? t("translation:month")
-                        : t("translation:year"),
-                  })}
+              <Row>
+                <Title level={2}>{t("yourPayment")}</Title>
+              </Row>
+              <Divider />
+              <Row
+                style={{
+                  alignItems: "flex-end",
+                  justifyContent: "space-between",
+                  marginBottom: 5,
+                }}
+              >
+                <Text>{t("Plan")}:</Text>
+                <Text style={{ margin: 0, padding: 0 }} strong>
+                  {plan.name}
                 </Text>
-              </div>
+              </Row>
+              <Row
+                style={{
+                  alignItems: "flex-end",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text>{t("Renovación")}:</Text>
+                <Text style={{ margin: 0, padding: 0 }} strong>
+                  {plan.interval === PlanInterval.MONTH
+                    ? t("translation:monthly")
+                    : t("translation:annual")}
+                </Text>
+              </Row>
+              <Divider />
+              <Row
+                style={{
+                  alignItems: "flex-end",
+                  justifyContent: "space-between",
+                  marginBottom: 5,
+                }}
+              >
+                <Text>{t("Bruto")}:</Text>
+                <Text style={{ margin: 0, padding: 0 }} strong>
+                  {(plan.amount!! / 1.21).toFixed(2).replace(/\./g, ",")}€
+                </Text>
+              </Row>
+              <Row
+                style={{
+                  alignItems: "flex-end",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text>{t("Impuestos")}:</Text>
+                <Text style={{ margin: 0, padding: 0 }} strong>
+                  {(plan.amount!! - plan.amount!! / 1.21)
+                    .toFixed(2)
+                    .replace(/\./g, ",")}
+                  €
+                </Text>
+              </Row>
+              <Row
+                style={{
+                  alignItems: "flex-end",
+                  justifyContent: "space-between",
+                  marginTop: 20,
+                }}
+              >
+                <Text>{t("Total")}:</Text>
+                <Title style={{ margin: 0, padding: 0 }} level={5}>
+                  {plan.amount!!.toFixed(2).replace(/\./g, ",")}€
+                </Title>
+              </Row>
+              <Divider />
             </Col>
             <Col span={24}>
               {paymentMethodId && (

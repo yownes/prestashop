@@ -106,7 +106,7 @@
   "defaultPaymentMethodWarning": "(Se establecerá como el método de pago por defecto)",
   "style": "Estilo",
   "cardDetails": "Detalles de la tarjeta",
-  "yourPayment": "Tu pedido",
+  "yourPayment": "Resumen",
   "subscriptionResume": "Suscripción de {{amount}}€ al {{interval}}",
   "upload": "Subir",
   "uploadLogo": "Subir logo",

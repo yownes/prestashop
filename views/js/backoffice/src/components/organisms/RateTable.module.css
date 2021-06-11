@@ -1,27 +1,17 @@
 .table {
   width: 100%;
-  min-width: 1000px;
+  /* min-width: 1000px; */
   table-layout: fixed;
   overflow-x: scroll;
 }
-.table td {
-  padding: 1rem;
+.table tr th {
+  padding: 0;
 }
 
 .table th {
-  /* padding: 0 1rem 2rem; */
-  vertical-align: bottom;
+  padding: 0 1rem 2rem;
 }
 
-.table .titleColumn {
-  padding: 1rem;
-}
-
-.table td:not(:last-child),
-.table th:not(:last-child) {
-  border-right: solid 1px #333;
-}
-
-.table tr {
-  border-bottom: solid 1px #333;
+.switch {
+  padding-left: 1rem;
 }
