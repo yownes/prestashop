@@ -66,7 +66,7 @@ const Profile = () => {
   const profileMenu = (
     <Menu>
       <Menu.Item>
-        <Link to="/profile/edit">{t("update")}</Link>
+        <Link to="/profile/edit">{t("edit")}</Link>
       </Menu.Item>
       <Menu.Divider></Menu.Divider>
       {data?.me?.subscription && (

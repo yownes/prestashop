@@ -19,7 +19,6 @@ const PersonalData = () => {
         <Loading />
       </Card>
     );
-  console.log("[MY_ACCOUNT data]", data);
   return (
     <Form
       initialValues={{

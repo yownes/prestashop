@@ -48,6 +48,10 @@ export interface AccountBasicData_subscription {
    */
   id: string;
   /**
+   * The datetime this object was created in stripe.
+   */
+  created: any | null;
+  /**
    * End of the current period for which the subscription has been invoiced. At the end of this period, a new invoice will be created.
    */
   currentPeriodEnd: any;

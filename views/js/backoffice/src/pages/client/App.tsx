@@ -107,7 +107,7 @@ const App = () => {
         <Col></Col>
       </Row>
       <Row gutter={[20, 20]}>
-        <Col span={14}>
+        <Col lg={14} xs={24}>
           <Card className={styles.card}>
             <Title level={2}>{t("client:style")}</Title>
             <TemplateSelector
@@ -130,7 +130,7 @@ const App = () => {
             />
           </Card>
         </Col>
-        <Col span={10}>
+        <Col lg={10} xs={24}>
           <Card className={styles.card}>
             {data?.app?.id ? (
               <AppPreview id={data?.app?.id} app={state} />

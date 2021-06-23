@@ -38,6 +38,7 @@ export interface App_app_builds_edges_node {
    */
   id: string;
   buildStatus: BuildBuildStatus;
+  date: any;
 }
 
 export interface App_app_builds_edges {

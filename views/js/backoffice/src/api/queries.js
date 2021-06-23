@@ -22,6 +22,7 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
     isStaff
     subscription {
       id
+      created
       currentPeriodEnd
       plan {
         amount
@@ -153,6 +154,7 @@ export const APP = gql`
           node {
             id
             buildStatus
+            date
           }
         }
       }
