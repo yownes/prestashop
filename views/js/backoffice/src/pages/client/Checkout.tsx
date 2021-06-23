@@ -37,14 +37,14 @@ const Checkout = () => {
   if (!plan && current !== 0) {
     setCurrent(0);
   }
-  if (data?.me?.accountStatus !== AccountAccountStatus.REGISTERED) {
-    if (current === 0) {
-      return <Redirect to="/profile" />;
-    }
-    if (current === 3) {
-      return <Redirect to="/profile" />;
-    }
-  }
+  // if (data?.me?.accountStatus !== AccountAccountStatus.REGISTERED) {
+  //   if (current === 0) {
+  //     return <Redirect to="/profile" />;
+  //   }
+  //   if (current === 3) {
+  //     return <Redirect to="/profile" />;
+  //   }
+  // }
   return (
     <Card>
       <Space direction="vertical" size="middle" style={{ width: "100%" }}>

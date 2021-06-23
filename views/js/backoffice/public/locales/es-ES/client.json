@@ -94,6 +94,7 @@
     "101": "Recurso no encontrado",
     "102": "No tienes permiso para acceder al recurso solicitado",
     "103": "La tienda ya tiene una aplicación creada",
+    "105": "Acción restringida para cuentas baneadas",
     "201": "Introduce la url de una tienda válida"
   },
   "personalData": "Datos personales",

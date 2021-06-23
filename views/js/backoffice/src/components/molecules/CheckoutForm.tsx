@@ -152,7 +152,14 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
                               if (data?.subscribe?.ok) {
                                 onSubscribed();
                               } else {
-                                message.error(data?.subscribe?.error, 4);
+                                data?.subscribe?.error === "105"
+                                  ? message.error(
+                                      t(
+                                        `client:appErrors.${data?.subscribe?.error}`
+                                      ),
+                                      4
+                                    )
+                                  : message.error(data?.subscribe?.error, 4);
                               }
                             })
                             .catch((err) => message.error(err, 4));
