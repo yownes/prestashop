@@ -19,7 +19,7 @@ import { getAppBuildState } from "../../lib/appBuildState";
 import styles from "./AppInfo.module.css";
 import BuildState from "./BuildState";
 import ImageUpload from "./FileUpload";
-import { StoreAppInput } from "../../api/types/globalTypes";
+import { BuildBuildStatus, StoreAppInput } from "../../api/types/globalTypes";
 import { App_app, App_app_builds_edges_node } from "../../api/types/App";
 import { BUILS_ALLOWED_BY_YEAR } from "../../data/variables";
 import format from "date-fns/format";
@@ -57,7 +57,6 @@ function getRenewalDate(date: Date) {
   let renewalDate = new Date();
 
   while (!renewal) {
-    console.log("while");
     renewalDate = addYearToDate(date, n++);
     renewal = date <= new Date() && new Date() <= renewalDate;
   }
@@ -79,6 +78,11 @@ function countCurrentBuilds(
 const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
   const { t } = useTranslation(["translation", "client"]);
   const [limitExceded, setLimitExceded] = useState(false);
+  const [allowUpdates, setAllowUpdates] = useState(false);
+  const [allowChanges, setAllowUChanges] = useState(false);
+  const [appBuildStatus, setAppBuildStatus] = useState<BuildBuildStatus>(
+    BuildBuildStatus.WAITING
+  );
   const [updateApp, { loading: loadingUpdate, data: dataUpdate }] = useMutation<
     UpdateApp,
     UpdateAppVariables
@@ -91,6 +95,9 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
       message.success(t("client:saveChangesSuccessful"), 4);
     }
   }, [dataUpdate, t]);
+  useEffect(() => {
+    setAppBuildStatus(getAppBuildState(app));
+  }, [app]);
   const builds = connectionToNodes(app?.builds);
   const renewalBuild = getRenewalBuild(builds);
   const renewalDate = renewalBuild
@@ -190,7 +197,7 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
         <Col lg={{ span: 5 }} md={{ span: 8 }} xs={{ span: 8 }}>
           <Space direction="vertical" size="middle">
             <Row>
-              <BuildState state={getAppBuildState(app)} />
+              <BuildState state={appBuildStatus} />
             </Row>
             <Row>
               <Col>
@@ -236,7 +243,11 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
             <Row align="middle" justify="start">
               <Popconfirm
                 cancelText={t("cancel")}
-                disabled={remainingBuilds <= 0}
+                disabled={
+                  remainingBuilds <= 0 ||
+                  (appBuildStatus !== BuildBuildStatus.STALLED &&
+                    appBuildStatus !== BuildBuildStatus.PUBLISHED)
+                }
                 okText={
                   app?.builds.edges.length === 0 ? t("publish") : t("update")
                 }
@@ -260,20 +271,43 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
                 }}
               >
                 <Tooltip
-                  title={"Límite de actualizaciones alcanzado"}
-                  visible={limitExceded && remainingBuilds <= 0}
+                  title={
+                    limitExceded && remainingBuilds <= 0
+                      ? t("client:limitExceded")
+                      : t("client:updateInProgress")
+                  }
+                  visible={
+                    (limitExceded && remainingBuilds <= 0) ||
+                    (allowUpdates &&
+                      appBuildStatus !== BuildBuildStatus.STALLED &&
+                      appBuildStatus !== BuildBuildStatus.PUBLISHED)
+                  }
                 >
-                  <Button
-                    className={styles.info__button}
-                    danger={remainingBuilds <= 0}
-                    onMouseEnter={() => setLimitExceded(true)}
-                    onMouseLeave={() => setLimitExceded(false)}
-                    type={remainingBuilds <= 0 ? "default" : "primary"}
+                  <div
+                    className={styles.info__buttonContainer}
+                    onMouseEnter={() => {
+                      setAllowUpdates(true);
+                      setLimitExceded(true);
+                    }}
+                    onMouseLeave={() => {
+                      setAllowUpdates(false);
+                      setLimitExceded(false);
+                    }}
                   >
-                    {app?.builds.edges.length === 0
-                      ? t("client:publishApp")
-                      : t("client:updateApp")}
-                  </Button>
+                    <Button
+                      className={styles.info__button}
+                      danger={remainingBuilds <= 0}
+                      disabled={
+                        appBuildStatus !== BuildBuildStatus.STALLED &&
+                        appBuildStatus !== BuildBuildStatus.PUBLISHED
+                      }
+                      type={remainingBuilds <= 0 ? "default" : "primary"}
+                    >
+                      {app?.builds.edges.length === 0
+                        ? t("client:publishApp")
+                        : t("client:updateApp")}
+                    </Button>
+                  </div>
                 </Tooltip>
               </Popconfirm>
             </Row>
@@ -285,20 +319,19 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
                 title={
                   <Trans
                     i18nKey={
-                      app?.builds.edges.length === 0
-                        ? "warnings.publish"
-                        : "warnings.update"
+                      appBuildStatus === BuildBuildStatus.QUEUED
+                        ? "warnings.saveApply"
+                        : app?.builds.edges.length === 0
+                        ? "warnings.saveNotApplyFirst"
+                        : "warnings.saveNotApplyNoFirst"
                     }
                     ns="client"
                   >
                     <strong></strong>
                     <p></p>
-                    <p></p>
-                    <p>{{ num: remainingBuilds }}</p>
                   </Trans>
                 }
                 onConfirm={() => {
-                  console.log("SAVE CHANGES APP");
                   if (data.apiLink === "" || data.name === "") {
                     message.error(t("client:saveChangesError"), 4);
                   } else {
@@ -349,14 +382,29 @@ const AppInfo = ({ app, id, data, onChange, hasChanged }: AppInfoProps) => {
                   }
                 }}
               >
-                <Button
-                  className={styles.info__button}
-                  disabled={!hasChanged || loadingUpdate}
-                  loading={loadingUpdate}
-                  type="ghost"
+                <Tooltip
+                  title={t("client:noChanges")}
+                  visible={!hasChanged && allowChanges}
                 >
-                  {t("client:saveChanges")}
-                </Button>
+                  <div
+                    className={styles.info__buttonContainer}
+                    onMouseEnter={() => {
+                      setAllowUChanges(true);
+                    }}
+                    onMouseLeave={() => {
+                      setAllowUChanges(false);
+                    }}
+                  >
+                    <Button
+                      className={styles.info__button}
+                      disabled={!hasChanged || loadingUpdate}
+                      loading={loadingUpdate}
+                      type="ghost"
+                    >
+                      {t("client:saveChanges")}
+                    </Button>
+                  </div>
+                </Tooltip>
               </Popconfirm>
             </Row>
           </Space>

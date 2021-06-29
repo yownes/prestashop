@@ -45,12 +45,20 @@
   grid-column: 4;
   padding-left: 1rem;
 }
-/* .info__button {
+.info__buttonContainer {
+  width: 100%;
+  height: 100%;
+}
+.info__button {
   display: block;
   width: 100%;
-} */
+}
 .info__icon {
   position: absolute;
   right: 1.5rem;
   top: 1.5rem;
+}
+
+button[disabled] {
+  pointer-events: none;
 }
