@@ -56,6 +56,7 @@
   "isActive": "Activo",
   "plan": "Suscripción",
   "noPlan": "Sin suscripción activa",
+  "canceledAtPeriodEnd": "renovación cancelada. Fin de la suscripción el",
   "currentPeriodEnd": "Renovación el",
   "select": "Seleccionar",
   "priceWithTaxes": "Precio con IVA incluido",

@@ -73,13 +73,27 @@ const ProfileInfo = ({ profile, action, verified }: ProfileInfoProps) => {
               {"/"}
               {t(`${profile.subscription.plan?.interval}`.toLocaleLowerCase())})
             </Text>
-            <Text>, {t("currentPeriodEnd").toLocaleLowerCase()} </Text>
-            <Text>
-              {format(
-                new Date(profile.subscription.currentPeriodEnd),
-                "dd/MM/yyyy"
-              )}
-            </Text>
+            {profile.subscription.cancelAtPeriodEnd ? (
+              <>
+                <Text>, {t("canceledAtPeriodEnd")} </Text>
+                <Text>
+                  {format(
+                    new Date(profile.subscription.currentPeriodEnd),
+                    "dd/MM/yyyy"
+                  )}
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text>, {t("currentPeriodEnd").toLocaleLowerCase()} </Text>
+                <Text>
+                  {format(
+                    new Date(profile.subscription.currentPeriodEnd),
+                    "dd/MM/yyyy"
+                  )}
+                </Text>
+              </>
+            )}
           </>
         ) : (
           <Text>{t("noPlan")}</Text>

@@ -32,11 +32,36 @@ export enum BuildBuildStatus {
 /**
  * An enumeration.
  */
+export enum BuildStatus {
+  GENERATING = "GENERATING",
+  PUBLISHED = "PUBLISHED",
+  QUEUED = "QUEUED",
+  STALLED = "STALLED",
+  UPLOADING = "UPLOADING",
+  WAITING = "WAITING",
+}
+
+/**
+ * An enumeration.
+ */
 export enum PlanInterval {
   DAY = "DAY",
   MONTH = "MONTH",
   WEEK = "WEEK",
   YEAR = "YEAR",
+}
+
+/**
+ * An enumeration.
+ */
+export enum SubscriptionStatus {
+  ACTIVE = "ACTIVE",
+  CANCELED = "CANCELED",
+  INCOMPLETE = "INCOMPLETE",
+  INCOMPLETE_EXPIRED = "INCOMPLETE_EXPIRED",
+  PAST_DUE = "PAST_DUE",
+  TRIALING = "TRIALING",
+  UNPAID = "UNPAID",
 }
 
 export interface PaymentBillingDetailsAddressInput {

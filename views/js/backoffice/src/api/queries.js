@@ -22,8 +22,10 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
     isStaff
     subscription {
       id
+      cancelAtPeriodEnd
       created
       currentPeriodEnd
+      status
       plan {
         amount
         interval
@@ -193,6 +195,7 @@ export const PLANS = gql`
           id
           name
           description
+          metadata
           features {
             id
           }

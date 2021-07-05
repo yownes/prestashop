@@ -23,12 +23,16 @@ import {
 } from "../../components/molecules";
 import { APPS, MY_ACCOUNT } from "../../api/queries";
 import { MyAccount } from "../../api/types/MyAccount";
-import { AccountAccountStatus } from "../../api/types/globalTypes";
+import {
+  AccountAccountStatus,
+  SubscriptionStatus,
+} from "../../api/types/globalTypes";
 import ProfileDangerZone from "../../components/organisms/ProfileDangerZone";
 import AppTable from "../../components/molecules/AppTable";
-import { UNSUBSCRIBE } from "../../api/mutations";
+import { RESUBSCRIBE, UNSUBSCRIBE } from "../../api/mutations";
 import { Apps, AppsVariables } from "../../api/types/Apps";
 import { Unsubscribe, UnsubscribeVariables } from "../../api/types/Unsubscribe";
+import { Resubscribe, ResubscribeVariables } from "../../api/types/Resubscribe";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { Trans, useTranslation } from "react-i18next";
 
@@ -37,6 +41,7 @@ const Profile = () => {
   const [confirmPassword, setConfirmPassword] = useState(false);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const [isUnsubscribed, setIsUnsubscribed] = useState(false);
+  const [isResubscribed, setIsResubscribed] = useState(false);
   const { t } = useTranslation(["translation", "client"]);
   const { loading, data } = useQuery<MyAccount>(MY_ACCOUNT);
   const { loading: loadingData, data: appsData } = useQuery<
@@ -49,6 +54,10 @@ const Profile = () => {
     unsubscribe,
     { loading: unsubscribing, data: unsubscribeData },
   ] = useMutation<Unsubscribe, UnsubscribeVariables>(UNSUBSCRIBE);
+  const [
+    resubscribe,
+    { loading: resubscribing, data: resubscribeData },
+  ] = useMutation<Resubscribe, ResubscribeVariables>(RESUBSCRIBE);
   message.config({
     maxCount: 1,
   });
@@ -60,6 +69,14 @@ const Profile = () => {
       }
     }
   }, [isUnsubscribed, t, unsubscribeData]);
+  useEffect(() => {
+    if (resubscribeData?.takeUp?.ok) {
+      if (isResubscribed) {
+        message.success(t("client:resubscribeSuccessful"), 4);
+        setIsResubscribed(false);
+      }
+    }
+  }, [isResubscribed, t, resubscribeData]);
 
   if (loading || loadingData) return <Loading />;
 
@@ -69,7 +86,7 @@ const Profile = () => {
         <Link to="/profile/edit">{t("edit")}</Link>
       </Menu.Item>
       <Menu.Divider></Menu.Divider>
-      {data?.me?.subscription && (
+      {data?.me?.subscription && !data.me.subscription.cancelAtPeriodEnd && (
         <Menu.Item>
           <Popconfirm
             cancelText={t("cancel")}
@@ -186,6 +203,49 @@ const Profile = () => {
                 cta={{ title: t("client:subscribe"), link: "/checkout" }}
               ></Placeholder>
             )}
+            {data?.me?.subscription?.status === SubscriptionStatus.ACTIVE &&
+              data.me.subscription.cancelAtPeriodEnd && (
+                <Placeholder claim={t("client:reSubscribeNow")}>
+                  {
+                    <Popconfirm
+                      cancelText={t("cancel")}
+                      okText={t("confirm")}
+                      title={
+                        <Trans
+                          i18nKey={"warnings.unCancelSubscription"}
+                          ns="client"
+                        >
+                          <strong></strong>
+                          <p></p>
+                        </Trans>
+                      }
+                      placement="left"
+                      onConfirm={() => {
+                        if (data?.me?.id) {
+                          resubscribe({
+                            variables: { userId: data.me.id },
+                            update(cache, { data: resubs }) {
+                              if (resubs?.takeUp?.ok) {
+                                cache.modify({
+                                  id: cache.identify({
+                                    ...data.me?.subscription,
+                                  }),
+                                  fields: {
+                                    cancelAtPeriodEnd: () => false,
+                                  },
+                                });
+                              }
+                            },
+                          });
+                          setIsResubscribed(true);
+                        }
+                      }}
+                    >
+                      <Button type="primary">{t("client:reSubscribe")}</Button>
+                    </Popconfirm>
+                  }
+                </Placeholder>
+              )}
           </Card>
         </Col>
         <Col lg={12} xs={24}>
@@ -221,6 +281,7 @@ const Profile = () => {
         <ProfileDangerZone confirmPassword={confirmPassword} />
       </Modal>
       {unsubscribing && <LoadingFullScreen tip={t("client:unsubscribing")} />}
+      {resubscribing && <LoadingFullScreen tip={t("client:resubscribing")} />}
     </>
   );
 };

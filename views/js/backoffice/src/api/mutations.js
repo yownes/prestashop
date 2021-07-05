@@ -151,6 +151,14 @@ export const CREATE_APP = gql`
   }
 `;
 
+export const GENERATE_APP = gql`
+  mutation GenerateApp($appId: ID!) {
+    generateApp(id: $appId) {
+      state
+    }
+  }
+`;
+
 /**
  * ACCOUNT
  */
@@ -224,6 +232,15 @@ export const SUBSCRIBE = gql`
 export const UNSUBSCRIBE = gql`
   mutation Unsubscribe($userId: ID!) {
     dropOut(userId: $userId) {
+      ok
+      error
+    }
+  }
+`;
+
+export const RESUBSCRIBE = gql`
+  mutation Resubscribe($userId: ID!) {
+    takeUp(userId: $userId) {
       ok
       error
     }

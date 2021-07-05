@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { AccountAccountStatus, PlanInterval, BuildBuildStatus } from "./globalTypes";
+import { AccountAccountStatus, SubscriptionStatus, PlanInterval, BuildBuildStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: Client
@@ -48,6 +48,10 @@ export interface Client_user_subscription {
    */
   id: string;
   /**
+   * If the subscription has been canceled with the ``at_period_end`` flag set to true, ``cancel_at_period_end`` on the subscription will be true. You can use this attribute to determine whether a subscription that has a status of active is scheduled to be canceled at the end of the current period.
+   */
+  cancelAtPeriodEnd: boolean;
+  /**
    * The datetime this object was created in stripe.
    */
   created: any | null;
@@ -55,6 +59,10 @@ export interface Client_user_subscription {
    * End of the current period for which the subscription has been invoiced. At the end of this period, a new invoice will be created.
    */
   currentPeriodEnd: any;
+  /**
+   * The status of this subscription.
+   */
+  status: SubscriptionStatus;
   /**
    * The plan associated with this subscription. This value will be `null` for multi-plan subscriptions
    */

@@ -71,6 +71,10 @@ export interface Plans_plans_edges_node {
    * A description of this object.
    */
   description: string | null;
+  /**
+   * A set of key/value pairs that you can attach to an object. It can be useful for storing additional information about an object in a structured format.
+   */
+  metadata: string | null;
   features: Plans_plans_edges_node_features[];
   /**
    * The product whose pricing this plan determines.
