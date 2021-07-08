@@ -9,7 +9,7 @@ import { useQuery } from "@apollo/client";
 import { Link, Redirect } from "react-router-dom";
 import { AccountAccountStatus } from "../../api/types/globalTypes";
 import { MyAccount } from "../../api/types/MyAccount";
-import { Plans_plans_edges_node_planSet_edges_node } from "../../api/types/Plans";
+import { Plans_products_edges_node_prices_edges_node } from "../../api/types/Plans";
 import { MY_ACCOUNT } from "../../api/queries";
 import Loading from "../../components/atoms/Loading";
 import CheckoutForm from "../../components/molecules/CheckoutForm";
@@ -17,7 +17,7 @@ import { RateTable } from "../../components/organisms";
 import { useTranslation } from "react-i18next";
 
 export interface CheckoutLocationState
-  extends Plans_plans_edges_node_planSet_edges_node {
+  extends Plans_products_edges_node_prices_edges_node {
   name: string;
 }
 

@@ -9,6 +9,38 @@ import { AccountAccountStatus, SubscriptionStatus, PlanInterval, BuildBuildStatu
 // GraphQL query operation: Client
 // ====================================================
 
+export interface Client_user_subscription_plan_product_prices_edges_node {
+  __typename: "StripePriceType";
+  /**
+   * The unit amount in cents to be charged, represented as a whole integer if possible. Null if a sub-cent precision is required.
+   */
+  unitAmount: number | null;
+  /**
+   * Three-letter ISO currency code
+   */
+  currency: string;
+  /**
+   * The recurring components of a price such as `interval` and `usage_type`.
+   */
+  recurring: any | null;
+}
+
+export interface Client_user_subscription_plan_product_prices_edges {
+  __typename: "StripePriceTypeEdge";
+  /**
+   * The item at the end of the edge
+   */
+  node: Client_user_subscription_plan_product_prices_edges_node | null;
+}
+
+export interface Client_user_subscription_plan_product_prices {
+  __typename: "StripePriceTypeConnection";
+  /**
+   * Contains the nodes in this connection.
+   */
+  edges: (Client_user_subscription_plan_product_prices_edges | null)[];
+}
+
 export interface Client_user_subscription_plan_product {
   __typename: "StripeProductType";
   /**
@@ -19,6 +51,10 @@ export interface Client_user_subscription_plan_product {
    * The product's name, meant to be displayable to the customer. Applicable to both `service` and `good` types.
    */
   name: string;
+  /**
+   * The product this price is associated with.
+   */
+  prices: Client_user_subscription_plan_product_prices;
 }
 
 export interface Client_user_subscription_plan {

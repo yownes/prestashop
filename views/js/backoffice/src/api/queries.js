@@ -33,6 +33,15 @@ export const ACCOUNT_BASIC_DATA_FRAGMENT = gql`
         product {
           id
           name
+          prices {
+            edges {
+              node {
+                unitAmount
+                currency
+                recurring
+              }
+            }
+          }
         }
       }
     }
@@ -189,7 +198,7 @@ export const PLANS = gql`
       id
       name
     }
-    plans {
+    products {
       edges {
         node {
           id
@@ -199,13 +208,13 @@ export const PLANS = gql`
           features {
             id
           }
-          planSet {
+          prices {
             edges {
               node {
                 id
                 stripeId
-                amount
-                interval
+                recurring
+                unitAmount
                 active
               }
             }

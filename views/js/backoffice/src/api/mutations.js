@@ -221,8 +221,8 @@ export const REMOVE_PAYMENT_METHOD = gql`
 `;
 
 export const SUBSCRIBE = gql`
-  mutation Subscribe($paymentMethodId: ID!, $planId: ID!) {
-    subscribe(paymentMethodId: $paymentMethodId, planId: $planId) {
+  mutation Subscribe($paymentMethodId: ID!, $priceId: ID!) {
+    subscribe(paymentMethodId: $paymentMethodId, priceId: $priceId) {
       ok
       error
     }

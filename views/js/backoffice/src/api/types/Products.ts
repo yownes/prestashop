@@ -4,21 +4,21 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: Plans
+// GraphQL query operation: Products
 // ====================================================
 
-export interface Plans_features {
+export interface Products_features {
   __typename: "FeaturesType";
   id: string;
   name: string;
 }
 
-export interface Plans_products_edges_node_features {
+export interface Products_products_edges_node_features {
   __typename: "FeaturesType";
   id: string;
 }
 
-export interface Plans_products_edges_node_prices_edges_node {
+export interface Products_products_edges_node_prices_edges_node {
   __typename: "StripePriceType";
   /**
    * The ID of the object.
@@ -39,23 +39,23 @@ export interface Plans_products_edges_node_prices_edges_node {
   active: boolean;
 }
 
-export interface Plans_products_edges_node_prices_edges {
+export interface Products_products_edges_node_prices_edges {
   __typename: "StripePriceTypeEdge";
   /**
    * The item at the end of the edge
    */
-  node: Plans_products_edges_node_prices_edges_node | null;
+  node: Products_products_edges_node_prices_edges_node | null;
 }
 
-export interface Plans_products_edges_node_prices {
+export interface Products_products_edges_node_prices {
   __typename: "StripePriceTypeConnection";
   /**
    * Contains the nodes in this connection.
    */
-  edges: (Plans_products_edges_node_prices_edges | null)[];
+  edges: (Products_products_edges_node_prices_edges | null)[];
 }
 
-export interface Plans_products_edges_node {
+export interface Products_products_edges_node {
   __typename: "StripeProductType";
   /**
    * The ID of the object.
@@ -73,30 +73,30 @@ export interface Plans_products_edges_node {
    * A set of key/value pairs that you can attach to an object. It can be useful for storing additional information about an object in a structured format.
    */
   metadata: any | null;
-  features: Plans_products_edges_node_features[];
+  features: Products_products_edges_node_features[];
   /**
    * The product this price is associated with.
    */
-  prices: Plans_products_edges_node_prices;
+  prices: Products_products_edges_node_prices;
 }
 
-export interface Plans_products_edges {
+export interface Products_products_edges {
   __typename: "StripeProductTypeEdge";
   /**
    * The item at the end of the edge
    */
-  node: Plans_products_edges_node | null;
+  node: Products_products_edges_node | null;
 }
 
-export interface Plans_products {
+export interface Products_products {
   __typename: "StripeProductTypeConnection";
   /**
    * Contains the nodes in this connection.
    */
-  edges: (Plans_products_edges | null)[];
+  edges: (Products_products_edges | null)[];
 }
 
-export interface Plans {
-  features: (Plans_features | null)[] | null;
-  products: Plans_products | null;
+export interface Products {
+  features: (Products_features | null)[] | null;
+  products: Products_products | null;
 }

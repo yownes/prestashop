@@ -69,7 +69,7 @@ const Clients = () => {
   const dataSource = connectionToNodes(data?.users).filter(
     (data) => !data.isStaff
   );
-  const plans: IPlan[] = connectionToNodes(plansData?.plans).map((data) => ({
+  const plans: IPlan[] = connectionToNodes(plansData?.products).map((data) => ({
     id: data.id,
     name: data.name,
   }));

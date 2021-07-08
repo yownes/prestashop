@@ -27,8 +27,13 @@ const RateSelection = ({
       <Text>{subtitle}</Text>
       <Title level={2}>{title}</Title>
       <Title level={3}>
-        <Text strong>{plan.amount}</Text>€/
-        {plan.interval === PlanInterval.MONTH ? t("month") : t("year")}
+        <Text strong>
+          {plan.unitAmount
+            ? (plan.unitAmount / 100).toFixed(2).replace(/\./g, ",")
+            : "-"}
+        </Text>
+        €/
+        {plan.recurring.interval === PlanInterval.DAY ? t("month") : t("year")}
       </Title>
       <Button onClick={() => onPlanSelected(plan)} type="primary">
         {t("select")}

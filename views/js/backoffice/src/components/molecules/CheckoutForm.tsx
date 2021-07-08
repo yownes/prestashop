@@ -87,7 +87,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
               >
                 <Text>{t("Renovación")}:</Text>
                 <Text style={{ margin: 0, padding: 0 }} strong>
-                  {plan.interval === PlanInterval.MONTH
+                  {plan.recurring.interval === PlanInterval.DAY
                     ? t("translation:monthly")
                     : t("translation:annual")}
                 </Text>
@@ -102,7 +102,12 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
               >
                 <Text>{t("Bruto")}:</Text>
                 <Text style={{ margin: 0, padding: 0 }} strong>
-                  {(plan.amount!! / 1.21).toFixed(2).replace(/\./g, ",")}€
+                  {plan.unitAmount
+                    ? (plan.unitAmount / 100 / 1.21)
+                        .toFixed(2)
+                        .replace(/\./g, ",")
+                    : "-"}
+                  €
                 </Text>
               </Row>
               <Row
@@ -113,9 +118,11 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
               >
                 <Text>{t("Impuestos")}:</Text>
                 <Text style={{ margin: 0, padding: 0 }} strong>
-                  {(plan.amount!! - plan.amount!! / 1.21)
-                    .toFixed(2)
-                    .replace(/\./g, ",")}
+                  {plan.unitAmount
+                    ? (plan.unitAmount / 100 - plan.unitAmount / 100 / 1.21)
+                        .toFixed(2)
+                        .replace(/\./g, ",")
+                    : "-"}
                   €
                 </Text>
               </Row>
@@ -128,7 +135,10 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
               >
                 <Text>{t("Total")}:</Text>
                 <Title style={{ margin: 0, padding: 0 }} level={5}>
-                  {plan.amount!!.toFixed(2).replace(/\./g, ",")}€
+                  {plan.unitAmount
+                    ? (plan.unitAmount / 100).toFixed(2).replace(/\./g, ",")
+                    : "-"}
+                  €
                 </Title>
               </Row>
               <Divider />
@@ -145,7 +155,7 @@ const CheckoutForm = ({ onSubscribed, plan }: CheckoutFormProps) => {
                           createSubscription({
                             variables: {
                               paymentMethodId,
-                              planId: plan.stripeId!!,
+                              priceId: plan.stripeId!!,
                             },
                           })
                             .then(({ data }) => {

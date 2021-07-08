@@ -19,5 +19,5 @@ export interface Subscribe {
 
 export interface SubscribeVariables {
   paymentMethodId: string;
-  planId: string;
+  priceId: string;
 }

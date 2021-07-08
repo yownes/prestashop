@@ -24,17 +24,17 @@ export interface MyPaymentMethods_me_customer_paymentMethods_edges_node {
   id: string;
   stripeId: string | null;
   /**
-   * If this is a card PaymentMethod, this hash contains details about the card.
+   * Additional information for payment methods of type `card`
    */
-  card: string;
+  card: any | null;
   /**
    * Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
    */
-  billingDetails: string;
+  billingDetails: any;
   /**
    * A set of key/value pairs that you can attach to an object. It can be useful for storing additional information about an object in a structured format.
    */
-  metadata: string | null;
+  metadata: any | null;
 }
 
 export interface MyPaymentMethods_me_customer_paymentMethods_edges {
@@ -64,7 +64,7 @@ export interface MyPaymentMethods_me_customer {
    */
   defaultPaymentMethod: MyPaymentMethods_me_customer_defaultPaymentMethod | null;
   /**
-   * Customer to which this PaymentMethod is saved.This will not be set when the PaymentMethod has not been saved to a Customer.
+   * Customer to which this PaymentMethod is saved. This will not be set when the PaymentMethod has not been saved to a Customer.
    */
   paymentMethods: MyPaymentMethods_me_customer_paymentMethods;
 }

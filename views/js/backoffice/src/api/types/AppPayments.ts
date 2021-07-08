@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface AppPayments_app_paymentMethod {
-  __typename: "PaymentMethodType";
+  __typename: "PaymentType";
   /**
    * The ID of the object.
    */
