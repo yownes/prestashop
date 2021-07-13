@@ -9,7 +9,7 @@ import { PlanInterval } from "../../api/types/globalTypes";
 import {
   Plans,
   Plans_features,
-  Plans_plans_edges_node_planSet_edges_node,
+  Plans_products_edges_node_prices_edges_node,
 } from "../../api/types/Plans";
 import connectionToNodes from "../../lib/connectionToNodes";
 import { CheckoutLocationState } from "../../pages/client/Checkout";
@@ -37,13 +37,21 @@ interface RateTableProps {
 }
 
 function selectPlan(
-  plans: Plans_plans_edges_node_planSet_edges_node[],
+  prices: Plans_products_edges_node_prices_edges_node[],
   interval: PlanInterval,
   name: string
 ): CheckoutLocationState {
-  const plan = plans
+  console.log(
+    "Prices",
+    JSON.parse(prices[0].recurring),
+    JSON.parse(prices[0].recurring).interval
+  );
+  const plan = prices
     .filter((plan) => plan.active)
-    .find((plan) => plan.interval === interval);
+    .find(
+      (plan) => JSON.parse(plan.recurring).interval.toUpperCase() === interval
+    );
+  console.log("plan", plan);
   if (plan) {
     return {
       ...plan,
@@ -51,11 +59,11 @@ function selectPlan(
     };
   } else {
     return {
-      __typename: "StripePlanType",
-      amount: 0,
+      __typename: "StripePriceType",
+      unitAmount: 0,
       id: "-1",
       stripeId: "-1",
-      interval: PlanInterval.MONTH,
+      recurring: { interval: PlanInterval.DAY },
       name,
       active: true,
     };
@@ -73,12 +81,13 @@ function notNull(
 const RateTable = ({ onPlanSelected }: RateTableProps) => {
   const { t } = useTranslation("client");
   const { data, loading } = useQuery<Plans>(PLANS);
-  const [interval, setInterval] = useState(PlanInterval.MONTH);
+  const [interval, setInterval] = useState(PlanInterval.DAY);
   if (loading) return <Loading />;
-  const nodes = reverse(connectionToNodes(data?.plans));
+  const nodes = reverse(connectionToNodes(data?.products));
   const dataSource = data?.features
     ?.filter<Plans_features>(notNull)
     .map((feat) => {
+      console.log("feat", feat);
       const ids = nodes
         .map((node) => ({
           [node.id]: node.features.map((f) => f.id).includes(feat.id),
@@ -90,6 +99,23 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
         key: feat.id,
       };
     });
+  console.log("datasource", dataSource);
+  const appsAllowed = nodes
+    .map(
+      (plan) =>
+        plan.metadata && {
+          key: "allowedApps",
+          __typename: "CustomType",
+          [plan.id]: JSON.parse(plan.metadata.replace(/'/g, '"')),
+          name: Object.keys(JSON.parse(plan.metadata.replace(/'/g, '"'))),
+        }
+    )
+    .reduce((a, b) => ({ ...a, ...b }), {});
+  console.log("appsAllowed", appsAllowed);
+  // dataSource?.push(appsAllowed);
+  console.log("dataSource", dataSource);
+  // const asign = [dataSource, appsAllowed];
+  // console.log("ASIGN", asign);
   return (
     <>
       <Title level={2}>{t("client:selectPlan")}</Title>
@@ -100,11 +126,9 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
               <div className={styles.switch}>
                 <span>{t("monthlyPayment")} </span>
                 <Switch
-                  checked={interval === PlanInterval.MONTH}
+                  checked={interval === PlanInterval.DAY}
                   onChange={(checked) => {
-                    setInterval(
-                      checked ? PlanInterval.MONTH : PlanInterval.YEAR
-                    );
+                    setInterval(checked ? PlanInterval.DAY : PlanInterval.WEEK);
                   }}
                 />
               </div>
@@ -114,12 +138,13 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
           },
           ...nodes.map((rate, i) => ({
             title: (
+              // <></>
               <RateSelection
                 key={rate.id}
                 title={rate.name}
                 subtitle={rate.description ?? "-"}
                 plan={selectPlan(
-                  connectionToNodes(rate.planSet),
+                  connectionToNodes(rate.prices),
                   interval,
                   rate.name
                 )}
@@ -129,6 +154,7 @@ const RateTable = ({ onPlanSelected }: RateTableProps) => {
             key: rate.id,
             dataIndex: rate.id,
             render(text: any, record: Plans_features, index: number) {
+              // console.log("text", text);
               return text ? (
                 <CheckOutlined style={{ fontSize: 20, color: "#00ec93" }} />
               ) : (
