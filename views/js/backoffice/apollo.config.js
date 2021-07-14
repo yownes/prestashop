@@ -3,7 +3,7 @@ module.exports = {
     includes: ["./src/api/*.js"],
     service: {
       name: "yownes-graphql-backend",
-      url: "http://localhost:8000/graphql",
+      url: "http://localhost:1337/graphql",
     },
   },
 };
