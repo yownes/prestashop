@@ -20,7 +20,7 @@ require_once(DIR_PLUGIN . 'system/engine/loader.php');
 require_once(DIR_PLUGIN . 'system/engine/model.php');
 require_once(DIR_PLUGIN . 'system/engine/registry.php');
 require_once(DIR_PLUGIN . 'system/engine/proxy.php');
-require_once(DIR_PLUGIN . 'system/vendor/autoload.php');
+require_once(DIR_PLUGIN . 'vendor/autoload.php');
 require_once(DIR_PLUGIN . 'system/helper/MySafeException.php');
 
 function start($context, $translator, $objectPresenter)
