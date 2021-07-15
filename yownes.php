@@ -47,7 +47,7 @@ class Yownes extends Module
     public function install()
     {
         return parent::install() &&
-        $this->registerAdminTab() && $this->registerAdminAjaxTab();
+        $this->registerAdminTab() && $this->registerAdminAjaxTab() && $this->installDatabase();
     }
 
     /**
@@ -58,7 +58,7 @@ class Yownes extends Module
     {
         return Configuration::deleteByName($this->name) &&
         parent::uninstall() &&
-        $this->deleteAdminTab();
+        $this->deleteAdminTab() && $this->uninstallDatabase();
     }
 
     /**
@@ -165,6 +165,56 @@ class Yownes extends Module
             if ($id_tab) {
                 $tab = new Tab($id_tab);
                 $tab->delete();
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Install the database modifications required for this module.
+     *
+     * @return bool
+     */
+    private function installDatabase()
+    {
+        $queries = [
+            'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'yownes_payments` (
+              `customer_id` int(11) NOT NULL,
+              `stripe_id` varchar(32) NOT NULL,
+              PRIMARY KEY (`customer_id`)
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;',
+        ];
+
+        return $this->executeQueries($queries);
+    }
+
+    /**
+     * Uninstall database modifications.
+     *
+     * @return bool
+     */
+    private function uninstallDatabase()
+    {
+        $queries = [
+            'DROP TABLE IF EXISTS `'._DB_PREFIX_.'yownes_payments`',
+        ];
+
+        return $this->executeQueries($queries);
+    }
+
+    /**
+     * A helper that executes multiple database queries.
+     *
+     * @param array $queries
+     *
+     * @return bool
+     */
+    private function executeQueries(array $queries)
+    {
+        foreach ($queries as $query) {
+            if (!Db::getInstance()->execute($query)) {
+                return false;
             }
         }
 

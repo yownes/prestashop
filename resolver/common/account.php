@@ -155,7 +155,7 @@ class ResolverCommonAccount extends Resolver
             'lastName' => $result['lastname'],
             'company' => $result['company'],
             'address1' => $result['address1'],
-            'address2' => $result['address1'],
+            'address2' => $result['address2'],
             'zoneId' => $result['id_state'],
             'zone' => $this->load->resolver('common/zone/get', array(
                 'id' => $result['id_state']
@@ -237,5 +237,41 @@ class ResolverCommonAccount extends Resolver
         }
 
         return $this->addressList($args);
+    }
+
+    public function paymentMethodList()
+    {
+        $paymentMethods = array();
+        $this->load->model('common/payment');
+
+        $result = $this->model_common_payment->getPaymentMethods($this->context->customer);
+
+        foreach ($result as $value) {
+            $paymentMethods[] = array(
+                'id' => $value['id'],
+                'last4' => $value['card']['last4'],
+                'brand' => $value['card']['brand'],
+                'expMonth' => $value['card']['exp_month'],
+                'expYear' => $value['card']['exp_year']
+            );
+        }
+
+        return $paymentMethods;
+    }
+
+    public function addPaymentMethod($args)
+    {
+        $this->load->model('common/payment');
+
+        $result = $this->model_common_payment->addPaymentMethod($this->context->customer, $args['paymentMethod']);
+        return $result;
+    }
+    
+    public function removePaymentMethod($args)
+    {
+        $this->load->model('common/payment');
+
+        $result = $this->model_common_payment->removePaymentMethod($this->context->customer, $args['id']);
+        return $this->paymentMethodList();
     }
 }

@@ -10,6 +10,9 @@
   "accountAddAddress": "common/account/addAddress",
   "accountEditAddress": "common/account/editAddress",
   "accountRemoveAddress": "common/account/removeAddress",
+  "accountPaymentMethodList": "common/account/paymentMethodList",
+  "accountAddPaymentMethod": "common/account/addPaymentMethod",
+  "accountRemovePaymentMethod": "common/account/removePaymentMethod",
 
   "home": "common/home/get",
 

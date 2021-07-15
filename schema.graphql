@@ -356,6 +356,15 @@ input AccountAddressInput {
   zipcode: String
 }
 
+type AccountPaymentMethod {
+  id: String
+  name: String
+  last4: String
+  brand: String
+  expMonth: Int
+  expYear: Int
+}
+
 type FileResult {
   code: String
 }
@@ -476,6 +485,12 @@ type RootMutationType {
     page: Int = 1
     size: Int = 10
   ): [AccountAddress]
+  accountAddPaymentMethod(paymentMethod: String): AccountPaymentMethod
+  accountRemovePaymentMethod(
+    id: String
+    page: Int = 1
+    size: Int = 10
+  ): [AccountPaymentMethod]
   addBlogPostReview(
     id: String
     rating: Float
@@ -584,6 +599,7 @@ type RootQueryType {
   contact: Contact
   accountCheckLogged: LoggedResult
   accountAddressList: [AccountAddress]
+  accountPaymentMethodList: [AccountPaymentMethod]
   accountAddress(id: String): AccountAddress
   checkoutLink: CheckoutLinkResult
 }
