@@ -66,6 +66,8 @@ class ModelCommonPayment extends Model
               );
         }
 
+        $paymentMethod = $stripe->paymentMethods->retrieve($paymentMethod_id);
+
         return [
             'id' => $paymentMethod->id,
             'last4' => $paymentMethod->card->last4,
